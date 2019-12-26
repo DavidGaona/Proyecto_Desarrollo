@@ -5,14 +5,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -23,15 +22,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Main extends Application {
+public class Test extends Application {
 
     public static boolean isNumeric(String inputData) {
         return inputData.matches("[+]?\\d+(\\d+)?");
     }
 
-    public static HBox addHBox(int width, int height, String color) {
+    public static HBox addHBox(double width, double height, String color) {
         HBox hbox = new HBox();
-        hbox.setPadding(new Insets(0, 15, (int)height*0.05, 15));
+        hbox.setPrefHeight(height*0.05);
         hbox.setSpacing(10);
         String style = String.format("-fx-background-color: #%s;", color);
         hbox.setStyle(style);
@@ -39,13 +38,68 @@ public class Main extends Application {
         return hbox;
     }
 
-    public static VBox addVBox(int width, int height) {
+    public static VBox addVBox(double width, double height) {
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15, (int)width*0.15, 15, 0));
+        vbox.setPrefWidth(width*0.2);
         vbox.setSpacing(10);
         vbox.setStyle("-fx-background-color: #18171C;"); // #336699
 
         return vbox;
+    }
+
+    public static VBox midPane(double width, double height){
+        VBox vbox = new VBox();
+        vbox.setPrefSize(width*0.6, height*0.9);
+        vbox.setAlignment(Pos.TOP_LEFT);
+        vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
+
+        HBox infoHbox = centerHboxTemplate(width, height*0.4, "Información Personal");
+        HBox centerHbox = centerHboxTemplate(width, height*0.6, "Información Del Plan");
+        HBox botHbox = centerHboxTemplate(width, height*0.3, "Información Bancaria");
+
+        vbox.getChildren().addAll(infoHbox, centerHbox, botHbox);
+        return vbox;
+    }
+
+    public static HBox centerHboxTemplate(double width, double height, String message){
+        //Vbox
+        HBox hbox = new HBox();
+        hbox.setPrefSize(width*0.6, height);
+        hbox.setAlignment(Pos.TOP_LEFT);
+        hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #302E38;");
+
+        //StackPane
+        StackPane stackPane = new StackPane();
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        stackPane.setPrefSize(width*0.2,height);
+
+        //Rectangle bg
+        Rectangle rect = new Rectangle();
+        rect.setHeight(height);
+        rect.setWidth(width*0.2);
+        rect.setFill(Color.web("#24222A"));
+
+        //VBox to center the text
+        VBox centerText = new VBox();
+        centerText.setAlignment(Pos.TOP_CENTER);
+        
+        //Text with message
+        Text text = new Text(message);
+        text.setFont(new Font("Consolas", 30));
+        text.setFill(Color.web("#FFFFFF"));
+        //text.setStyle("-fx-font-style: italic;\n-fx-font-size: 30");
+
+        //
+        Rectangle marginRect = new Rectangle();
+        marginRect.setHeight(30);
+        marginRect.setWidth(width*0.2);
+        marginRect.setFill(Color.web("#24222A"));
+
+        centerText.getChildren().addAll(marginRect, text);
+        stackPane.getChildren().addAll(rect, centerText);
+        hbox.getChildren().addAll(stackPane);
+
+        return hbox;
     }
 
     public static TextField clientTextFieldTemplate(String tittle, String textFieldStyle){
@@ -64,9 +118,9 @@ public class Main extends Application {
     }
 
     static int lastUpdated;
-    public static GridPane addGridPane(int width, int height) throws FileNotFoundException {
+    public static GridPane addGridPane(double width, double height) throws FileNotFoundException {
         GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setPrefSize(width,height);
         gridPane.setVgap(25);
         gridPane.setHgap(10);
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
@@ -98,8 +152,6 @@ public class Main extends Application {
             }
 
         });
-
-
 
         //last name text
         texts.add(clientTextTemplate("Apellidos:", textColor));
@@ -204,27 +256,41 @@ public class Main extends Application {
         return gridPane;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static ScrollPane centerScrollPane(double width, double height){
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
+
+        BorderPane layout = new BorderPane();
+        VBox vBoxLeft = addVBox(width, height);
+        VBox vBoxRight = addVBox(width, height);
+        VBox vBoxCenter = midPane(width, height);
+
+        layout.setCenter(vBoxCenter); //
+        layout.setLeft(vBoxLeft);
+        layout.setRight(vBoxRight);
+
+        scrollPane.setContent(layout);
+        return scrollPane;
     }
 
     @Override
     public void start(Stage window) throws Exception {
-        int width = 1920;  //1920 1280
-        int height = 1080; //1080 720
+        //resolutions
+        int width = 1920; //1920 1280 1152
+        int height = 1080;//1080 720 648
+
         Scene mainMenu;
-        BorderPane layout = new BorderPane();
+        BorderPane layoutScroll = new BorderPane();
         HBox hBoxTop = addHBox(width, height, "2E293D"); //18171C
         HBox hBoxBot = addHBox(width, height, "24222A");
-        GridPane gridPane = addGridPane(width, height);
-        VBox vBoxLeft = addVBox(width, height);
-        VBox vBoxRight = addVBox(width, height);
-        layout.setTop(hBoxTop);
-        layout.setCenter(gridPane);
-        layout.setLeft(vBoxLeft);
-        layout.setRight(vBoxRight);
-        layout.setBottom(hBoxBot);
-        mainMenu = new Scene(layout, width, height);
+        ScrollPane spCenter = centerScrollPane(width, height);
+
+        layoutScroll.setBottom(hBoxBot);
+        layoutScroll.setTop(hBoxTop);
+        layoutScroll.setCenter(spCenter);
+
+        mainMenu = new Scene(layoutScroll, width, height);
 
         window.setScene(mainMenu);
         window.setTitle("UwU");
@@ -232,4 +298,9 @@ public class Main extends Application {
         window.show();
 
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }
