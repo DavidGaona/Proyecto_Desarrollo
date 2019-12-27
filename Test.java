@@ -117,7 +117,7 @@ public class Test extends Application {
 
     public Text clientTextTemplate(String tittle, String color){
         Text clientText = new Text(tittle);
-        clientText.setFont(new Font("Consolas", 20));;
+        clientText.setFont(new Font("Consolas", 20));
         clientText.setFill(Color.web(color));
         return clientText;
     }
