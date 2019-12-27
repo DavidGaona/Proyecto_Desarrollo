@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,11 +25,11 @@ import java.util.ArrayList;
 
 public class Test extends Application {
 
-    public static boolean isNumeric(String inputData) {
+    public boolean isNumeric(String inputData) {
         return inputData.matches("[+]?\\d+(\\d+)?");
     }
 
-    public static HBox addHBox(double width, double height, String color) {
+    public HBox addHBox(double width, double height, String color) {
         HBox hbox = new HBox();
         hbox.setPrefHeight(height*0.05);
         hbox.setSpacing(10);
@@ -38,7 +39,7 @@ public class Test extends Application {
         return hbox;
     }
 
-    public static VBox addVBox(double width, double height) {
+    public VBox addVBox(double width, double height) {
         VBox vbox = new VBox();
         vbox.setPrefWidth(width*0.2);
         vbox.setSpacing(10);
@@ -47,7 +48,7 @@ public class Test extends Application {
         return vbox;
     }
 
-    public static VBox midPane(double width, double height){
+    public VBox midPane(double width, double height){
         VBox vbox = new VBox();
         vbox.setPrefSize(width*0.6, height*0.9);
         vbox.setAlignment(Pos.TOP_LEFT);
@@ -61,7 +62,7 @@ public class Test extends Application {
         return vbox;
     }
 
-    public static HBox centerHboxTemplate(double width, double height, String message){
+    public HBox centerHboxTemplate(double width, double height, String message){
         //Vbox
         HBox hbox = new HBox();
         hbox.setPrefSize(width*0.6, height);
@@ -81,28 +82,32 @@ public class Test extends Application {
 
         //VBox to center the text
         VBox centerText = new VBox();
+        centerText.setMaxWidth(width*0.2);
         centerText.setAlignment(Pos.TOP_CENTER);
         
         //Text with message
         Text text = new Text(message);
-        text.setFont(new Font("Consolas", 30));
+        text.setFont(new Font("Consolas", 25));
         text.setFill(Color.web("#FFFFFF"));
         //text.setStyle("-fx-font-style: italic;\n-fx-font-size: 30");
 
-        //
+        //Margin for the text
         Rectangle marginRect = new Rectangle();
         marginRect.setHeight(30);
-        marginRect.setWidth(width*0.2);
+        marginRect.setWidth(0);
         marginRect.setFill(Color.web("#24222A"));
+
+        //TextFields
+        GridPane gridPane = addGridPane(width, height);
 
         centerText.getChildren().addAll(marginRect, text);
         stackPane.getChildren().addAll(rect, centerText);
-        hbox.getChildren().addAll(stackPane);
+        hbox.getChildren().addAll(stackPane, gridPane);
 
         return hbox;
     }
 
-    public static TextField clientTextFieldTemplate(String tittle, String textFieldStyle){
+    public TextField clientTextFieldTemplate(String tittle, String textFieldStyle){
         TextField clientTextField = new TextField(tittle);
         clientTextField.setStyle(textFieldStyle);
         clientTextField.setFont(new Font("Consolas", 20));
@@ -110,153 +115,157 @@ public class Test extends Application {
         return clientTextField;
     }
 
-    public static Text clientTextTemplate(String tittle, String color){
+    public Text clientTextTemplate(String tittle, String color){
         Text clientText = new Text(tittle);
         clientText.setFont(new Font("Consolas", 20));;
         clientText.setFill(Color.web(color));
         return clientText;
     }
 
-    static int lastUpdated;
-    public static GridPane addGridPane(double width, double height) throws FileNotFoundException {
+    private TextField selectedTextField, lastSelectedTextField;
+    private void installListener(GridPane layout, String textFieldStyle, String textColor, TextField... textFields) {
+        // Install the same listener on all of them
+        for (TextField textField : textFields) {
+            textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
+
+                // Set the selectedTextField to null whenever focus is lost. This accounts for the
+                // TextField losing focus to another control that is NOT a TextField
+                selectedTextField = null;
+
+                if (newValue) {
+                    // The new textfield is focused, so set the global reference
+                    lastSelectedTextField = textField;
+                    selectedTextField = textField;
+                    selectedTextField.setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
+                    for (Node node : layout.getChildren()){
+                        if (selectedTextField.getId().substring(2).equals(node.getId().substring(1))){
+                            ((Text) node).setFill(Color.web(textColor));
+                            break;
+                        }
+                    }
+                } else {
+                    if (lastSelectedTextField != null){
+                        lastSelectedTextField.setStyle(textFieldStyle);
+                        for (Node node : layout.getChildren()){
+                            if (lastSelectedTextField.getId().substring(2).equals(node.getId().substring(1))){
+                                ((Text) node).setFill(Color.web("#948FA3"));
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    public GridPane addGridPane(double width, double height)  {
         GridPane gridPane = new GridPane();
-        gridPane.setPrefSize(width,height);
+        gridPane.setPrefSize(width*0.4, height);
+        //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
         gridPane.setHgap(10);
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
-                "-fx-border-color: #28272F;\n-fx-border-width: 5;");
+                "-fx-border-color: #28272F;\n-fx-border-width: 0;");
 
-        //0 = name, 1 = last name, 2 = id document, 3 = Email, 4 = Direction
-        ArrayList<TextField> textFields = new ArrayList<>();
-        ArrayList<Text> texts = new ArrayList<>();
 
         String textFieldStyle = "-fx-background-color: #3D3946;\n-fx-text-fill: #FFFFFF;\n-fx-border-radius: 2;\n" +
                 "-fx-border-width: 2;\n-fx-border-color: #3d3d3d;";
         String textColor = "#948FA3";
 
-        Image checkImage = new Image(new FileInputStream("C:\\Users\\david\\IdeaProjects\\panes\\src\\Check.png"));
-        final ImageView currentImage = new ImageView();
-        currentImage.setImage(checkImage);
+        //Image checkImage = new Image(new FileInputStream("C:\\Users\\david\\IdeaProjects\\panes\\src\\Check.png"));
+        //final ImageView currentImage = new ImageView();
+        //currentImage.setImage(checkImage);
 
         //name text
-        texts.add(clientTextTemplate("Nombres:", textColor));
-        //name text field actions
-        textFields.add(clientTextFieldTemplate("", textFieldStyle));
-        textFields.get(0).setOnMouseClicked(e -> {
-            textFields.get(0).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-            texts.get(0).setFill(Color.web("#C2B8E0"));
-            if (lastUpdated != 0){
-                textFields.get(lastUpdated).setStyle(textFieldStyle);
-                texts.get(lastUpdated).setFill(Color.web(textColor));
-                lastUpdated = 0;
-            }
+        Text clientNameText = clientTextTemplate("Nombres:", textColor);
+        clientNameText.setId("T1");
 
-        });
+        //name text field actions
+        TextField clientNameTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientNameTextField.setId("TF1");
 
         //last name text
-        texts.add(clientTextTemplate("Apellidos:", textColor));
+        Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
+        clientLastNameText.setId("T2");
 
         //name text field actions
-        textFields.add(clientTextFieldTemplate("", textFieldStyle));
-        textFields.get(1).setOnMouseClicked(e -> {
-            textFields.get(1).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-            texts.get(1).setFill(Color.web("#C2B8E0"));
-            if (lastUpdated != 1){
-                textFields.get(lastUpdated).setStyle(textFieldStyle);
-                texts.get(lastUpdated).setFill(Color.web(textColor));
-                lastUpdated = 1;
-            }
-        });
+        TextField clientLastNameTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientLastNameTextField.setId("TF2");
 
         //ID document text
-        texts.add(clientTextTemplate("Documento de identidad:", textColor));
+        Text clientDocumentIdText = clientTextTemplate("Documento de identidad:", textColor);
+        clientDocumentIdText.setId("T3");
 
         //name text field actions
-        textFields.add(clientTextFieldTemplate("", textFieldStyle));
-        textFields.get(2).setOnMouseClicked(e -> {
-            textFields.get(2).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-            texts.get(2).setFill(Color.web("#C2B8E0"));
-            if (lastUpdated != 2){
-                textFields.get(lastUpdated).setStyle(textFieldStyle);
-                texts.get(lastUpdated).setFill(Color.web(textColor));
-                lastUpdated = 2;
-            }
-        });
-        textFields.get(2).setOnKeyTyped(e -> {
-            if (isNumeric(textFields.get(2).getText()) || textFields.get(2).getText().isBlank()) {
-                textFields.get(2).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-                texts.get(2).setFill(Color.web("#C2B8E0"));
+        TextField clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientDocumentIdTextField.setId("TF3");
+        clientDocumentIdTextField.setOnKeyTyped(e -> {
+            if (isNumeric(clientDocumentIdTextField.getText()) || clientDocumentIdTextField.getText().isBlank()) {
+                clientDocumentIdTextField.setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
+                clientDocumentIdText.setFill(Color.web("#C2B8E0"));
             } else {
-                textFields.get(2).setStyle(textFieldStyle + "\n-fx-border-color: #FE0000;");
-                texts.get(2).setFill(Color.web("#FE0000"));
+                clientDocumentIdTextField.setStyle(textFieldStyle + "\n-fx-border-color: #FE0000;");
+                clientDocumentIdText.setFill(Color.web("#FE0000"));
             }
-
         });
 
         //Email Text
-        texts.add(clientTextTemplate("Email:", textColor));
+        Text clientEmailText = clientTextTemplate("Email", textColor);
+        clientEmailText.setId("T4");
 
         //Email TextField
-        textFields.add(clientTextFieldTemplate("", textFieldStyle));
-        textFields.get(3).setOnMouseClicked(e -> {
-            textFields.get(3).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-            texts.get(3).setFill(Color.web("#C2B8E0"));
-            if (lastUpdated != 3){
-                textFields.get(lastUpdated).setStyle(textFieldStyle);
-                texts.get(lastUpdated).setFill(Color.web(textColor));
-                lastUpdated = 3;
-            }
-        });
+        TextField clientEmailTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientEmailTextField.setId("TF4");
 
         //Direction Text
-        texts.add(clientTextTemplate("Dirección:", textColor));
+        Text clientDirectionText = clientTextTemplate("Dirección:", textColor);
+        clientDirectionText.setId("T5");
 
         //Direction TextField
-        textFields.add(clientTextFieldTemplate("", textFieldStyle));
-        textFields.get(4).setOnMouseClicked(e -> {
-            textFields.get(4).setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-            texts.get(4).setFill(Color.web("#C2B8E0"));
-            if (lastUpdated != 4){
-                textFields.get(lastUpdated).setStyle(textFieldStyle);
-                texts.get(lastUpdated).setFill(Color.web(textColor));
-                lastUpdated = 4;
-            }
-        });
+        TextField clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientDirectionTextField.setId("TF5");
 
+        //Install listener
+        installListener(gridPane, textFieldStyle, "#C2B8E0",
+                clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField,
+                clientDirectionTextField);
 
-        int colText = 40;
-        int colTextField = 41;
+        int colText = 4;
+        int colTextField = 5;
         int rowStart = 1;
         //Constrains
-        GridPane.setConstraints(texts.get(0), colText, rowStart);
-        GridPane.setHalignment(texts.get(0), HPos.RIGHT);
-        GridPane.setConstraints(textFields.get(0), colTextField, rowStart);
-        GridPane.setConstraints(texts.get(1), colText, rowStart + 1);
-        GridPane.setHalignment(texts.get(1), HPos.RIGHT);
-        GridPane.setConstraints(textFields.get(1), colTextField, rowStart + 1);
-        GridPane.setConstraints(texts.get(2), colText, rowStart + 2);
-        GridPane.setHalignment(texts.get(2), HPos.RIGHT);
-        GridPane.setConstraints(textFields.get(2), colTextField, rowStart + 2);
-        GridPane.setConstraints(texts.get(3), colText, rowStart + 3);
-        GridPane.setHalignment(texts.get(3), HPos.RIGHT);
-        GridPane.setConstraints(textFields.get(3), colTextField, rowStart + 3);
-        GridPane.setConstraints(texts.get(4), colText, rowStart + 4);
-        GridPane.setHalignment(texts.get(4), HPos.RIGHT);
-        GridPane.setConstraints(textFields.get(4), colTextField, rowStart + 4);
+        GridPane.setConstraints(clientNameText, colText, rowStart);
+        GridPane.setHalignment(clientNameText, HPos.RIGHT);
+        GridPane.setConstraints(clientNameTextField, colTextField, rowStart);
+        GridPane.setConstraints(clientLastNameText, colText, rowStart + 1);
+        GridPane.setHalignment(clientLastNameText, HPos.RIGHT);
+        GridPane.setConstraints(clientLastNameTextField, colTextField, rowStart + 1);
+        GridPane.setConstraints(clientDocumentIdText, colText, rowStart + 2);
+        GridPane.setHalignment(clientDocumentIdText, HPos.RIGHT);
+        GridPane.setConstraints(clientDocumentIdTextField, colTextField, rowStart + 2);
+        GridPane.setConstraints(clientEmailText, colText, rowStart + 3);
+        GridPane.setHalignment(clientEmailText, HPos.RIGHT);
+        GridPane.setConstraints(clientEmailTextField, colTextField, rowStart + 3);
+        GridPane.setConstraints(clientDirectionText, colText, rowStart + 4);
+        GridPane.setHalignment(clientDirectionText, HPos.RIGHT);
+        GridPane.setConstraints(clientDirectionTextField, colTextField, rowStart + 4);
+
 
         //Adding all nodes
         gridPane.getChildren().addAll(
                 //currentImage,
-                texts.get(0), textFields.get(0),
-                texts.get(1), textFields.get(1),
-                texts.get(2), textFields.get(2),
-                texts.get(3), textFields.get(3),
-                texts.get(4), textFields.get(4));
+                clientNameText, clientNameTextField,
+                clientLastNameText, clientLastNameTextField,
+                clientDocumentIdText, clientDocumentIdTextField,
+                clientEmailText, clientEmailTextField,
+                clientDirectionText, clientDirectionTextField);
         //gridPane.setAlignment(Pos.TOP_CENTER);
         return gridPane;
     }
 
-    public static ScrollPane centerScrollPane(double width, double height){
+    public ScrollPane centerScrollPane(double width, double height){
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
