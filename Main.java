@@ -172,6 +172,7 @@ public class Main extends Application {
                 clientNameTextField, clientLastNameTextField,
                 clientDocumentIdTextField, clientEmailTextField,
                 clientDirectionTextField);
+
         int colText = 40;
         int colTextField = 41;
         int rowStart = 1;
