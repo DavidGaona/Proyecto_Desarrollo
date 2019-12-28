@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class Test extends Application {
 
     public boolean isNumeric(String inputData) {
-        return inputData.matches("[+]?\\d+(\\d+)?");
+        return inputData.matches("\\d+(\\d+)?");
     }
 
     public HBox addHBox(double width, double height, String color) {
@@ -136,18 +137,20 @@ public class Test extends Application {
                     // The new textfield is focused, so set the global reference
                     lastSelectedTextField = textField;
                     selectedTextField = textField;
+                    String textFieldId = selectedTextField.getId();
                     selectedTextField.setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
                     for (Node node : layout.getChildren()){
-                        if (selectedTextField.getId().substring(2).equals(node.getId().substring(1))){
+                        if (textFieldId.substring(2).equals(node.getId().substring(1))){
                             ((Text) node).setFill(Color.web(textColor));
                             break;
                         }
                     }
                 } else {
+                    String textFieldId = lastSelectedTextField.getId();
                     if (lastSelectedTextField != null){
                         lastSelectedTextField.setStyle(textFieldStyle);
                         for (Node node : layout.getChildren()){
-                            if (lastSelectedTextField.getId().substring(2).equals(node.getId().substring(1))){
+                            if (textFieldId.substring(2).equals(node.getId().substring(1))){
                                 ((Text) node).setFill(Color.web("#948FA3"));
                                 break;
                             }
@@ -158,6 +161,16 @@ public class Test extends Application {
         }
     }
 
+    private void addTextFieldCharacterLimit(int limit, TextField... textFields){
+        for (TextField textField : textFields) {
+            textField.textProperty().addListener(e -> {
+                if (textField.getText().length() > limit){
+                    textField.setText(textField.getText(0, textField.getText().length() - 1));
+                    textField.positionCaret(textField.getText().length());
+                }
+            });
+        }
+    }
 
     public GridPane addGridPane(double width, double height)  {
         GridPane gridPane = new GridPane();
@@ -197,16 +210,15 @@ public class Test extends Application {
         Text clientDocumentIdText = clientTextTemplate("Documento de identidad:", textColor);
         clientDocumentIdText.setId("T3");
 
-        //name text field actions
+        //Document id text field actions
         TextField clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDocumentIdTextField.setId("TF3");
+
         clientDocumentIdTextField.setOnKeyTyped(e -> {
-            if (isNumeric(clientDocumentIdTextField.getText()) || clientDocumentIdTextField.getText().isBlank()) {
-                clientDocumentIdTextField.setStyle(textFieldStyle + "\n-fx-border-color: #C2B8E0;");
-                clientDocumentIdText.setFill(Color.web("#C2B8E0"));
-            } else {
-                clientDocumentIdTextField.setStyle(textFieldStyle + "\n-fx-border-color: #FE0000;");
-                clientDocumentIdText.setFill(Color.web("#FE0000"));
+            if (!(isNumeric(clientDocumentIdTextField.getText()))) {
+                String correctText = clientDocumentIdTextField.getText().replaceAll("[^\\d]", "");
+                clientDocumentIdTextField.setText(correctText);
+                clientDocumentIdTextField.positionCaret(correctText.length());
             }
         });
 
@@ -226,11 +238,16 @@ public class Test extends Application {
         TextField clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDirectionTextField.setId("TF5");
 
-        //Install listener
+        //Install listener for color highlight
         installListener(gridPane, textFieldStyle, "#C2B8E0",
                 clientNameTextField, clientLastNameTextField,
                 clientDocumentIdTextField, clientEmailTextField,
                 clientDirectionTextField);
+
+        //install listener for length limit
+        addTextFieldCharacterLimit(100, clientNameTextField, clientLastNameTextField);
+        addTextFieldCharacterLimit(20, clientDocumentIdTextField);
+        addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
 
         int colText = 4;
         int colTextField = 5;
@@ -275,7 +292,7 @@ public class Test extends Application {
         VBox vBoxRight = addVBox(width, height);
         VBox vBoxCenter = midPane(width, height);
 
-        layout.setCenter(vBoxCenter); //
+        layout.setCenter(vBoxCenter);
         layout.setLeft(vBoxLeft);
         layout.setRight(vBoxRight);
 
