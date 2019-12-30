@@ -77,7 +77,12 @@ public class Test extends Application {
 
         //Rectangle bg
         Rectangle rect = new Rectangle();
-        rect.setHeight(height);
+        if (height >= 280.0){
+            rect.setHeight(height);
+        } else {
+            rect.setHeight(280.0);
+        }
+
         rect.setWidth(width*0.2);
         rect.setFill(Color.web("#24222A"));
 
@@ -88,7 +93,7 @@ public class Test extends Application {
         
         //Text with message
         Text text = new Text(message);
-        text.setFont(new Font("Consolas", 25));
+        text.setFont(new Font("Consolas", 18));
         text.setFill(Color.web("#FFFFFF"));
         //text.setStyle("-fx-font-style: italic;\n-fx-font-size: 30");
 
@@ -111,14 +116,14 @@ public class Test extends Application {
     public TextField clientTextFieldTemplate(String tittle, String textFieldStyle){
         TextField clientTextField = new TextField(tittle);
         clientTextField.setStyle(textFieldStyle);
-        clientTextField.setFont(new Font("Consolas", 20));
+        clientTextField.setFont(new Font("Consolas", 15));
         clientTextField.setPrefSize(350, 30);
         return clientTextField;
     }
 
     public Text clientTextTemplate(String tittle, String color){
         Text clientText = new Text(tittle);
-        clientText.setFont(new Font("Consolas", 20));
+        clientText.setFont(new Font("Consolas", 15));
         clientText.setFill(Color.web(color));
         return clientText;
     }
@@ -165,8 +170,10 @@ public class Test extends Application {
         for (TextField textField : textFields) {
             textField.textProperty().addListener(e -> {
                 if (textField.getText().length() > limit){
-                    textField.setText(textField.getText(0, textField.getText().length() - 1));
-                    textField.positionCaret(textField.getText().length());
+                    int prevPos = textField.getCaretPosition();
+                    String limitedText = textField.getText().substring(0, prevPos) + textField.getText().substring(prevPos + 1);
+                    textField.setText(limitedText);
+                    textField.positionCaret(prevPos);
                 }
             });
         }
@@ -175,7 +182,7 @@ public class Test extends Application {
     public GridPane addGridPane(double width, double height)  {
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(width*0.4, height);
-        //gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
         gridPane.setHgap(10);
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
@@ -217,8 +224,9 @@ public class Test extends Application {
         clientDocumentIdTextField.setOnKeyTyped(e -> {
             if (!(isNumeric(clientDocumentIdTextField.getText()))) {
                 String correctText = clientDocumentIdTextField.getText().replaceAll("[^\\d]", "");
+                int prevPos = clientDocumentIdTextField.getCaretPosition();
                 clientDocumentIdTextField.setText(correctText);
-                clientDocumentIdTextField.positionCaret(correctText.length());
+                clientDocumentIdTextField.positionCaret(prevPos - 1);
             }
         });
 
@@ -245,13 +253,13 @@ public class Test extends Application {
                 clientDirectionTextField);
 
         //install listener for length limit
-        addTextFieldCharacterLimit(100, clientNameTextField, clientLastNameTextField);
+        addTextFieldCharacterLimit(10, clientNameTextField, clientLastNameTextField);
         addTextFieldCharacterLimit(20, clientDocumentIdTextField);
         addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
 
         int colText = 4;
         int colTextField = 5;
-        int rowStart = 1;
+        int rowStart = 0;
         //Constrains
         GridPane.setConstraints(clientNameText, colText, rowStart);
         GridPane.setHalignment(clientNameText, HPos.RIGHT);
@@ -291,6 +299,7 @@ public class Test extends Application {
         VBox vBoxLeft = addVBox(width, height);
         VBox vBoxRight = addVBox(width, height);
         VBox vBoxCenter = midPane(width, height);
+        vBoxCenter.setId("a1");
 
         layout.setCenter(vBoxCenter);
         layout.setLeft(vBoxLeft);
@@ -303,8 +312,8 @@ public class Test extends Application {
     @Override
     public void start(Stage window) throws Exception {
         //resolutions
-        int width = 1920; //1920 1280 1152
-        int height = 1080;//1080 720 648
+        int width = 1024; //2560 1920 1280 1152 1024
+        int height = 576;//1440 1080 720 648 576;
 
         Scene mainMenu;
         BorderPane layoutScroll = new BorderPane();
@@ -318,10 +327,15 @@ public class Test extends Application {
 
         mainMenu = new Scene(layoutScroll, width, height);
 
+        //mainMenu.setOn(e -> System.out.println(mainMenu.getWidth() + " x " + mainMenu.getHeight()));
+        System.out.println(mainMenu.getWidth() + " x " + mainMenu.getHeight());
         window.setScene(mainMenu);
         window.setTitle("UwU");
         window.setResizable(false);
+
         window.show();
+        Node tst = layoutScroll.getChildren().get(2).lookup("a1");
+        System.out.println(spCenter.getHeight());
 
     }
 
