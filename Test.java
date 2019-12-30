@@ -77,12 +77,7 @@ public class Test extends Application {
 
         //Rectangle bg
         Rectangle rect = new Rectangle();
-        if (height >= 280.0){
-            rect.setHeight(height);
-        } else {
-            rect.setHeight(280.0);
-        }
-
+        rect.setHeight(Math.max(height, 280.0));
         rect.setWidth(width*0.2);
         rect.setFill(Color.web("#24222A"));
 
