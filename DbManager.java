@@ -5,8 +5,8 @@ public class DbManager {
     private DBconnect fachada;
     private Connection conexion;
 
-    public DbManager(String usuario,String password,String nombreBaseDeDatos,String host){
-        fachada = new DBconnect(usuario, password, nombreBaseDeDatos,host);
+    public DbManager(String usuario, String password, String nombreBaseDeDatos, String host) {
+        fachada = new DBconnect(usuario, password, nombreBaseDeDatos, host);
         conexion = null;
     }
 
