@@ -22,13 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+
+
 public class Test extends Application {
 
-    public boolean isNumeric(String inputData) {
-        return inputData.matches("\\d+(\\d+)?");
-    }
 
-    private Client client;
+    private static Client client = new Client();
+    private static DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
@@ -48,6 +48,7 @@ public class Test extends Application {
         searchTextField.setPromptText("Buscar cliente por documento");
         searchTextField.setPrefSize(width*0.296, height*0.03);
         searchTextField.getStyleClass().add("client-search-bar");
+        onlyNumericTextField(searchTextField);
 
         Button newClientButton = new Button("Nuevo cliente");
         newClientButton.setPrefSize(width*0.10, height*0.03);
@@ -56,6 +57,17 @@ public class Test extends Application {
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
         return hbox;
+    }
+
+    private void onlyNumericTextField(TextField searchTextField) {
+        searchTextField.setOnKeyTyped(e -> {
+            if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
+                String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
+                int prevPos = searchTextField.getCaretPosition();
+                searchTextField.setText(correctText);
+                searchTextField.positionCaret(prevPos - 1);
+            }
+        });
     }
 
     public HBox botBar(double width, double height, String buttonText) {
@@ -79,7 +91,8 @@ public class Test extends Application {
         saveChangesButton.setPrefSize(width*0.10, height*0.03);
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
-            Node uwu = hbox.getParent().getChildrenUnmodifiable().get(1);
+            dbManager.abrirConexionBD();
+            dbManager.saveNewClient(client);
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -221,37 +234,11 @@ public class Test extends Application {
         }
     }
 
-    private void addTextFieldTypeListener(TextField... textFields){
-        for (TextField textField : textFields) {
-            textField.onKeyTypedProperty().addListener((observableValue, eventHandler, t1) -> {
 
-                System.out.println(textField.getId());
-                switch (textField.getId()){
-                    case "TF1":
-                        client.setName(textField.getText());
-                        System.out.println("Sirvo uwu");
-                        break;
-                    case "TF2":
-                        client.setLastName(textField.getText());
-                        break;
-                    case "TF3":
-                        client.setDocumentId(textField.getText());
-                        break;
-                    case "TF4":
-                        client.setEmail(textField.getText());
-                        break;
-                    case "TF5":
-                        client.setDirection(textField.getText());
-                        break;
-                }
-            });
-        }
-    }
 
     public GridPane personalInfoPane(double width, double height)  {
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(width*0.4, height);
-        //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
         gridPane.setHgap(10);
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
@@ -273,6 +260,7 @@ public class Test extends Application {
         //name text field actions
         TextField clientNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientNameTextField.setId("TF1");
+        clientNameTextField.setOnKeyTyped(e -> client.setName(clientNameTextField.getText()));
 
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
@@ -281,26 +269,7 @@ public class Test extends Application {
         //name text field actions
         TextField clientLastNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientLastNameTextField.setId("TF2");
-
-        //document type text
-        Text clientDocumentTypeText = clientTextTemplate("Tipo de documento:", textColor);
-        clientDocumentTypeText.setId("T6");
-
-        //document type combobox
-        String documentTypes[] = { "Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
-        ComboBox clientDocumentTypeComboBox = new ComboBox(FXCollections.observableArrayList(documentTypes));
-        clientDocumentTypeComboBox.setPrefSize(350, 40);
-        clientDocumentTypeComboBox.setId("CB6");
-
-        //document type text
-        Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
-        clientTypeText.setId("T7");
-
-        //document type combobox
-        String clientTypes[] = { "Natural", "Corporativo"};
-        ComboBox clientTypeComboBox = new ComboBox(FXCollections.observableArrayList(clientTypes));
-        clientTypeComboBox.setPrefSize(350, 40);
-        clientTypeComboBox.setId("CB7");
+        clientLastNameTextField.setOnKeyTyped(e -> client.setLastName(clientLastNameTextField.getText()));
 
         //document id text
         Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
@@ -309,15 +278,8 @@ public class Test extends Application {
         //Document id text field actions
         TextField clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDocumentIdTextField.setId("TF3");
-
-        clientDocumentIdTextField.setOnKeyTyped(e -> {
-            if (!(isNumeric(clientDocumentIdTextField.getText()))) {
-                String correctText = clientDocumentIdTextField.getText().replaceAll("[^\\d]", "");
-                int prevPos = clientDocumentIdTextField.getCaretPosition();
-                clientDocumentIdTextField.setText(correctText);
-                clientDocumentIdTextField.positionCaret(prevPos - 1);
-            }
-        });
+        clientDocumentIdTextField.setOnKeyTyped(e -> { client.setDocumentId(clientDocumentIdTextField.getText()); });
+        onlyNumericTextField(clientDocumentIdTextField);
 
         //Email Text
         Text clientEmailText = clientTextTemplate("Email:", textColor);
@@ -326,6 +288,7 @@ public class Test extends Application {
         //Email TextField
         TextField clientEmailTextField = clientTextFieldTemplate("", textFieldStyle);
         clientEmailTextField.setId("TF4");
+        clientEmailTextField.setOnKeyTyped(e -> { client.setEmail(clientEmailTextField.getText()); });
 
         //Direction Text
         Text clientDirectionText = clientTextTemplate("Dirección:", textColor);
@@ -334,6 +297,27 @@ public class Test extends Application {
         //Direction TextField
         TextField clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDirectionTextField.setId("TF5");
+        clientDirectionTextField.setOnKeyTyped(e -> { client.setDirection(clientDirectionTextField.getText()); });
+
+        //document type text
+        Text clientDocumentTypeText = clientTextTemplate("Tipo de documento:", textColor);
+        clientDocumentTypeText.setId("T6");
+
+        //document type combobox
+        ComboBox clientDocumentTypeComboBox = new ComboBox(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
+        clientDocumentTypeComboBox.setPrefSize(350, 40);
+        clientDocumentTypeComboBox.setId("CB6");
+        clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue().toString())));
+
+        //document type text
+        Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
+        clientTypeText.setId("T7");
+
+        //document type combobox
+        ComboBox clientTypeComboBox = new ComboBox(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
+        clientTypeComboBox.setPrefSize(350, 40);
+        clientTypeComboBox.setId("CB7");
+        clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue().toString())));
 
         //Install listener for color highlight
         focusListener(gridPane, textFieldStyle, "#C2B8E0",
@@ -346,10 +330,6 @@ public class Test extends Application {
         addTextFieldCharacterLimit(50, clientNameTextField, clientLastNameTextField);
         addTextFieldCharacterLimit(20, clientDocumentIdTextField);
         addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
-
-        addTextFieldTypeListener(clientNameTextField, clientLastNameTextField,
-                clientDocumentIdTextField, clientEmailTextField,
-                clientDirectionTextField);
 
         int colText = 4;
         int colTextField = 5;
@@ -382,7 +362,15 @@ public class Test extends Application {
         GridPane.setConstraints(clientTypeText, colText, rowStart + 6);
         GridPane.setHalignment(clientTypeText, HPos.RIGHT);
         GridPane.setConstraints(clientTypeComboBox, colTextField, rowStart + 6);
-
+        Node node = new Node() {
+            @Override
+            public boolean hasProperties() {
+                return super.hasProperties();
+            }
+        };
+        GridPane.setConstraints(node, colText, rowStart + 7);
+        GridPane.setHalignment(node, HPos.RIGHT);
+        GridPane.setConstraints(node, colTextField, rowStart + 7);
 
         //Adding all nodes
         gridPane.getChildren().addAll(
@@ -449,19 +437,8 @@ public class Test extends Application {
     }
 
     public static void main(String[] args) {
-        DbManager test = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
-        test.abrirConexionBD();
-        Client client = new Client();
-        client.setName("David");
-        client.setLastName("Gaona");
-        //client.setDocumentType();
-        client.setDocumentId("1234");
-        client.setDirection("Cra 26 #16-64");
-        client.setEmail("dvg@gmail.com");
-        client.setType(1);
-        //test.saveClient(client);
-
-
+        //DbManager test = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+        //test.abrirConexionBD();
         launch(args);
     }
 
