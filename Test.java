@@ -57,7 +57,7 @@ public class Test extends Application {
         searchTextField.getStyleClass().add("client-search-bar");
 
         Button newClientButton = new Button("Nuevo cliente");
-        newClientButton.setPrefSize(width*(0.10/1080*width) , height*0.03 ); //0.10 , 0.03
+        newClientButton.setPrefSize(width*(0.10/1080*width) , height*0.03); //0.10 , 0.03
         newClientButton.getStyleClass().add("client-buttons-template");
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -453,7 +453,10 @@ public class Test extends Application {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double porwid = (1920 - screenSize.getWidth())/1920;
         double porhei = (1080 - screenSize.getHeight())/1080;
-
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        GraphicsConfiguration graphicsConfiguration = gd.getDefaultConfiguration();
+        java.awt.Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(graphicsConfiguration);
+        int taskBarSize = scnMax.bottom;
         int width = (int) screenSize.getWidth() ; //2560 1920 1280 1152 1024; 768 40
         int height = (int) screenSize.getHeight();//1440 1080 720 648 576; 432 40
         Scene mainMenu;
@@ -467,7 +470,7 @@ public class Test extends Application {
         mainLayout.setTop(hBoxTop);
         mainLayout.setCenter(spCenter);
 
-        mainMenu = new Scene(mainLayout, width , height );
+        mainMenu = new Scene(mainLayout, width , height - taskBarSize*1.8);
         mainMenu.getStylesheets().add("styles.css");
 
         //mainMenu.setOn(e -> System.out.println(mainMenu.getWidth() + " x " + mainMenu.getHeight()));
