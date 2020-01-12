@@ -81,7 +81,7 @@ public class Main extends Application {
         marginRect1.setHeight(0);
         marginRect1.setWidth(width * 0.205 ); // 0.205
 
-        double optimalWidth = 0.15;
+        double optimalWidth = 0.15; //
         double rect2Reduction = 0.05;
         if ( width > 1920){
             optimalWidth = 0.1;
