@@ -34,7 +34,6 @@ public class Test extends Application {
         return inputData.matches("\\d+(\\d+)?");
     }
 
-
     private Client client;
 
     public HBox topBar(double width, double height, double porwid, double porhei) {
@@ -56,13 +55,13 @@ public class Test extends Application {
         searchTextField.setPrefSize(width*0.296 , height*0.03 ); // 0.296 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
 
-        double optimalWidth = width;
-        if ( width > 1080){
-            optimalWidth = 1080;
+        double optimalWidth = 0.15;
+        if ( width > 1920){
+            optimalWidth = 0.1;
         }
 
         Button newClientButton = new Button("Nuevo cliente");
-        newClientButton.setPrefSize(width*(0.10/1080*optimalWidth) , height*0.03); //0.10 , 0.03
+        newClientButton.setPrefSize(width * optimalWidth , height*0.03); //0.10 , 0.03
         newClientButton.getStyleClass().add("client-buttons-template");
 
         hbox.setAlignment(Pos.CENTER_LEFT);

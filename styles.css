@@ -1,4 +1,11 @@
 
+.lower-res .combo-box {
+    -fx-background: #3D3946;
+    -fx-background-color: #3D3946;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 20px;
+}
+
 .combo-box {
     -fx-background: #3D3946;
     -fx-background-color: #3D3946;
