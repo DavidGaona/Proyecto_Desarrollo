@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -10,22 +9,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import model.Client;
+import model.DbManager;
 
-import javax.swing.text.StyledEditorKit;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 
 
 public class Main extends Application {
@@ -58,6 +51,7 @@ public class Main extends Application {
         searchTextField.setPromptText("Buscar cliente por documento");
         searchTextField.setPrefSize(width*0.296 , height*0.03 ); // 0.296 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
+        searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
 
         Button newClientButton = new Button("Nuevo cliente");
@@ -273,10 +267,16 @@ public class Main extends Application {
 
 
     public GridPane personalInfoPane(double width, double height,double percentageWidth, double percentageHeight)  {
+        double percent = percentageHeight;
+        if(percentageWidth > percentageHeight)
+        {
+            percent = percentageWidth;
+        }
         GridPane gridPane = new GridPane();
-        gridPane.setPrefSize(width*0.4, height);
+        gridPane.setPrefSize(width*0.4 , height ); // 0.4 ,,
+        //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
-        gridPane.setHgap(10);
+        gridPane.setHgap(10); // 10
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
                 "-fx-border-color: #28272F;\n-fx-border-width: 0;");
 
@@ -340,7 +340,7 @@ public class Main extends Application {
 
         //document type combobox
         ComboBox clientDocumentTypeComboBox = new ComboBox(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
-        clientDocumentTypeComboBox.setPrefSize(350, 40);
+        clientDocumentTypeComboBox.setPrefSize(350 - (350 * percent), 40 - (40 * percent));
         clientDocumentTypeComboBox.setId("CB6");
         clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue().toString())));
 
@@ -350,7 +350,7 @@ public class Main extends Application {
 
         //document type combobox
         ComboBox clientTypeComboBox = new ComboBox(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
-        clientTypeComboBox.setPrefSize(350, 40);
+        clientTypeComboBox.setPrefSize(350 - (350 * percent), 40 - (40 * percent));
         clientTypeComboBox.setId("CB7");
         clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue().toString())));
 
@@ -397,17 +397,13 @@ public class Main extends Application {
         GridPane.setConstraints(clientTypeText, colText, rowStart + 6);
         GridPane.setHalignment(clientTypeText, HPos.RIGHT);
         GridPane.setConstraints(clientTypeComboBox, colTextField, rowStart + 6);
-        Node node = new Node() {
-            @Override
-            public boolean hasProperties() {
-                return super.hasProperties();
-            }
-        };
-        GridPane.setConstraints(node, colText, rowStart + 7);
-        GridPane.setHalignment(node, HPos.RIGHT);
-        GridPane.setConstraints(node, colTextField, rowStart + 7);
-
-        //Adding all nodes
+        Rectangle emptyRect = new Rectangle();
+        emptyRect.setWidth(0.0);
+        emptyRect.setHeight(0.0);
+        GridPane.setConstraints(emptyRect, colText, rowStart + 7);
+        GridPane.setHalignment(emptyRect, HPos.RIGHT);
+        GridPane.setConstraints(emptyRect, colTextField, rowStart + 7);
+//Adding all nodes
         gridPane.getChildren().addAll(
                 //currentImage,
                 clientNameText, clientNameTextField,
@@ -416,8 +412,9 @@ public class Main extends Application {
                 clientDocumentIdText, clientDocumentIdTextField,
                 clientEmailText, clientEmailTextField,
                 clientDirectionText, clientDirectionTextField,
-                clientTypeText, clientTypeComboBox);
-        //gridPane.setAlignment(Pos.TOP_CENTER);
+                clientTypeText, clientTypeComboBox,
+                emptyRect);
+//gridPane.setAlignment(Pos.TOP_CENTER);
         return gridPane;
     }
 
