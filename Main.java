@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 public class Main extends Application {
 
-    private static Client client = new Client();
-    private static DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private Client client = new Client();
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
@@ -47,6 +47,7 @@ public class Main extends Application {
         searchTextField.setPromptText("Buscar cliente por documento");
         searchTextField.setPrefSize(width*0.296, height*0.03);
         searchTextField.getStyleClass().add("client-search-bar");
+        searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
 
         Button newClientButton = new Button("Nuevo cliente");
@@ -364,15 +365,13 @@ public class Main extends Application {
         GridPane.setConstraints(clientTypeText, colText, rowStart + 6);
         GridPane.setHalignment(clientTypeText, HPos.RIGHT);
         GridPane.setConstraints(clientTypeComboBox, colTextField, rowStart + 6);
-        Node node = new Node() {
-            @Override
-            public boolean hasProperties() {
-                return super.hasProperties();
-            }
-        };
-        GridPane.setConstraints(node, colText, rowStart + 7);
-        GridPane.setHalignment(node, HPos.RIGHT);
-        GridPane.setConstraints(node, colTextField, rowStart + 7);
+
+        Rectangle emptyRect = new Rectangle();
+        emptyRect.setWidth(0.0);
+        emptyRect.setHeight(0.0);
+        GridPane.setConstraints(emptyRect, colText, rowStart + 7);
+        GridPane.setHalignment(emptyRect, HPos.RIGHT);
+        GridPane.setConstraints(emptyRect, colTextField, rowStart + 7);
 
         //Adding all nodes
         gridPane.getChildren().addAll(
@@ -383,7 +382,8 @@ public class Main extends Application {
                 clientDocumentIdText, clientDocumentIdTextField,
                 clientEmailText, clientEmailTextField,
                 clientDirectionText, clientDirectionTextField,
-                clientTypeText, clientTypeComboBox);
+                clientTypeText, clientTypeComboBox,
+                emptyRect);
         //gridPane.setAlignment(Pos.TOP_CENTER);
         return gridPane;
     }
