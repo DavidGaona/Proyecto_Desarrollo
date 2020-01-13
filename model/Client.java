@@ -9,6 +9,8 @@ public class Client {
     private String direction;
     private int type;
 
+    public boolean isEmpty(){ return name.isEmpty() && lastName.isEmpty() && documentId.isEmpty() && email.isEmpty() && direction.isEmpty(); }
+
     public int getType() {
         return type;
     }
@@ -64,4 +66,5 @@ public class Client {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+
 }

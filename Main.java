@@ -108,8 +108,11 @@ public class Main extends Application {
         saveChangesButton.setPrefSize(width*optimalWidth , height*0.03 ); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
-            dbManager.abrirConexionBD();
-            dbManager.saveNewClient(client);
+            if (!client.isEmpty()){
+                dbManager.abrirConexionBD();
+                dbManager.saveNewClient(client);
+                dbManager.cerrarConexionBD();
+            }
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
