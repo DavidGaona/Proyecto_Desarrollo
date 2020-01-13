@@ -1,3 +1,7 @@
+package model;
+
+import controller.DBconnect;
+
 import java.sql.*;
 
 
