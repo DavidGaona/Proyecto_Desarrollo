@@ -16,15 +16,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Client;
-import model.DbManager;
+import connection.DbManager;
+import view.DaoClient;
 
 import java.awt.*;
 
 
 public class Main extends Application {
 
-    private Client client = new Client();
-    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private DaoClient client = new DaoClient();
+    //private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     private double percentage;
 
@@ -108,11 +109,7 @@ public class Main extends Application {
         saveChangesButton.setPrefSize(width*optimalWidth , height*0.03 ); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
-            if (!client.isEmpty()){
-                dbManager.abrirConexionBD();
-                dbManager.saveNewClient(client);
-                dbManager.cerrarConexionBD();
-            }
+            dbManager.saveNewClient(client);
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);

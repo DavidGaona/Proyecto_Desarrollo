@@ -1,6 +1,6 @@
-package model;
+package connection;
 
-import controller.DBconnect;
+import model.Client;
 
 import java.sql.*;
 
@@ -14,7 +14,7 @@ public class DbManager {
         conexion = null;
     }
 
-    public void saveNewClient(Client client) {
+    public int saveNewClient(Client client) {
         String sql_guardar;
         int numFilas;
         sql_guardar = "INSERT INTO public.cliente(nombre_cliente, apellidos_cliente, documento_id_cliente, email_cliente, direccion_cliente, tipo_cliente, tipo_documento)" +
@@ -24,13 +24,14 @@ public class DbManager {
         try {
             Statement sentencia = conexion.createStatement();
             numFilas = sentencia.executeUpdate(sql_guardar);
-            System.out.println("up " + numFilas);
+            return numFilas;
 
         } catch (SQLException e) {
             System.out.println(e);
         } catch (Exception e) {
             System.out.println(e);
         }
+        return -1;
     }
 
     public void editClient(Client client) {
