@@ -54,7 +54,7 @@ public class DbManager {
     }
 
     public Client loadClient(){
-        Client client = new Client();
+
         String sql_select = "SELECT nombre_cliente, apellidos_cliente, documento_id_cliente, email_cliente," +
                 "direccion_cliente, tipo_cliente, tipo_documento " +
                 "FROM public.cliente";
@@ -63,14 +63,15 @@ public class DbManager {
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
             ResultSet tabla = sentencia.executeQuery(sql_select);
-
-            client.setName(tabla.getString(1));
-            client.setLastName(tabla.getString(2));
-            client.setDocumentId(tabla.getString(3));
-            client.setEmail(tabla.getString(4));
-            client.setDirection(tabla.getString(5));
-            client.setType(tabla.getInt(6));
-            client.setDocumentType(tabla.getInt(7));
+            Client client = new Client(
+                    tabla.getString(1),
+                    tabla.getString(2),
+                    tabla.getShort(7),
+                    tabla.getString(3),
+                    tabla.getString(4),
+                    tabla.getString(5),
+                    tabla.getShort(6)
+            );
 
             return client;
         }
@@ -81,7 +82,7 @@ public class DbManager {
             System.out.println("ERROR Fatal en la base de datos");
         }
 
-        return client;
+        return new Client("", "", (short) 0, "", "", "", (short) 0);
     }
     public boolean abrirConexionBD(){
         conexion = fachada.getConnetion();
