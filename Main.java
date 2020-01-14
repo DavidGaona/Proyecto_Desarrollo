@@ -58,11 +58,11 @@ public class Main extends Application {
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
             if (!searchedClient.isBlank()){
-                clientNameTextField.setText(searchedClient.getName());
-                clientLastNameTextField.setText(searchedClient.getLastName());
-                clientDocumentIdTextField.setText(searchedClient.getDocumentId());
-                clientEmailTextField.setText(searchedClient.getEmail());
-                clientDirectionTextField.setText(searchedClient.getDirection());
+                clientNameTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getName()));
+                clientLastNameTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getLastName()));
+                clientDocumentIdTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getDocumentId()));
+                clientEmailTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getEmail()));
+                clientDirectionTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getDirection()));
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
                 clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
                 saveChangesButton.setText("Modificar cliente");
