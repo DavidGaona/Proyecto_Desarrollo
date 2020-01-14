@@ -8,7 +8,7 @@ public class ProjectUtilities {
     public static final String documentTypes[] = { "Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
     public static final String clientTypes[] = { "Natural", "Corporativo"};
 
-    public static int convertDocumentType(String  documentType){
+    public static short convertDocumentType(String  documentType){
         if(documentTypes[0].equals(documentType)){
             return 0;
         } else if (documentTypes[1].equals(documentType)){
@@ -21,7 +21,7 @@ public class ProjectUtilities {
         return 0;
     }
 
-    public static int convertClientType(String type){
+    public static short convertClientType(String type){
         if (clientTypes[0].equals(type)){
             return 0;
         } else if (clientTypes[1].equals(type)){
