@@ -3,19 +3,29 @@ package model;
 public class Client {
     private String name;
     private String lastName;
-    private int documentType;
+    private short documentType;
     private String documentId;
     private String email;
     private String direction;
-    private int type;
+    private short type;
 
-    public boolean isEmpty(){ return name.isEmpty() && lastName.isEmpty() && documentId.isEmpty() && email.isEmpty() && direction.isEmpty(); }
+    public Client(String name, String lastName, short documentType, String documentId, String email, String direction, short type) {
+        this.name = name;
+        this.lastName = lastName;
+        this.documentType = documentType;
+        this.documentId = documentId;
+        this.email = email;
+        this.direction = direction;
+        this.type = type;
+    }
+
+    public boolean isBlank(){ return name.isBlank() || lastName.isBlank() || documentId.isBlank() || email.isBlank() || direction.isBlank(); }
 
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(short type) {
         this.type = type;
     }
 
@@ -39,7 +49,7 @@ public class Client {
         return documentType;
     }
 
-    public void setDocumentType(int documentType) {
+    public void setDocumentType(short documentType) {
         this.documentType = documentType;
     }
 
