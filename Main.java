@@ -32,7 +32,7 @@ public class Main extends Application {
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(0, 0, 0, 0));
-        hbox.setPrefHeight(height*0.05);
+        hbox.setPrefHeight(height * 0.05);
         hbox.getStyleClass().add("top-bar-color");
 
         Rectangle marginRect1 = new Rectangle();
@@ -41,7 +41,7 @@ public class Main extends Application {
 
         double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
-        if ( width > 1920){
+        if (width > 1920) {
             optimalWidth = 0.1;
             rect2Reduction = 0.0;
         }
@@ -52,13 +52,13 @@ public class Main extends Application {
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar cliente por documento");
-        searchTextField.setPrefSize(width*0.296 , height*0.03 ); // 0.296 , 0.03
+        searchTextField.setPrefSize(width * 0.296, height * 0.03); // 0.296 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
 
         Button newClientButton = new Button("Nuevo cliente");
-        newClientButton.setPrefSize(width * optimalWidth , height*0.03); //0.10 , 0.03
+        newClientButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
         newClientButton.getStyleClass().add("client-buttons-template");
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -74,16 +74,12 @@ public class Main extends Application {
                 searchTextField.setText(correctText);
                 searchTextField.positionCaret(prevPos - 1);
             }
-
-            if (searchTextField.getId().equals("TF3")){
-                client.setDocumentId(searchTextField.getText());
-            }
         });
     }
 
     public HBox botBar(double width, double height, String buttonText) {
         HBox hbox = new HBox();
-        hbox.setPrefHeight(height*0.05);
+        hbox.setPrefHeight(height * 0.05);
         hbox.getStyleClass().add("bot-bar-color");
 
         Rectangle marginRect1 = new Rectangle();
@@ -92,24 +88,29 @@ public class Main extends Application {
 
         double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
-        if ( width > 1920){
+        if (width > 1920) {
             optimalWidth = 0.1;
             rect2Reduction = 0.0;
         }
 
         Rectangle marginRect2 = new Rectangle();
         marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.391 - rect2Reduction * 2) ); //0.391
+        marginRect2.setWidth(width * (0.391 - rect2Reduction * 2)); //0.391
 
         Button clearButton = new Button("Limpiar celdas");
-        clearButton.setPrefSize(width*optimalWidth , height*0.03 ); //0.10 , 0.03
+        clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
         clearButton.getStyleClass().add("client-buttons-template");
 
         Button saveChangesButton = new Button(buttonText);
-        saveChangesButton.setPrefSize(width*optimalWidth , height*0.03 ); // 0.10 , 0.03
+        saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
-            dbManager.saveNewClient(client);
+            client.saveNewClient(
+                    clientNameTextField.getText(), clientLastNameTextField.getText(),
+                    ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
+                    clientDocumentIdTextField.getText(), clientEmailTextField.getText(),
+                    clientDirectionTextField.getText(),
+                    ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -119,49 +120,49 @@ public class Main extends Application {
 
     public VBox addVBox(double width) {
         VBox vbox = new VBox();
-        vbox.setPrefWidth(width*0.2);
+        vbox.setPrefWidth(width * 0.2);
         vbox.setSpacing(10);
         vbox.setStyle("-fx-background-color: #18171C;"); // #336699
         return vbox;
     }
 
-    public VBox midPane(double width, double height){
+    public VBox midPane(double width, double height) {
         VBox vbox = new VBox();
-        vbox.setPrefSize(width*0.6, height*0.9);
+        vbox.setPrefSize(width * 0.6, height * 0.9);
         vbox.setAlignment(Pos.TOP_LEFT);
         vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
 
         GridPane delete = new GridPane();
 
-        HBox infoHbox = centerHboxTemplate(width, height*0.45, "Información Personal", personalInfoPane(width, height*0.45));
-        HBox centerHbox = centerHboxTemplate(width, height*0.6, "Información Del Plan", delete);
-        HBox botHbox = centerHboxTemplate(width, height*0.3, "Información Bancaria", delete);
+        HBox infoHbox = centerHboxTemplate(width, height * 0.45, "Información Personal", personalInfoPane(width, height * 0.45));
+        HBox centerHbox = centerHboxTemplate(width, height * 0.6, "Información Del Plan", delete);
+        HBox botHbox = centerHboxTemplate(width, height * 0.3, "Información Bancaria", delete);
 
         vbox.getChildren().addAll(infoHbox, centerHbox, botHbox);
         return vbox;
     }
 
-    public HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane){
+    public HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane) {
         //Vbox
         HBox hbox = new HBox();
-        hbox.setPrefSize(width*0.6, height);
+        hbox.setPrefSize(width * 0.6, height);
         hbox.setAlignment(Pos.TOP_LEFT);
         hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #24222A;");
 
         //StackPane
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.TOP_LEFT);
-        stackPane.setPrefSize(width*0.2,height);
+        stackPane.setPrefSize(width * 0.2, height);
 
         //Rectangle bg
         Rectangle rect = new Rectangle();
         rect.setHeight(Math.max(height, 280.0));
-        rect.setWidth(width*0.2);
+        rect.setWidth(width * 0.2);
         rect.setFill(Color.web("#24222A"));
 
         //VBox to center the text
         VBox centerText = new VBox();
-        centerText.setMaxWidth(width*0.2);
+        centerText.setMaxWidth(width * 0.2);
         centerText.setAlignment(Pos.TOP_CENTER);
 
         //Text with message
@@ -179,10 +180,14 @@ public class Main extends Application {
         stackPane.getChildren().addAll(rect, centerText);
         hbox.getChildren().addAll(stackPane, gridPane);
 
+        //ReSize
+        hbox.maxHeightProperty().bind(gridPane.heightProperty());
+        //hbox.maxWidthProperty().bind(gridPane.widthProperty());
+
         return hbox;
     }
 
-    public TextField clientTextFieldTemplate(String tittle, String textFieldStyle){
+    public TextField clientTextFieldTemplate(String tittle, String textFieldStyle) {
         TextField clientTextField = new TextField(tittle);
         clientTextField.setStyle(textFieldStyle);
         clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
@@ -190,7 +195,7 @@ public class Main extends Application {
         return clientTextField;
     }
 
-    public Text clientTextTemplate(String tittle, String color){
+    public Text clientTextTemplate(String tittle, String color) {
         Text clientText = new Text(tittle);
         clientText.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
         clientText.setFill(Color.web(color));
@@ -237,10 +242,10 @@ public class Main extends Application {
         }
     }
 
-    private void addTextFieldCharacterLimit(int limit, TextField... textFields){
+    private void addTextFieldCharacterLimit(int limit, TextField... textFields) {
         for (TextField textField : textFields) {
             textField.textProperty().addListener(e -> {
-                if (textField.getText().length() > limit){
+                if (textField.getText().length() > limit) {
                     int prevPos = textField.getCaretPosition();
                     String limitedText = textField.getText().substring(0, prevPos) + textField.getText().substring(prevPos + 1);
                     textField.setText(limitedText);
@@ -250,11 +255,17 @@ public class Main extends Application {
         }
     }
 
+    private TextField clientNameTextField;
+    private TextField clientLastNameTextField;
+    private TextField clientDocumentIdTextField;
+    private TextField clientEmailTextField;
+    private TextField clientDirectionTextField;
+    private ComboBox<String> clientDocumentTypeComboBox;
+    private ComboBox<String> clientTypeComboBox;
 
-
-    public GridPane personalInfoPane(double width, double height)  {
+    public GridPane personalInfoPane(double width, double height) {
         GridPane gridPane = new GridPane();
-        gridPane.setPrefSize(width*0.4 , height ); // 0.4 ,,
+        gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
         //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
         gridPane.setHgap(10); // 10
@@ -275,25 +286,23 @@ public class Main extends Application {
         clientNameText.setId("T1");
 
         //name text field actions
-        TextField clientNameTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientNameTextField.setId("TF1");
-        clientNameTextField.setOnKeyTyped(e -> client.setName(clientNameTextField.getText()));
 
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
         clientLastNameText.setId("T2");
 
         //name text field actions
-        TextField clientLastNameTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientLastNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientLastNameTextField.setId("TF2");
-        clientLastNameTextField.setOnKeyTyped(e -> client.setLastName(clientLastNameTextField.getText()));
 
         //document id text
         Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
         clientDocumentIdText.setId("T3");
 
         //Document id text field actions
-        TextField clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDocumentIdTextField.setId("TF3");
         onlyNumericTextField(clientDocumentIdTextField);
 
@@ -302,38 +311,36 @@ public class Main extends Application {
         clientEmailText.setId("T4");
 
         //Email TextField
-        TextField clientEmailTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientEmailTextField = clientTextFieldTemplate("", textFieldStyle);
         clientEmailTextField.setId("TF4");
-        clientEmailTextField.setOnKeyTyped(e -> client.setEmail(clientEmailTextField.getText()));
 
         //Direction Text
         Text clientDirectionText = clientTextTemplate("Dirección:", textColor);
         clientDirectionText.setId("T5");
 
         //Direction TextField
-        TextField clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
+        clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDirectionTextField.setId("TF5");
-        clientDirectionTextField.setOnKeyTyped(e -> client.setDirection(clientDirectionTextField.getText()));
 
         //document type text
         Text clientDocumentTypeText = clientTextTemplate("Tipo de documento:", textColor);
         clientDocumentTypeText.setId("T6");
 
         //document type combobox
-        ComboBox<String> clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
+        clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientDocumentTypeComboBox.setId("CB6");
-        clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
+        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
 
         //document type text
         Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
         clientTypeText.setId("T7");
 
         //document type combobox
-        ComboBox<String> clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
+        clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setId("CB7");
-        clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
+        //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
         focusListener(gridPane, textFieldStyle, "#C2B8E0",
@@ -401,7 +408,7 @@ public class Main extends Application {
         return gridPane;
     }
 
-    public ScrollPane centerScrollPane(double width, double height){
+    public ScrollPane centerScrollPane(double width, double height) {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
@@ -424,14 +431,14 @@ public class Main extends Application {
     public void start(Stage window) {
         //resolutions
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double percentageWidth = (1920 - screenSize.getWidth())/1920;
-        double percentageHeight = (1080 - screenSize.getHeight())/1080;
+        double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
+        double percentageHeight = (1080 - screenSize.getHeight()) / 1080;
         percentage = Math.max(percentageWidth, percentageHeight);
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         GraphicsConfiguration graphicsConfiguration = gd.getDefaultConfiguration();
         java.awt.Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(graphicsConfiguration);
         int taskBarSize = scnMax.bottom;
-        int width = (int) screenSize.getWidth() ; //2560 1920 1280 1152 1024; 768 40
+        int width = (int) screenSize.getWidth(); //2560 1920 1280 1152 1024; 768 40
         int height = (int) screenSize.getHeight();//1440 1080 720 648 576; 432 40
 
         Scene mainMenu;
@@ -445,13 +452,14 @@ public class Main extends Application {
         mainLayout.setTop(hBoxTop);
         mainLayout.setCenter(spCenter);
 
-        mainMenu = new Scene(mainLayout, width , height - taskBarSize*1.8);
+        mainMenu = new Scene(mainLayout, width, height - taskBarSize * 1.8);
         mainMenu.getStylesheets().add("styles.css");
 
         window.setScene(mainMenu);
         window.setTitle("UwU");
         window.setResizable(false);
         window.show();
+
     }
 
     public static void main(String[] args) {
