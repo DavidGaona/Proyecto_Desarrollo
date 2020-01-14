@@ -21,7 +21,7 @@ public class Client {
 
     public boolean isBlank(){ return name.isBlank() || lastName.isBlank() || documentId.isBlank() || email.isBlank() || direction.isBlank(); }
 
-    public int getType() {
+    public short getType() {
         return type;
     }
 
@@ -45,7 +45,7 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public int getDocumentType() {
+    public short getDocumentType() {
         return documentType;
     }
 

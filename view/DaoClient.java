@@ -21,4 +21,11 @@ public class DaoClient {
 
         return message;
     }
+
+    public Client loadClient(String documentNumber){
+        dbManager.abrirConexionBD();
+        Client client = dbManager.loadClient(documentNumber);
+        dbManager.cerrarConexionBD();
+        return client;
+    }
 }

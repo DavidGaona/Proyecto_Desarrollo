@@ -53,39 +53,40 @@ public class DbManager {
         }
     }
 
-    public Client loadClient(){
+    public Client loadClient(String documentNumber){
 
-        String sql_select = "SELECT nombre_cliente, apellidos_cliente, documento_id_cliente, email_cliente," +
-                "direccion_cliente, tipo_cliente, tipo_documento " +
-                "FROM public.cliente";
+        String sql_select = "SELECT nombre_cliente, apellidos_cliente, tipo_documento, documento_id_cliente," +
+                " email_cliente, direccion_cliente, tipo_cliente " +
+                "FROM public.cliente WHERE documento_id_cliente = '" + documentNumber + "'";
         try{
 
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
             ResultSet tabla = sentencia.executeQuery(sql_select);
+            tabla.next();
             Client client = new Client(
                     tabla.getString(1),
                     tabla.getString(2),
-                    tabla.getShort(7),
-                    tabla.getString(3),
+                    tabla.getShort(3),
                     tabla.getString(4),
                     tabla.getString(5),
-                    tabla.getShort(6)
+                    tabla.getString(6),
+                    tabla.getShort(7)
             );
-
+            System.out.println(client.getName());
             return client;
         }
         catch(SQLException e){ System.out.println(e);
-            System.out.println("Problema en la base de datos tabla: buses");
+            System.out.println("Problema en la base de datos tabla: cliente");
         }
         catch(Exception e){ System.out.println(e);
             System.out.println("ERROR Fatal en la base de datos");
         }
 
-        return new Client("", "", (short) 0, "", "", "", (short) 0);
+        return new Client("", "", (short) -1, "", "", "", (short) -1);
     }
     public boolean abrirConexionBD(){
-        conexion = fachada.getConnetion();
+        conexion = fachada.getconnetion();
         return conexion != null;
     }
     public void cerrarConexionBD(){

@@ -19,14 +19,13 @@ import model.Client;
 import connection.DbManager;
 import view.DaoClient;
 
+import javax.swing.text.Utilities;
 import java.awt.*;
 
 
 public class Main extends Application {
 
     private DaoClient client = new DaoClient();
-    //private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
-
     private double percentage;
 
     public HBox topBar(double width, double height) {
@@ -56,10 +55,27 @@ public class Main extends Application {
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
+        searchTextField.setOnAction(e -> {
+            Client searchedClient = client.loadClient(searchTextField.getText());
+            if (!searchedClient.isBlank()){
+                clientNameTextField.setText(searchedClient.getName());
+                clientLastNameTextField.setText(searchedClient.getLastName());
+                clientDocumentIdTextField.setText(searchedClient.getDocumentId());
+                clientEmailTextField.setText(searchedClient.getEmail());
+                clientDirectionTextField.setText(searchedClient.getDirection());
+                clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
+                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
+                saveChangesButton.setText("Modificar cliente");
+            }
+        });
 
         Button newClientButton = new Button("Nuevo cliente");
         newClientButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
         newClientButton.getStyleClass().add("client-buttons-template");
+        newClientButton.setOnMouseClicked(e -> {
+            clearTextFields();
+            saveChangesButton.setText("Agregar cliente");
+        });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
@@ -77,7 +93,9 @@ public class Main extends Application {
         });
     }
 
-    public HBox botBar(double width, double height, String buttonText) {
+    private Button saveChangesButton;
+
+    public HBox botBar(double width, double height) {
         HBox hbox = new HBox();
         hbox.setPrefHeight(height * 0.05);
         hbox.getStyleClass().add("bot-bar-color");
@@ -100,8 +118,9 @@ public class Main extends Application {
         Button clearButton = new Button("Limpiar celdas");
         clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
         clearButton.getStyleClass().add("client-buttons-template");
+        clearButton.setOnMouseClicked(e -> clearTextFields());
 
-        Button saveChangesButton = new Button(buttonText);
+        saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
@@ -253,6 +272,17 @@ public class Main extends Application {
                 }
             });
         }
+    }
+
+    private void clearTextFields(){
+        clientNameTextField.setText("");
+        clientNameTextField.setText("");
+        clientLastNameTextField.setText("");
+        clientDocumentIdTextField.setText("");
+        clientEmailTextField.setText("");
+        clientDirectionTextField.setText("");
+        clientDocumentTypeComboBox.valueProperty().set(null);
+        clientTypeComboBox.valueProperty().set(null);
     }
 
     private TextField clientNameTextField;
@@ -424,6 +454,12 @@ public class Main extends Application {
         layout.setRight(vBoxRight);
 
         scrollPane.setContent(layout);
+        layout.setOnScroll(e -> {
+            double deltaY = e.getDeltaY() * 3; // *6 to make the scrolling a bit faster
+            double widthSpeed = scrollPane.getContent().getBoundsInLocal().getWidth();
+            double value = scrollPane.getVvalue();
+            scrollPane.setVvalue(value + -deltaY / widthSpeed);
+        });
         return scrollPane;
     }
 
@@ -445,7 +481,7 @@ public class Main extends Application {
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
         HBox hBoxTop = topBar(width, height);
-        HBox hBoxBot = botBar(width, height, "Agregar cliente");
+        HBox hBoxBot = botBar(width, height);
         ScrollPane spCenter = centerScrollPane(width, height);
 
         mainLayout.setBottom(hBoxBot);

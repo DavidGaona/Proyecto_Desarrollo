@@ -19,7 +19,7 @@ public class DBconnect {
         this.password = password;
     }
 
-    public Connection conectar() {
+    public Connection connect() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
@@ -36,19 +36,19 @@ public class DBconnect {
 
     }
 
-    public Connection getConnetion() {
+    public Connection getconnetion() {
         if (connection == null) {
-            return this.conectar();
+            return this.connect();
         } else {
             return connection;
         }
-
     }
 
     public void closeConnection(Connection c) {
         try {
             if (connection != null) {
                 c.close();
+                connection = null;
             }
 
         } catch (SQLException e) {
