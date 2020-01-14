@@ -5,16 +5,20 @@ import model.Client;
 
 public class DaoClient {
 
-
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public DaoClient(){
+    public String saveNewClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type){
+        String message = "Error client not saved";
+        Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
+        if (!client.isBlank()){
+            dbManager.abrirConexionBD();
+            int status = dbManager.saveNewClient(client);
+            dbManager.cerrarConexionBD();
+            if (status > 0){
+                message = "Client saved successfully";
+            }
+        }
 
-    }
-
-    public void saveNewClient(){
-        dbManager.abrirConexionBD();
-        dbManager.saveNewClient(new Client());
-        dbManager.cerrarConexionBD();
+        return message;
     }
 }
