@@ -28,4 +28,5 @@ public class DaoClient {
         dbManager.cerrarConexionBD();
         return client;
     }
+
 }

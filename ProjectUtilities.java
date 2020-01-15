@@ -21,7 +21,7 @@ public class ProjectUtilities {
         return (short) -1;
     }
 
-    public static String clearWhiteSpaces(String inputString)
+    /*public static String clearWhiteSpaces(String inputString)
     {
         String newString = "";
         boolean whiteSpace = false;
@@ -56,6 +56,32 @@ public class ProjectUtilities {
         }
 
         return newString;
+    }*/
+
+    public static String clearWhiteSpaces(String inputString) {
+        StringBuilder newString = new StringBuilder();
+        boolean whiteSpace = false;
+        boolean firstTime = true;
+        for (int i = 0; i < inputString.length(); i++) {
+            if (firstTime) {
+                if (!(inputString.charAt(i) == ' ')) {
+                    firstTime = false;
+                    newString.append(inputString.charAt(i));
+                }
+            } else if (!(inputString.charAt(i) == ' ')) {
+                if (whiteSpace) {
+                    newString.append(" ").append(inputString.charAt(i));
+                } else {
+                    newString.append(inputString.charAt(i));
+                }
+                whiteSpace = false;
+            } else {
+                if (!whiteSpace) {
+                    whiteSpace = true;
+                }
+            }
+        }
+        return newString.toString();
     }
 
     public static String convertDocumentTypeString(short documentType){
