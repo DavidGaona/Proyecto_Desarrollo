@@ -21,6 +21,69 @@ public class ProjectUtilities {
         return (short) -1;
     }
 
+    /*public static String clearWhiteSpaces(String inputString)
+    {
+        String newString = "";
+        boolean whiteSpace = false;
+        boolean firstTime = true;
+        for (int i = 0; i < inputString.length(); i++) {
+
+            if(firstTime)
+            {
+                if(!(inputString.charAt(i) == ' '))
+                {
+                    firstTime = false;
+                    newString = newString + inputString.charAt(i);
+                }
+            }else if( !(inputString.charAt(i) == ' '))
+            {
+                if(whiteSpace)
+                {
+                    newString = newString + " " + inputString.charAt(i);
+                }
+                else {
+                    newString = newString + inputString.charAt(i);
+                }
+                whiteSpace = false;
+
+            }
+            else{
+                if(!whiteSpace)
+                {
+                    whiteSpace = true;
+                }
+            }
+        }
+
+        return newString;
+    }*/
+
+    public static String clearWhiteSpaces(String inputString) {
+        StringBuilder newString = new StringBuilder();
+        boolean whiteSpace = false;
+        boolean firstTime = true;
+        for (int i = 0; i < inputString.length(); i++) {
+            if (firstTime) {
+                if (!(inputString.charAt(i) == ' ')) {
+                    firstTime = false;
+                    newString.append(inputString.charAt(i));
+                }
+            } else if (!(inputString.charAt(i) == ' ')) {
+                if (whiteSpace) {
+                    newString.append(" ").append(inputString.charAt(i));
+                } else {
+                    newString.append(inputString.charAt(i));
+                }
+                whiteSpace = false;
+            } else {
+                if (!whiteSpace) {
+                    whiteSpace = true;
+                }
+            }
+        }
+        return newString.toString();
+    }
+
     public static String convertDocumentTypeString(short documentType){
         if(documentType == (short) 0){
             return documentTypes[0];
@@ -50,33 +113,5 @@ public class ProjectUtilities {
             return clientTypes[1];
         }
         return clientTypes[0];
-    }
-
-    public static String clearWhiteSpaces(String inputString) {
-        StringBuilder newString = new StringBuilder();
-        boolean whiteSpace = false;
-        boolean firstTime = true;
-        for (int i = 0; i < inputString.length(); i++) {
-            if (firstTime) {
-                if (!(inputString.charAt(i) == ' ')) {
-                    firstTime = false;
-                    newString.append(inputString.charAt(i));
-                }
-            } else if (!(inputString.charAt(i) == ' ')) {
-                if (whiteSpace) {
-                    newString.append(" ").append(inputString.charAt(i));
-                } else {
-                    newString.append(inputString.charAt(i));
-                }
-                whiteSpace = false;
-
-            } else {
-                if (!whiteSpace) {
-                    whiteSpace = true;
-                }
-            }
-        }
-
-        return newString.toString();
     }
 }

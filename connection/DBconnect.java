@@ -37,18 +37,19 @@ public class DBconnect {
     }
 
     public Connection getconnetion() {
-        if (connection == null) {
-            return this.connect();
-        } else {
-            return connection;
+        try{
+            if (connection == null || connection.isClosed())
+                return this.connect();
+        }catch (SQLException e){
+            System.out.println("Error de al momento de conectarse");
         }
+        return connection;
     }
 
     public void closeConnection(Connection c) {
         try {
-            if (connection != null) {
+            if (connection != null || !connection.isClosed()) {
                 c.close();
-                connection = null;
             }
 
         } catch (SQLException e) {
