@@ -58,11 +58,11 @@ public class Main extends Application {
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
             if (!searchedClient.isBlank()){
-                clientNameTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getName()));
-                clientLastNameTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getLastName()));
-                clientDocumentIdTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getDocumentId()));
-                clientEmailTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getEmail()));
-                clientDirectionTextField.setText(ProjectUtilities.clearWhiteSpaces(searchedClient.getDirection()));
+                clientNameTextField.setText(searchedClient.getName());
+                clientLastNameTextField.setText(searchedClient.getLastName());
+                clientDocumentIdTextField.setText(searchedClient.getDocumentId());
+                clientEmailTextField.setText(searchedClient.getEmail());
+                clientDirectionTextField.setText(searchedClient.getDirection());
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
                 clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
                 saveChangesButton.setText("Modificar cliente");
@@ -125,10 +125,12 @@ public class Main extends Application {
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
             client.saveNewClient(
-                    clientNameTextField.getText(), clientLastNameTextField.getText(),
+                    ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
                     ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
-                    clientDocumentIdTextField.getText(), clientEmailTextField.getText(),
-                    clientDirectionTextField.getText(),
+                    ProjectUtilities.clearWhiteSpaces(clientDocumentIdTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
                     ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
         });
 
