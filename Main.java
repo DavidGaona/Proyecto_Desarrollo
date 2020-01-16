@@ -62,9 +62,6 @@ public class Main extends Application {
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
             if (!searchedClient.isBlank()) {
-                resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                        clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
-
                 clientNameTextField.setText(searchedClient.getName());
                 clientLastNameTextField.setText(searchedClient.getLastName());
                 clientDocumentIdTextField.setText(searchedClient.getDocumentId());
@@ -72,7 +69,6 @@ public class Main extends Application {
                 clientDirectionTextField.setText(searchedClient.getDirection());
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
                 clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));
-
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
             }
@@ -83,8 +79,6 @@ public class Main extends Application {
         newClientButton.getStyleClass().add("client-buttons-template");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
-            resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                    clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
             saveChangesButton.setText("Agregar cliente");
             currentClientMode = true;
             searchTextField.setText("");
@@ -93,12 +87,6 @@ public class Main extends Application {
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
         return hbox;
-    }
-
-    private void resetNodeBorderColor(Node... nodes){
-        for (Node node : nodes) {
-            node.setStyle(node.getStyle() + "\n-fx-border-color: #3d3d3d;");
-        }
     }
 
     private void onlyNumericTextField(TextField searchTextField) {
@@ -157,10 +145,8 @@ public class Main extends Application {
     }
 
     private void saveNewClient() {
-        boolean cbCorrect = isComboBoxCorrect(clientTypeComboBox, clientDocumentTypeComboBox);
-        boolean tfCorrect = isTextFieldCorrect(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField,
-                clientEmailTextField, clientDirectionTextField);
-        if (cbCorrect && tfCorrect) {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
             client.saveNewClient(
                     ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
@@ -173,10 +159,8 @@ public class Main extends Application {
     }
 
     private void editClient() {
-        boolean cbCorrect = isComboBoxCorrect(clientTypeComboBox, clientDocumentTypeComboBox);
-        boolean tfCorrect = isTextFieldCorrect(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField,
-                clientEmailTextField, clientDirectionTextField);
-        if (cbCorrect && tfCorrect) {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
             client.editClient(
                     ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
@@ -193,20 +177,6 @@ public class Main extends Application {
         for (TextField textField : textFields) {
             if (textField.getText().isBlank()) {
                 textField.setStyle(textField.getStyle() + "\n-fx-border-color: #ED1221;");
-                //textField.getStyleClass().add("client-text-field-template-wrong");
-                correct = false;
-            }
-        }
-        return correct;
-    }
-
-    @SafeVarargs
-    private boolean isComboBoxCorrect(ComboBox<String>... comboBoxes){
-        boolean correct = true;
-        for (ComboBox<String> comboBox : comboBoxes) {
-            if (comboBox.getValue() == null) {
-                comboBox.setStyle(comboBox.getStyle() + "\n-fx-border-color: #ED1221;");
-                //comboBox.getStyleClass().add("client-text-field-template-wrong");
                 correct = false;
             }
         }
@@ -282,9 +252,9 @@ public class Main extends Application {
         return hbox;
     }
 
-    public TextField clientTextFieldTemplate(String tittle) {
+    public TextField clientTextFieldTemplate(String tittle, String textFieldStyle) {
         TextField clientTextField = new TextField(tittle);
-        clientTextField.getStyleClass().add("client-text-field-template");
+        clientTextField.setStyle(textFieldStyle);
         clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
         clientTextField.setPrefSize(350 - (350 * percentage), 30 - (30 * percentage)); //350 , 30
         return clientTextField;
@@ -299,7 +269,7 @@ public class Main extends Application {
 
     private Node selectedNode, lastSelectedNode;
 
-    private void focusListener(GridPane layout, String nodeColor, Node... nodes) {
+    private void focusListener(GridPane layout, String nodeStyle, String nodeColor, Node... nodes) {
         // Install the same listener on all of them
         for (Node textField : nodes) {
             textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -313,7 +283,7 @@ public class Main extends Application {
                     lastSelectedNode = textField;
                     selectedNode = textField;
                     String textFieldId = selectedNode.getId();
-                    selectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #C2B8E0;");
+                    selectedNode.setStyle(nodeStyle + "\n-fx-border-color: #C2B8E0;");
                     for (Node node : layout.getChildren()) {
                         if (textFieldId.substring(2).equals(node.getId().substring(1))) {
                             ((Text) node).setFill(Color.web(nodeColor));
@@ -323,7 +293,7 @@ public class Main extends Application {
                 } else {
                     String textFieldId = lastSelectedNode.getId();
                     if (lastSelectedNode != null) {
-                        lastSelectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #3d3d3d;");
+                        lastSelectedNode.setStyle(nodeStyle);
                         for (Node node : layout.getChildren()) {
                             if (textFieldId.substring(2).equals(node.getId().substring(1))) {
                                 ((Text) node).setFill(Color.web("#948FA3"));
@@ -359,7 +329,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Datos del Cliente Limpiados");
+        AlertBox.display("", "Celdas Limpiadas");
     }
 
     private TextField clientNameTextField;
@@ -380,6 +350,8 @@ public class Main extends Application {
                 "-fx-border-color: #28272F;\n-fx-border-width: 0;");
 
 
+        String textFieldStyle = "-fx-background-color: #3D3946;\n-fx-text-fill: #FFFFFF;\n-fx-border-radius: 2;\n" +
+                "-fx-border-width: 2;\n-fx-border-color: #3d3d3d;";
         String textColor = "#948FA3";
 
         //Image checkImage = new Image(new FileInputStream("C:\\Users\\david\\IdeaProjects\\panes\\src\\Check.png"));
@@ -391,7 +363,7 @@ public class Main extends Application {
         clientNameText.setId("T1");
 
         //name text field actions
-        clientNameTextField = clientTextFieldTemplate("");
+        clientNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientNameTextField.setId("TF1");
 
         //last name text
@@ -399,7 +371,7 @@ public class Main extends Application {
         clientLastNameText.setId("T2");
 
         //name text field actions
-        clientLastNameTextField = clientTextFieldTemplate("");
+        clientLastNameTextField = clientTextFieldTemplate("", textFieldStyle);
         clientLastNameTextField.setId("TF2");
 
         //document id text
@@ -407,7 +379,7 @@ public class Main extends Application {
         clientDocumentIdText.setId("T3");
 
         //Document id text field actions
-        clientDocumentIdTextField = clientTextFieldTemplate("");
+        clientDocumentIdTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDocumentIdTextField.setId("TF3");
         onlyNumericTextField(clientDocumentIdTextField);
 
@@ -416,7 +388,7 @@ public class Main extends Application {
         clientEmailText.setId("T4");
 
         //Email TextField
-        clientEmailTextField = clientTextFieldTemplate("");
+        clientEmailTextField = clientTextFieldTemplate("", textFieldStyle);
         clientEmailTextField.setId("TF4");
 
         //Direction Text
@@ -424,7 +396,7 @@ public class Main extends Application {
         clientDirectionText.setId("T5");
 
         //Direction TextField
-        clientDirectionTextField = clientTextFieldTemplate("");
+        clientDirectionTextField = clientTextFieldTemplate("", textFieldStyle);
         clientDirectionTextField.setId("TF5");
 
         //document type text
@@ -448,7 +420,7 @@ public class Main extends Application {
         //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
-        focusListener(gridPane, "#C2B8E0",
+        focusListener(gridPane, textFieldStyle, "#C2B8E0",
                 clientNameTextField, clientLastNameTextField,
                 clientDocumentIdTextField, clientEmailTextField,
                 clientDirectionTextField, clientDocumentTypeComboBox,
@@ -575,10 +547,12 @@ public class Main extends Application {
         window.setTitle("UwU");
         window.setResizable(false);
         window.show();
+
     }
 
     private void closeProgram(Stage window) {
-        if (ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?")) {
+        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?");
+        if (answer) {
             window.close();
         }
     }

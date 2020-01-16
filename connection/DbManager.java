@@ -25,11 +25,11 @@ public class DbManager {
         try {
             Statement sentencia = conexion.createStatement();
             numFilas = sentencia.executeUpdate(sql_guardar);
-            AlertBox.display("Titulaso", " Cliente creado correctamente");
+            AlertBox.display("Operación exitosa", " Cliente creado correctamente");
             return numFilas;
 
         } catch (SQLException e) {
-            AlertBox.display("Titulaso", " Error al crear el cliente");
+            AlertBox.display("Error", " Error al crear el cliente");
             System.out.println(e);
         } catch (Exception e) {
             System.out.println(e);
@@ -48,8 +48,10 @@ public class DbManager {
         try {
             Statement sentencia = conexion.createStatement();
             numRows = sentencia.executeUpdate(sql_update);
+            AlertBox.display("Operación exitosa", " Cliente editado correctamente");
             System.out.println("up " + numRows);
         } catch (SQLException e) {
+            AlertBox.display("Error", " Error al editar al cliente");
             System.out.println(e);
         } catch (Exception e) {
             System.out.println(e);
@@ -77,11 +79,11 @@ public class DbManager {
                     tabla.getShort(7)
             );
             System.out.println(client.getName());
-            AlertBox.display("Titulaso", " Cliente Encontrado");
+            AlertBox.display("Operación exitosa", " Cliente Encontrado");
             return client;
         } catch (SQLException e) {
             System.out.println(e);
-            AlertBox.display("Titulaso", " Problema en la base de datos tabla: cliente");
+            AlertBox.display("Error", " Problema en la base de datos tabla: cliente");
             //System.out.println("Problema en la base de datos tabla: cliente");
         } catch (Exception e) {
             System.out.println(e);

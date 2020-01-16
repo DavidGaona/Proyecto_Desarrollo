@@ -22,8 +22,8 @@ public class ConfirmBox {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setHeight(screenSize.getWidth() * 0.20);
-        window.setHeight(screenSize.getHeight() * 0.15);
+        window.setWidth(screenSize.getWidth() * 0.30);
+        window.setHeight(screenSize.getHeight() * 0.25);
 
         //Message label
         Label label = new Label();
@@ -32,8 +32,8 @@ public class ConfirmBox {
         //Yes/No buttons
         Button yesButton = new Button();
         Button noButton = new Button();
-        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
-        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        //yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        //noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
         yesButton.setText("Sí quiero salir del programa");
         noButton.setText("No quiero salir del programa");
 
@@ -60,6 +60,8 @@ public class ConfirmBox {
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
+        window.setX((screenSize.getWidth()/2) - ((screenSize.getWidth() * 0.30)/2));
+        window.setY((screenSize.getHeight()/2) - ((screenSize.getHeight() * 0.25)/2));
         window.setResizable(false);
         window.showAndWait();
 
