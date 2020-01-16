@@ -101,6 +101,17 @@ public class Main extends Application {
         }
     }
 
+    private void onlyWordsTextField(TextField searchTextField){
+        searchTextField.setOnKeyTyped(e -> {
+            if (!(ProjectUtilities.onlyLetters(searchTextField.getText()))) {
+                String correctText = searchTextField.getText().replaceAll("[^A-Za-zñÑ\\s+]", "");
+                int prevPos = searchTextField.getCaretPosition();
+                searchTextField.setText(correctText);
+                searchTextField.positionCaret(prevPos - 1);
+            }
+        });
+    }
+
     private void onlyNumericTextField(TextField searchTextField) {
         searchTextField.setOnKeyTyped(e -> {
             if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
@@ -362,7 +373,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Datos del Cliente Limpiados");
+        AlertBox.display("", "Celdas Limpiadas","");
     }
 
     private TextField clientNameTextField;
@@ -396,14 +407,17 @@ public class Main extends Application {
         //name text field actions
         clientNameTextField = clientTextFieldTemplate("");
         clientNameTextField.setId("TF1");
+        onlyWordsTextField(clientNameTextField);
 
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
         clientLastNameText.setId("T2");
 
+
         //name text field actions
         clientLastNameTextField = clientTextFieldTemplate("");
         clientLastNameTextField.setId("TF2");
+        onlyWordsTextField(clientLastNameTextField);
 
         //document id text
         Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
@@ -555,6 +569,8 @@ public class Main extends Application {
         int width = (int) screenSize.getWidth(); //2560 1920 1280 1152 1024; 768 40
         int height = (int) screenSize.getHeight();//1440 1080 720 648 576; 432 40
 
+
+
         Scene mainMenu;
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
@@ -581,7 +597,7 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        if (ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?")) {
+        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?")) {
             window.close();
         }
     }

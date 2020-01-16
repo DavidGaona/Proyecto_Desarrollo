@@ -47,6 +47,18 @@ public class ProjectUtilities {
         return newString.toString();
     }
 
+    public static Boolean onlyLetters(String word){
+        Boolean answer = false;
+        String aux = word.replaceAll("[A-Za-zñÑ\\s+]", "");
+        if( aux.length() == 0)
+        {
+            answer = true;
+        }
+        return answer;
+    }
+
+
+
     public static String convertDocumentTypeString(short documentType) {
         if (documentType == (short) 0) {
             return documentTypes[0];
