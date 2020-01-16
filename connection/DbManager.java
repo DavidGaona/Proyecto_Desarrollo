@@ -35,16 +35,17 @@ public class DbManager {
     }
 
     public void editClient(Client client) {
-
-        int numFilas;
+        int numRows;
         String sql_update = "UPDATE public.cliente" +
-                "SET nombre_cliente = " + client.getName() + ", apellidos_cliente = " + client.getLastName() + ", documento_id_cliente = " + client.getDocumentId() +
-                "email_cliente = " + client.getEmail() + ", direccion_cliente = " + client.getDirection() + ", tipo_cliente = " + client.getType() +
-                ", tipo_documento = " + client.getDocumentType() + "WHERE documento_id_cliente = " + client.getDocumentId();
+                " SET nombre_cliente = '" + client.getName() + "', apellidos_cliente = '" + client.getLastName() +
+                "', documento_id_cliente = '" + client.getDocumentId() + "', email_cliente = '" + client.getEmail() +
+                "', direccion_cliente = '" + client.getDirection() + "', tipo_cliente = " + client.getType() +
+                ", tipo_documento = " + client.getDocumentType() +
+                " WHERE documento_id_cliente = '" + client.getDocumentId() + "'";
         try {
             Statement sentencia = conexion.createStatement();
-            numFilas = sentencia.executeUpdate(sql_update);
-            System.out.println("up " + numFilas);
+            numRows = sentencia.executeUpdate(sql_update);
+            System.out.println("up " + numRows);
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -53,12 +54,12 @@ public class DbManager {
         }
     }
 
-    public Client loadClient(String documentNumber){
+    public Client loadClient(String documentNumber) {
 
         String sql_select = "SELECT nombre_cliente, apellidos_cliente, tipo_documento, documento_id_cliente," +
                 " email_cliente, direccion_cliente, tipo_cliente " +
                 "FROM public.cliente WHERE documento_id_cliente = '" + documentNumber + "'";
-        try{
+        try {
 
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
@@ -75,21 +76,23 @@ public class DbManager {
             );
             System.out.println(client.getName());
             return client;
-        }
-        catch(SQLException e){ System.out.println(e);
+        } catch (SQLException e) {
+            System.out.println(e);
             System.out.println("Problema en la base de datos tabla: cliente");
-        }
-        catch(Exception e){ System.out.println(e);
+        } catch (Exception e) {
+            System.out.println(e);
             System.out.println("ERROR Fatal en la base de datos");
         }
 
         return new Client("", "", (short) -1, "", "", "", (short) -1);
     }
-    public boolean abrirConexionBD(){
+
+    public boolean abrirConexionBD() {
         conexion = fachada.getconnetion();
         return conexion != null;
     }
-    public void cerrarConexionBD(){
+
+    public void cerrarConexionBD() {
         fachada.closeConnection(conexion);
     }
 

@@ -19,7 +19,6 @@ import model.Client;
 import connection.DbManager;
 import view.DaoClient;
 
-import javax.swing.text.Utilities;
 import java.awt.*;
 
 
@@ -27,6 +26,7 @@ public class Main extends Application {
 
     private DaoClient client = new DaoClient();
     private double percentage;
+    private boolean currentClientMode = true;
 
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
@@ -66,6 +66,7 @@ public class Main extends Application {
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
                 clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
                 saveChangesButton.setText("Modificar cliente");
+                currentClientMode = false;
             }
         });
 
@@ -75,6 +76,8 @@ public class Main extends Application {
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
             saveChangesButton.setText("Agregar cliente");
+            currentClientMode = true;
+            searchTextField.setText("");
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -124,6 +127,21 @@ public class Main extends Application {
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
+            if (currentClientMode){
+                saveNewClient();
+            } else {
+                editClient();
+            }
+        });
+
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
+        return hbox;
+    }
+
+    private void saveNewClient() {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
             client.saveNewClient(
                     ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
@@ -132,11 +150,32 @@ public class Main extends Application {
                     ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
                     ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
-        });
+        }
+    }
 
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
-        return hbox;
+    private void editClient() {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
+            client.editClient(
+                    ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
+                    ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
+                    ProjectUtilities.clearWhiteSpaces(clientDocumentIdTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
+                    ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
+        }
+    }
+
+    private boolean isTextFieldCorrect(TextField... textFields){
+        boolean correct = true;
+        for (TextField textField : textFields){
+            if(textField.getText().isBlank()){
+                textField.setStyle(textField.getStyle() + "\n-fx-border-color: #ED1221;");
+                correct = false;
+            }
+        }
+        return correct;
     }
 
     public VBox addVBox(double width) {
@@ -287,6 +326,7 @@ public class Main extends Application {
         clientTypeComboBox.valueProperty().set(null);
     }
 
+    //Personal info text fields
     private TextField clientNameTextField;
     private TextField clientLastNameTextField;
     private TextField clientDocumentIdTextField;
@@ -362,7 +402,7 @@ public class Main extends Application {
         clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientDocumentTypeComboBox.setId("CB6");
-        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
+        clientDocumentTypeComboBox.getSelectionModel().selectFirst();
 
         //document type text
         Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
@@ -372,7 +412,7 @@ public class Main extends Application {
         clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setId("CB7");
-        //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
+        clientTypeComboBox.getSelectionModel().selectFirst();
 
         //Install listener for color highlight
         focusListener(gridPane, textFieldStyle, "#C2B8E0",
