@@ -4,6 +4,8 @@
     -fx-background-color: #3D3946;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 20px;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
 }
 
 .combo-box > .cell
@@ -53,4 +55,20 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-family: Consolas;
     -fx-font-size: 18;
+}
+
+.client-text-field-template {
+    -fx-background-color: #3D3946;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+    -fx-border-color: #3d3d3d;
+}
+
+.client-text-field-template-wrong {
+    -fx-background-color: #3D3946;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+    -fx-border-color: #ED1221;
 }
