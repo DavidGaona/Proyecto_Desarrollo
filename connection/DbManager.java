@@ -1,6 +1,7 @@
 package connection;
 
 import model.Client;
+import messages.AlertBox;
 
 import java.sql.*;
 
@@ -24,9 +25,11 @@ public class DbManager {
         try {
             Statement sentencia = conexion.createStatement();
             numFilas = sentencia.executeUpdate(sql_guardar);
+            AlertBox.display("Titulaso"," Cliente creado correctamente");
             return numFilas;
 
         } catch (SQLException e) {
+            AlertBox.display("Titulaso"," Error al crear el cliente" );
             System.out.println(e);
         } catch (Exception e) {
             System.out.println(e);
@@ -35,17 +38,17 @@ public class DbManager {
     }
 
     public void editClient(Client client) {
-
-        int numFilas;
+        int numRows;
         String sql_update = "UPDATE public.cliente" +
-                "SET nombre_cliente = " + client.getName() + ", apellidos_cliente = " + client.getLastName() + ", documento_id_cliente = " + client.getDocumentId() +
-                "email_cliente = " + client.getEmail() + ", direccion_cliente = " + client.getDirection() + ", tipo_cliente = " + client.getType() +
-                ", tipo_documento = " + client.getDocumentType() + "WHERE documento_id_cliente = " + client.getDocumentId();
+                " SET nombre_cliente = '" + client.getName() + "', apellidos_cliente = '" + client.getLastName() +
+                "', documento_id_cliente = '" + client.getDocumentId() + "', email_cliente = '" + client.getEmail() +
+                "', direccion_cliente = '" + client.getDirection() + "', tipo_cliente = " + client.getType() +
+                ", tipo_documento = " + client.getDocumentType() +
+                " WHERE documento_id_cliente = '" + client.getDocumentId() + "'";
         try {
             Statement sentencia = conexion.createStatement();
-            numFilas = sentencia.executeUpdate(sql_update);
-            System.out.println("up " + numFilas);
-
+            numRows = sentencia.executeUpdate(sql_update);
+            System.out.println("up " + numRows);
         } catch (SQLException e) {
             System.out.println(e);
         } catch (Exception e) {
@@ -74,10 +77,12 @@ public class DbManager {
                     tabla.getShort(7)
             );
             System.out.println(client.getName());
+            AlertBox.display("Titulaso"," Cliente Encontrado");
             return client;
         }
         catch(SQLException e){ System.out.println(e);
-            System.out.println("Problema en la base de datos tabla: cliente");
+            AlertBox.display("Titulaso"," Problema en la base de datos tabla: cliente");
+            //System.out.println("Problema en la base de datos tabla: cliente");
         }
         catch(Exception e){ System.out.println(e);
             System.out.println("ERROR Fatal en la base de datos");

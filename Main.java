@@ -15,6 +15,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messages.AlertBox;
+import messages.ConfirmBox;
 import model.Client;
 import connection.DbManager;
 import view.DaoClient;
@@ -27,6 +29,7 @@ public class Main extends Application {
 
     private DaoClient client = new DaoClient();
     private double percentage;
+    private boolean currentClientMode = true;
 
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
@@ -55,17 +58,20 @@ public class Main extends Application {
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
+
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
-            if (!searchedClient.isBlank()){
+            if (!searchedClient.isBlank()) {
                 clientNameTextField.setText(searchedClient.getName());
                 clientLastNameTextField.setText(searchedClient.getLastName());
                 clientDocumentIdTextField.setText(searchedClient.getDocumentId());
                 clientEmailTextField.setText(searchedClient.getEmail());
                 clientDirectionTextField.setText(searchedClient.getDirection());
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
-                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
+                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));
+                ;
                 saveChangesButton.setText("Modificar cliente");
+                currentClientMode = false;
             }
         });
 
@@ -75,6 +81,8 @@ public class Main extends Application {
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
             saveChangesButton.setText("Agregar cliente");
+            currentClientMode = true;
+            searchTextField.setText("");
         });
 
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -123,7 +131,23 @@ public class Main extends Application {
         saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
+
         saveChangesButton.setOnMouseClicked(e -> {
+            if (currentClientMode) {
+                saveNewClient();
+            } else {
+                editClient();
+            }
+        });
+
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
+        return hbox;
+    }
+
+    private void saveNewClient() {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
             client.saveNewClient(
                     ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
@@ -132,11 +156,32 @@ public class Main extends Application {
                     ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
                     ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
                     ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
-        });
+        }
+    }
 
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
-        return hbox;
+    private void editClient() {
+        if (isTextFieldCorrect(clientNameTextField, clientLastNameTextField,
+                clientDocumentIdTextField, clientEmailTextField, clientDirectionTextField)) {
+            client.editClient(
+                    ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
+                    ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
+                    ProjectUtilities.clearWhiteSpaces(clientDocumentIdTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
+                    ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
+                    ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
+        }
+    }
+
+    private boolean isTextFieldCorrect(TextField... textFields) {
+        boolean correct = true;
+        for (TextField textField : textFields) {
+            if (textField.getText().isBlank()) {
+                textField.setStyle(textField.getStyle() + "\n-fx-border-color: #ED1221;");
+                correct = false;
+            }
+        }
+        return correct;
     }
 
     public VBox addVBox(double width) {
@@ -276,7 +321,7 @@ public class Main extends Application {
         }
     }
 
-    private void clearTextFields(){
+    private void clearTextFields() {
         clientNameTextField.setText("");
         clientNameTextField.setText("");
         clientLastNameTextField.setText("");
@@ -285,6 +330,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
+        AlertBox.display("titulito","Datos del Cliente Limpiados");
     }
 
     private TextField clientNameTextField;
@@ -493,11 +539,23 @@ public class Main extends Application {
         mainMenu = new Scene(mainLayout, width, height - taskBarSize * 1.8);
         mainMenu.getStylesheets().add("styles.css");
 
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram(window);
+        });
+
         window.setScene(mainMenu);
         window.setTitle("UwU");
         window.setResizable(false);
         window.show();
 
+    }
+
+    private void closeProgram(Stage window) {
+        Boolean answer = ConfirmBox.display("Cerrar Programa", "seguro que quieres cerrar?");
+        if (answer) {
+            window.close();
+        }
     }
 
     public static void main(String[] args) {
