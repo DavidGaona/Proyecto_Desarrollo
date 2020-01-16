@@ -578,8 +578,7 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?");
-        if (answer) {
+        if (ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?")) {
             window.close();
         }
     }
