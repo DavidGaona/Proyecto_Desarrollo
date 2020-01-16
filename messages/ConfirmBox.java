@@ -32,10 +32,10 @@ public class ConfirmBox {
         //Yes/No buttons
         Button yesButton = new Button();
         Button noButton = new Button();
-        //yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
-        //noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
-        yesButton.setText("Sí quiero salir del programa");
-        noButton.setText("No quiero salir del programa");
+        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        yesButton.setText("Sí quiero cerrar");
+        noButton.setText("No quiero cerrar");
 
         yesButton.setOnAction(e -> {
             answer = true;
