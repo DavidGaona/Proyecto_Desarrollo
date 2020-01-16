@@ -1,6 +1,7 @@
 package connection;
 
 import model.Client;
+import messages.AlertBox;
 
 import java.sql.*;
 
@@ -24,9 +25,11 @@ public class DbManager {
         try {
             Statement sentencia = conexion.createStatement();
             numFilas = sentencia.executeUpdate(sql_guardar);
+            AlertBox.display("Titulaso"," Cliente creado correctamente");
             return numFilas;
 
         } catch (SQLException e) {
+            AlertBox.display("Titulaso"," Error al crear el cliente" );
             System.out.println(e);
         } catch (Exception e) {
             System.out.println(e);
@@ -46,7 +49,6 @@ public class DbManager {
             Statement sentencia = conexion.createStatement();
             numRows = sentencia.executeUpdate(sql_update);
             System.out.println("up " + numRows);
-
         } catch (SQLException e) {
             System.out.println(e);
         } catch (Exception e) {
@@ -54,12 +56,12 @@ public class DbManager {
         }
     }
 
-    public Client loadClient(String documentNumber) {
+    public Client loadClient(String documentNumber){
 
         String sql_select = "SELECT nombre_cliente, apellidos_cliente, tipo_documento, documento_id_cliente," +
                 " email_cliente, direccion_cliente, tipo_cliente " +
                 "FROM public.cliente WHERE documento_id_cliente = '" + documentNumber + "'";
-        try {
+        try{
 
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
@@ -75,24 +77,24 @@ public class DbManager {
                     tabla.getShort(7)
             );
             System.out.println(client.getName());
+            AlertBox.display("Titulaso"," Cliente Encontrado");
             return client;
-        } catch (SQLException e) {
-            System.out.println(e);
-            System.out.println("Problema en la base de datos tabla: cliente");
-        } catch (Exception e) {
-            System.out.println(e);
+        }
+        catch(SQLException e){ System.out.println(e);
+            AlertBox.display("Titulaso"," Problema en la base de datos tabla: cliente");
+            //System.out.println("Problema en la base de datos tabla: cliente");
+        }
+        catch(Exception e){ System.out.println(e);
             System.out.println("ERROR Fatal en la base de datos");
         }
 
         return new Client("", "", (short) -1, "", "", "", (short) -1);
     }
-
-    public boolean abrirConexionBD() {
+    public boolean abrirConexionBD(){
         conexion = fachada.getconnetion();
         return conexion != null;
     }
-
-    public void cerrarConexionBD() {
+    public void cerrarConexionBD(){
         fachada.closeConnection(conexion);
     }
 

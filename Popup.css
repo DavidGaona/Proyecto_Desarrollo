@@ -1,0 +1,12 @@
+.button {
+    -fx-background-color: #3986AC;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-font-family: Consolas;
+}
+
+.label {
+    -fx-text-fill: #3986AC;
+    -fx-font-size: 20px;
+    -fx-font-family: Consolas;
+}

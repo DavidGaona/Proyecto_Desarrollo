@@ -15,10 +15,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messages.AlertBox;
+import messages.ConfirmBox;
 import model.Client;
 import connection.DbManager;
 import view.DaoClient;
 
+import javax.swing.text.Utilities;
 import java.awt.*;
 
 
@@ -55,16 +58,18 @@ public class Main extends Application {
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         onlyNumericTextField(searchTextField);
+
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
-            if (!searchedClient.isBlank()){
+            if (!searchedClient.isBlank()) {
                 clientNameTextField.setText(searchedClient.getName());
                 clientLastNameTextField.setText(searchedClient.getLastName());
                 clientDocumentIdTextField.setText(searchedClient.getDocumentId());
                 clientEmailTextField.setText(searchedClient.getEmail());
                 clientDirectionTextField.setText(searchedClient.getDirection());
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
-                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));;
+                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));
+                ;
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
             }
@@ -126,8 +131,9 @@ public class Main extends Application {
         saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
+
         saveChangesButton.setOnMouseClicked(e -> {
-            if (currentClientMode){
+            if (currentClientMode) {
                 saveNewClient();
             } else {
                 editClient();
@@ -167,10 +173,10 @@ public class Main extends Application {
         }
     }
 
-    private boolean isTextFieldCorrect(TextField... textFields){
+    private boolean isTextFieldCorrect(TextField... textFields) {
         boolean correct = true;
-        for (TextField textField : textFields){
-            if(textField.getText().isBlank()){
+        for (TextField textField : textFields) {
+            if (textField.getText().isBlank()) {
                 textField.setStyle(textField.getStyle() + "\n-fx-border-color: #ED1221;");
                 correct = false;
             }
@@ -315,7 +321,7 @@ public class Main extends Application {
         }
     }
 
-    private void clearTextFields(){
+    private void clearTextFields() {
         clientNameTextField.setText("");
         clientNameTextField.setText("");
         clientLastNameTextField.setText("");
@@ -324,9 +330,9 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
+        AlertBox.display("","Datos del Cliente Limpiados");
     }
 
-    //Personal info text fields
     private TextField clientNameTextField;
     private TextField clientLastNameTextField;
     private TextField clientDocumentIdTextField;
@@ -402,7 +408,7 @@ public class Main extends Application {
         clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientDocumentTypeComboBox.setId("CB6");
-        clientDocumentTypeComboBox.getSelectionModel().selectFirst();
+        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
 
         //document type text
         Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
@@ -412,7 +418,7 @@ public class Main extends Application {
         clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setId("CB7");
-        clientTypeComboBox.getSelectionModel().selectFirst();
+        //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
         focusListener(gridPane, textFieldStyle, "#C2B8E0",
@@ -533,11 +539,23 @@ public class Main extends Application {
         mainMenu = new Scene(mainLayout, width, height - taskBarSize * 1.8);
         mainMenu.getStylesheets().add("styles.css");
 
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram(window);
+        });
+
         window.setScene(mainMenu);
         window.setTitle("UwU");
         window.setResizable(false);
         window.show();
 
+    }
+
+    private void closeProgram(Stage window) {
+        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?");
+        if (answer) {
+            window.close();
+        }
     }
 
     public static void main(String[] args) {
