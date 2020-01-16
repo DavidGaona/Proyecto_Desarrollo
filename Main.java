@@ -329,7 +329,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Datos del Cliente Limpiados");
+        AlertBox.display("", "Celdas Limpiadas");
     }
 
     private TextField clientNameTextField;
@@ -551,7 +551,7 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?");
+        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?");
         if (answer) {
             window.close();
         }
