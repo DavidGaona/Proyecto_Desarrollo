@@ -137,12 +137,15 @@ public class Main extends Application {
         Button clearButton = new Button("Limpiar celdas");
         clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
         clearButton.getStyleClass().add("client-buttons-template");
-        clearButton.setOnMouseClicked(e -> clearTextFields());
+        clearButton.setOnMouseClicked(e -> {
+            clearTextFields();
+            resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
+                    clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
+        });
 
         saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
         saveChangesButton.getStyleClass().add("client-buttons-template");
-
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentClientMode) {
                 saveNewClient();
