@@ -69,7 +69,6 @@ public class Main extends Application {
                 clientDirectionTextField.setText(searchedClient.getDirection());
                 clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
                 clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));
-                ;
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
             }
@@ -330,7 +329,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("","Datos del Cliente Limpiados");
+        AlertBox.display("", "Datos del Cliente Limpiados");
     }
 
     private TextField clientNameTextField;

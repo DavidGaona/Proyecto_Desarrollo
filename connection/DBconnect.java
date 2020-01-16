@@ -37,10 +37,10 @@ public class DBconnect {
     }
 
     public Connection getconnetion() {
-        try{
+        try {
             if (connection == null || connection.isClosed())
                 return this.connect();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error de al momento de conectarse");
         }
         return connection;

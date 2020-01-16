@@ -12,34 +12,34 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class AlertBox {
-    private static double percentage;
-    public static void display(String title, String message)
-    {
 
+    public static void display(String title, String message) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Stage window = new Stage();
 
+        Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(screenSize.getWidth() * 0.25);
-        window.setMinHeight(screenSize.getHeight() * 0.2);
+        window.setWidth(screenSize.getWidth() * 0.20);
+        window.setHeight(screenSize.getHeight() * 0.15);
 
         Label label = new Label();
         label.setText(message);
+
         Button closeButton = new Button();
         closeButton.setText("Cerrar");
-        closeButton.setOnAction( e -> window.close());
+        closeButton.setOnAction(e -> window.close());
+        closeButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.025);
 
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(label,closeButton);
+        VBox layout = new VBox();
+        layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #22282A");
         layout.setPadding(new Insets(20, 20, 20, 20));
         layout.setSpacing(20);
-        layout.setStyle("-fx-background-color: #22282A");
-
 
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("Popup.css");
+
         window.setScene(scene);
         window.setResizable(false);
         window.showAndWait();

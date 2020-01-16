@@ -3,7 +3,7 @@ import java.awt.*;
 public class Resolution {
 
 
-    public static int[][] getBestResolution(){
+    public static int[][] getBestResolution() {
         int[][] resList = new int[11][2];
         fillResList(resList);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -11,7 +11,7 @@ public class Resolution {
         return resList;
     }
 
-    private static void fillResList(int[][] resList){
+    private static void fillResList(int[][] resList) {
         //4k
         resList[0][0] = 3840;
         resList[0][1] = 2160;
