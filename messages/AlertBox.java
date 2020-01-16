@@ -19,8 +19,8 @@ public class AlertBox {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setWidth(screenSize.getWidth() * 0.20);
-        window.setHeight(screenSize.getHeight() * 0.15);
+        window.setWidth(screenSize.getWidth() * 0.25);
+        window.setHeight(screenSize.getHeight() * 0.2);
 
         Label label = new Label();
         label.setText(message);
@@ -28,7 +28,7 @@ public class AlertBox {
         Button closeButton = new Button();
         closeButton.setText("Cerrar");
         closeButton.setOnAction(e -> window.close());
-        closeButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.025);
+        //closeButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.025);
 
         VBox layout = new VBox();
         layout.getChildren().addAll(label, closeButton);
@@ -41,6 +41,8 @@ public class AlertBox {
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
+        window.setX((screenSize.getWidth()/2) - ((screenSize.getWidth() * 0.25)/2));
+        window.setY((screenSize.getHeight()/2) - ((screenSize.getHeight() * 0.2)/2));
         window.setResizable(false);
         window.showAndWait();
 
