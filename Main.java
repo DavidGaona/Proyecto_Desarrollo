@@ -330,7 +330,7 @@ public class Main extends Application {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("titulito","Datos del Cliente Limpiados");
+        AlertBox.display("","Datos del Cliente Limpiados");
     }
 
     private TextField clientNameTextField;
@@ -552,7 +552,7 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        Boolean answer = ConfirmBox.display("Cerrar Programa", "seguro que quieres cerrar?");
+        Boolean answer = ConfirmBox.display("Cerrar Programa", "¿ Seguro que quieres cerrar el programa ?");
         if (answer) {
             window.close();
         }
