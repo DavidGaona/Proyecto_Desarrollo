@@ -30,6 +30,7 @@ public class Main extends Application {
     private DaoClient client = new DaoClient();
     private double percentage;
     private boolean currentClientMode = true;
+    private double buttonFont;
 
     public HBox topBar(double width, double height) {
         HBox hbox = new HBox();
@@ -80,6 +81,7 @@ public class Main extends Application {
 
         Button newClientButton = new Button("Nuevo cliente");
         newClientButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
+        newClientButton.setStyle("-fx-font-size: "+buttonFont);
         newClientButton.getStyleClass().add("client-buttons-template");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
@@ -136,6 +138,7 @@ public class Main extends Application {
 
         double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
+
         if (width > 1920) {
             optimalWidth = 0.1;
             rect2Reduction = 0.0;
@@ -147,6 +150,7 @@ public class Main extends Application {
 
         Button clearButton = new Button("Limpiar celdas");
         clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
+        clearButton.setStyle("-fx-font-size: "+buttonFont);
         clearButton.getStyleClass().add("client-buttons-template");
         clearButton.setOnMouseClicked(e -> {
             clearTextFields();
@@ -156,6 +160,7 @@ public class Main extends Application {
 
         saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
+        saveChangesButton.setStyle("-fx-font-size: "+buttonFont);
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentClientMode) {
@@ -385,6 +390,7 @@ public class Main extends Application {
     private ComboBox<String> clientTypeComboBox;
 
     public GridPane personalInfoPane(double width, double height) {
+
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
         //gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -407,7 +413,7 @@ public class Main extends Application {
         //name text field actions
         clientNameTextField = clientTextFieldTemplate("");
         clientNameTextField.setId("TF1");
-        onlyWordsTextField(clientNameTextField);
+
 
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
@@ -417,7 +423,6 @@ public class Main extends Application {
         //name text field actions
         clientLastNameTextField = clientTextFieldTemplate("");
         clientLastNameTextField.setId("TF2");
-        onlyWordsTextField(clientLastNameTextField);
 
         //document id text
         Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
@@ -562,6 +567,7 @@ public class Main extends Application {
         double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
         double percentageHeight = (1080 - screenSize.getHeight()) / 1080;
         percentage = Math.max(percentageWidth, percentageHeight);
+        buttonFont = 22 - (22 * percentage);
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         GraphicsConfiguration graphicsConfiguration = gd.getDefaultConfiguration();
         java.awt.Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(graphicsConfiguration);
