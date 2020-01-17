@@ -385,6 +385,7 @@ public class Main extends Application {
     private ComboBox<String> clientTypeComboBox;
 
     public GridPane personalInfoPane(double width, double height) {
+
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
         //gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -407,7 +408,7 @@ public class Main extends Application {
         //name text field actions
         clientNameTextField = clientTextFieldTemplate("");
         clientNameTextField.setId("TF1");
-        onlyWordsTextField(clientNameTextField);
+
 
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
@@ -417,7 +418,6 @@ public class Main extends Application {
         //name text field actions
         clientLastNameTextField = clientTextFieldTemplate("");
         clientLastNameTextField.setId("TF2");
-        onlyWordsTextField(clientLastNameTextField);
 
         //document id text
         Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
