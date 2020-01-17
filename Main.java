@@ -569,8 +569,6 @@ public class Main extends Application {
         int width = (int) screenSize.getWidth(); //2560 1920 1280 1152 1024; 768 40
         int height = (int) screenSize.getHeight();//1440 1080 720 648 576; 432 40
 
-
-
         Scene mainMenu;
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
