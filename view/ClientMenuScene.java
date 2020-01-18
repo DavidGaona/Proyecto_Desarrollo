@@ -7,6 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 public class ClientMenuScene {
+
     private ClientMenu clientMenu;
 
     public ClientMenuScene(double percentage, double buttonFont ){
