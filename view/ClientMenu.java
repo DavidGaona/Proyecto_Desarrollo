@@ -1,3 +1,5 @@
+package view;
+
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -12,14 +14,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import messages.AlertBox;
+import utilities.AlertBox;
 import model.Client;
-import view.DaoClient;
+import controller.DaoClient;
+import utilities.ProjectUtilities;
 
 public class ClientMenu {
 
-    public ClientMenu(DaoClient client, double percentage, double buttonFont) {
-        this.client = client;
+    public ClientMenu(double percentage, double buttonFont) {
+        client = new DaoClient();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
@@ -445,7 +448,7 @@ public class ClientMenu {
         clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientDocumentTypeComboBox.setId("CB6");
-        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
+        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(utilities.ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
 
         //document type text
         Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
@@ -455,7 +458,7 @@ public class ClientMenu {
         clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setId("CB7");
-        //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
+        //clientTypeComboBox.setOnAction(e -> client.setType(utilities.ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
         focusListener(gridPane, "#C2B8E0",
@@ -547,4 +550,6 @@ public class ClientMenu {
         });
         return scrollPane;
     }
+
+
 }

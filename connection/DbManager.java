@@ -1,7 +1,7 @@
 package connection;
 
 import model.Client;
-import messages.AlertBox;
+import utilities.AlertBox;
 
 import java.sql.*;
 
