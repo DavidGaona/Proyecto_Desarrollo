@@ -1,3 +1,5 @@
+package connection;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -17,7 +19,7 @@ public class DBconnect {
         this.password = password;
     }
 
-    public Connection conectar() {
+    public Connection connect() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
@@ -34,18 +36,19 @@ public class DBconnect {
 
     }
 
-    public Connection getConnetion() {
-        if (connection == null) {
-            return this.conectar();
-        } else {
-            return connection;
+    public Connection getconnetion() {
+        try {
+            if (connection == null || connection.isClosed())
+                return this.connect();
+        } catch (SQLException e) {
+            System.out.println("Error de al momento de conectarse");
         }
-
+        return connection;
     }
 
     public void closeConnection(Connection c) {
         try {
-            if (connection != null) {
+            if (connection != null || !connection.isClosed()) {
                 c.close();
             }
 
