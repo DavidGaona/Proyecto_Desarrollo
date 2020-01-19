@@ -134,7 +134,7 @@ public class DbManager {
         //final String hashWillBeStored = BCrypt.withDefaults().hashToString(12,user.getUserPassword.toCharArray());
         String hashWillBeStored = "";
         sql_guardar = "INSERT INTO public.usuario(nombre_usuario,apellidos_usuario,documento_id_usuario,tipo_usuario,estado_usuario,pass_usuario)" +
-                " VALUES('" + user.getUserName() + "','" + user.getUserLastName() + "','" + user.getUserIdDocumentNumber() + "'," + user.getUserType() +
+                " VALUES('" + user.getUserName() + "','" + user.getUserLastName() + "','" + user.getUserDocumentIdNumber() + "'," + user.getUserType() +
                 "," + user.getUserState() + ",'" + hashWillBeStored + "')" + " ON CONFLICT (id_usuario) DO NOTHING";
         try {
             Statement sentencia = conexion.createStatement();

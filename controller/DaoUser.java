@@ -7,8 +7,8 @@ public class DaoUser {
     // Cambiar al usuario correspondiente
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public void saveNewUser(String nombre_usuario, String apellidos_usuario, String documento_id_usuario, short tipo_usuario, Boolean estado_usuario, String pass_usuario) {
-        User user = new User(nombre_usuario, apellidos_usuario, documento_id_usuario, tipo_usuario, estado_usuario, pass_usuario);
+    public void saveNewUser(String userName, String userLastName, String userIdDocumentNumber, short userType, Boolean userState, String userPassword) {
+        User user = new User(userName, userLastName, userIdDocumentNumber, userType, userState, userPassword);
         if (!user.isBlank()) {
             dbManager.openDBConnection();
             int status = dbManager.saveNewUser(user);

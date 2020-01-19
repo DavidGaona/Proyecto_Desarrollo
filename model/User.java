@@ -4,19 +4,19 @@ public class User {
 
     private String userName;
     private String userLastName;
-    private String userIdDocumentNumber;
+    private String userDocumentIdNumber;
     private short userType;
     private Boolean userState;
     private String userPassword;
 
     public boolean isBlank() {
-        return userName.isBlank() || userLastName.isBlank() || userIdDocumentNumber.isBlank() || userPassword.isBlank();
+        return userName.isBlank() || userLastName.isBlank() || userDocumentIdNumber.isBlank() || userPassword.isBlank();
     }
 
     public User(String userName, String userLastName, String userIdDocumentNumber, short userType, Boolean userStatus, String userPassword) {
         this.userName = userName;
         this.userLastName = userLastName;
-        this.userIdDocumentNumber = userIdDocumentNumber;
+        this.userDocumentIdNumber = userIdDocumentNumber;
         this.userType = userType;
         this.userState = userStatus;
         this.userPassword = userPassword;
@@ -30,8 +30,8 @@ public class User {
         return userLastName;
     }
 
-    public String getUserIdDocumentNumber() {
-        return userIdDocumentNumber;
+    public String getUserDocumentIdNumber() {
+        return userDocumentIdNumber;
     }
 
     public short getUserType() {
