@@ -1,81 +1,80 @@
 package view;
-import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
+
+import controller.DaoClient;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Login {
 
-    /* ToDo  */
-    /*private double percentage;
-    private double buttonFont;
-
     public Login(double percentage, double buttonFont) {
-
+        client = new DaoClient();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
 
-    private TextField userIdTextField;
-    private PasswordField passwordTextfield;
+    private DaoClient client;
+    private double percentage;
+    private double buttonFont;
 
-
-    private TextField userTextFieldTemplate(String tittle) {
-        TextField clientTextField = new TextField(tittle);
-        clientTextField.getStyleClass().add("client-text-field-template");
-        clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
-        clientTextField.setPrefSize(350 - (350 * percentage), 30 - (30 * percentage)); //350 , 30
-        return clientTextField;
+    private TextField loginTextFieldTemplate() {
+        TextField textField = new TextField();
+        textField.setPrefSize(350, 40);
+        return textField;
     }
 
-    private Text userTextTemplate(String tittle, String color) {
-        Text clientText = new Text(tittle);
-        clientText.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
-        clientText.setFill(Color.web(color));
-        return clientText;
+    private Text loginTextTemplate(String tittle) {
+        Text text = new Text(tittle);
+        text.setFill(Color.web("#FFFFFF"));
+        text.setFont(new Font("Consolas", 20 - (20 * percentage)));
+        return text;
     }
 
-
-    public GridPane loginPane(double width, double height){
+    private GridPane loginGridPane(double width, double height) {
         GridPane gridPane = new GridPane();
-        gridPane.setPrefSize(width * 0.2, height); // 0.4 ,,
-        //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(25);
-        gridPane.setHgap(10); // 10
-        gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
-                "-fx-border-color: #28272F;\n-fx-border-width: 0;");
+        gridPane.setHgap(25);
+        gridPane.setPadding(new Insets(25, 25, 25, 25));
+        gridPane.setStyle("-fx-background-color: #22282A");
+        gridPane.setPrefSize(width * 0.6, height * 0.6);
+        gridPane.setMaxWidth(width * 0.6);
 
+        Text text = loginTextTemplate("Número de documento");
 
-        String textColor = "#948FA3";
+        TextField textField = loginTextFieldTemplate();
 
-        //Id text
-        Text clientNameText = userTextTemplate("ID: ", textColor);
-        clientNameText.setId("L1");
-        gridPane.add(clientNameText,0,1);
-
-        //Id text field actions
-        userIdTextField = userTextFieldTemplate("");
-        userIdTextField.setId("LF1");
-        gridPane.add(userIdTextField,1,1);
-
-        //Password text
-        Text passwordText = userTextTemplate("Contraseña: ", textColor);
-        passwordText.setId("L2");
-        gridPane.add(passwordText,0,3);
-
-        // Add Password Field
-        passwordTextfield = new PasswordField();
-        gridPane.add(passwordTextfield, 1, 3);
+        GridPane.setConstraints(text, 0, 0);
+        GridPane.setConstraints(textField, 0, 1);
+        gridPane.getChildren().addAll(text, textField);
 
         return gridPane;
+    }
 
-    }*/
+    private VBox mainLoginPane(double width, double height) {
+        VBox background = new VBox();
+        background.setStyle("-fx-background-color: #171A1C");
+        background.setPrefSize(width, height);
 
+        GridPane gridPane = loginGridPane(width, height);
+
+        background.getChildren().addAll(gridPane);
+        background.setAlignment(Pos.CENTER);
+        return background;
+    }
+
+    public Scene renderLoginScene(double width, double height) {
+        Scene loginScene;
+
+        loginScene = new Scene(mainLoginPane(width, height), width, height);
+        loginScene.getStylesheets().add("loginStyle.css");
+
+        return loginScene;
+    }
 }
