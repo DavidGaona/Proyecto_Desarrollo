@@ -1,4 +1,4 @@
-package view;
+package controller;
 
 import connection.DbManager;
 import model.Client;
