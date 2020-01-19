@@ -306,7 +306,7 @@ public class ClientMenu {
 
     private Node selectedNode, lastSelectedNode;
 
-    private void focusListener(GridPane layout, String nodeColor, Node... nodes) {
+    private void focusListener(GridPane layout, Node... nodes) {
         // Install the same listener on all of them
         for (Node textField : nodes) {
             textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -323,7 +323,7 @@ public class ClientMenu {
                     selectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #C2B8E0;");
                     for (Node node : layout.getChildren()) {
                         if (textFieldId.substring(2).equals(node.getId().substring(1))) {
-                            ((Text) node).setFill(Color.web(nodeColor));
+                            ((Text) node).setFill(Color.web("#C2B8E0"));
                             break;
                         }
                     }
@@ -458,7 +458,7 @@ public class ClientMenu {
         //clientTypeComboBox.setOnAction(e -> client.setType(ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
-        focusListener(gridPane, "#C2B8E0",
+        focusListener(gridPane,
                 clientNameTextField, clientLastNameTextField,
                 clientDocumentIdTextField, clientEmailTextField,
                 clientDirectionTextField, clientDocumentTypeComboBox,

@@ -5,8 +5,8 @@ public class ProjectUtilities {
         return inputData.matches("\\d+(\\d+)?");
     }
 
-    public static final String documentTypes[] = {"Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
-    public static final String clientTypes[] = {"Natural", "Corporativo"};
+    public static final String[] documentTypes = {"Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
+    public static final String[] clientTypes = {"Natural", "Corporativo"};
 
     public static short convertDocumentType(String documentType) {
         if (documentTypes[0].equals(documentType)) {

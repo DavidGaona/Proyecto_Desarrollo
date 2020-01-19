@@ -66,6 +66,7 @@ public class Main extends Application {
         });
 
         window.setScene(mainMenuClient);
+
         window.setTitle("UwU");
         window.setResizable(false);
         window.show();
