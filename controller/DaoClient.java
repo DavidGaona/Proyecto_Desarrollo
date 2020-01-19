@@ -10,25 +10,25 @@ public class DaoClient {
     public void saveNewClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
         if (!client.isBlank()) {
-            dbManager.abrirConexionBD();
+            dbManager.openDBConnection();
             int status = dbManager.saveNewClient(client);
-            dbManager.cerrarConexionBD();
+            dbManager.closeDBConnection();
         }
     }
 
     public void editClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
         if (!client.isBlank()) {
-            dbManager.abrirConexionBD();
+            dbManager.openDBConnection();
             dbManager.editClient(client);
-            dbManager.cerrarConexionBD();
+            dbManager.closeDBConnection();
         }
     }
 
     public Client loadClient(String documentNumber) {
-        dbManager.abrirConexionBD();
+        dbManager.openDBConnection();
         Client client = dbManager.loadClient(documentNumber);
-        dbManager.cerrarConexionBD();
+        dbManager.closeDBConnection();
         return client;
     }
 

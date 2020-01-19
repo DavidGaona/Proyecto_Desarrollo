@@ -10,11 +10,11 @@ public class ClientMenuScene {
 
     private ClientMenu clientMenu;
 
-    public ClientMenuScene(double percentage, double buttonFont ){
-        clientMenu = new ClientMenu(percentage,buttonFont);
+    public ClientMenuScene(double percentage, double buttonFont) {
+        clientMenu = new ClientMenu(percentage, buttonFont);
     }
 
-    public Scene renderScene(int width, int height,int taskBarSize){
+    public Scene renderScene(double width, double height) {
         Scene mainMenuClient;
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
@@ -26,7 +26,7 @@ public class ClientMenuScene {
         mainLayout.setTop(hBoxTop);
         mainLayout.setCenter(spCenter);
 
-        mainMenuClient = new Scene(mainLayout, width, height - taskBarSize * 1.8);
+        mainMenuClient = new Scene(mainLayout, width, height);
         mainMenuClient.getStylesheets().add("styles.css");
 
         return mainMenuClient;

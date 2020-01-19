@@ -77,7 +77,7 @@ public class ClientMenu {
 
         Button newClientButton = new Button("Nuevo cliente");
         newClientButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
-        newClientButton.setStyle("-fx-font-size: "+buttonFont);
+        newClientButton.setStyle("-fx-font-size: " + buttonFont);
         newClientButton.getStyleClass().add("client-buttons-template");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
@@ -93,13 +93,13 @@ public class ClientMenu {
         return hbox;
     }
 
-    private void resetNodeBorderColor(Node... nodes){
+    private void resetNodeBorderColor(Node... nodes) {
         for (Node node : nodes) {
             node.setStyle(node.getStyle() + "\n-fx-border-color: #3d3d3d;");
         }
     }
 
-    private void onlyWordsTextField(TextField searchTextField){
+    private void onlyWordsTextField(TextField searchTextField) {
         searchTextField.setOnKeyTyped(e -> {
             if (!(ProjectUtilities.onlyLetters(searchTextField.getText()))) {
                 String correctText = searchTextField.getText().replaceAll("[^A-Za-zñÑ\\s+]", "");
@@ -141,7 +141,7 @@ public class ClientMenu {
 
         Button clearButton = new Button("Limpiar celdas");
         clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
-        clearButton.setStyle("-fx-font-size: "+buttonFont);
+        clearButton.setStyle("-fx-font-size: " + buttonFont);
         clearButton.getStyleClass().add("client-buttons-template");
         clearButton.setOnMouseClicked(e -> {
             clearTextFields();
@@ -151,7 +151,7 @@ public class ClientMenu {
 
         saveChangesButton = new Button("Agregar cliente");
         saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
-        saveChangesButton.setStyle("-fx-font-size: "+buttonFont);
+        saveChangesButton.setStyle("-fx-font-size: " + buttonFont);
         saveChangesButton.getStyleClass().add("client-buttons-template");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentClientMode) {
@@ -211,7 +211,7 @@ public class ClientMenu {
     }
 
     @SafeVarargs
-    private boolean isComboBoxCorrect(ComboBox<String>... comboBoxes){
+    private boolean isComboBoxCorrect(ComboBox<String>... comboBoxes) {
         boolean correct = true;
         for (ComboBox<String> comboBox : comboBoxes) {
             if (comboBox.getValue() == null) {
@@ -295,14 +295,14 @@ public class ClientMenu {
     public TextField clientTextFieldTemplate(String tittle) {
         TextField clientTextField = new TextField(tittle);
         clientTextField.getStyleClass().add("client-text-field-template");
-        clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
-        clientTextField.setPrefSize(350 - (350 * percentage), 30 - (30 * percentage)); //350 , 30
+        clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage)));
+        clientTextField.setPrefSize(350 - (350 * percentage), 30 - (30 * percentage));
         return clientTextField;
     }
 
     public Text clientTextTemplate(String tittle, String color) {
         Text clientText = new Text(tittle);
-        clientText.setFont(new Font("Consolas", 20 - (20 * percentage))); //20
+        clientText.setFont(new Font("Consolas", 20 - (20 * percentage)));
         clientText.setFill(Color.web(color));
         return clientText;
     }
@@ -369,7 +369,7 @@ public class ClientMenu {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Celdas Limpiadas","");
+        AlertBox.display("", "Celdas Limpiadas", "");
     }
 
     private TextField clientNameTextField;

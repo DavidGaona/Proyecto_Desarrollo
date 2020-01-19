@@ -1,0 +1,13 @@
+.text {
+    -fx-text-fill: #FFFFFF;
+}
+
+.text-field {
+    -fx-background-color: #2E3538;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+    -fx-font-family: Consolas;
+    -fx-font-size: 20;
+    -fx-border-color: #212628;
+}
