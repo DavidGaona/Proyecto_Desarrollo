@@ -16,14 +16,15 @@ public class DaoUser {
         }
     }
 
-    public void loginUser(String id_usuario, String password){
+    public int loginUser(String id_usuario, String password){
         dbManager.openDBConnection();
-        int status = dbManager.loginUser(id_usuario,password);
+        int role = dbManager.loginUser(id_usuario,password);
         dbManager.closeDBConnection();
-        if (status==0){
+        if (role==0){
             System.out.println("Iniciada sesión correctamente");
         }else{
             System.out.println("No se pudo iniciar sesión");
         }
+        return role;
     }
 }

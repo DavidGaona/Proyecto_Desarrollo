@@ -101,7 +101,7 @@ public class DbManager {
     }
 
     public int loginUser(String documento_id_usuario, String password) {
-        String sql_select = "SELECT pass_usuario" +
+        String sql_select = "SELECT pass_usuario,tipo_usuario" +
                 " FROM public.usuario WHERE documento_id_usuario = '" + documento_id_usuario + "'";
 
         try {
@@ -109,17 +109,19 @@ public class DbManager {
             Statement sentencia = conexion.createStatement();
             ResultSet tabla = sentencia.executeQuery(sql_select);
             String hashedPasswordFromBD;
+            short user_type;
             if(!tabla.next()){
                 System.out.println("No se pudo encontrar el usuario");
                 return -1;
             }
             hashedPasswordFromBD = tabla.getString(1);
+            user_type = tabla.getShort(2);
             final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
             if(!resultCompare.verified){
                 System.out.println("CONTRASEÑA INVALIDA");
                 return -1;
             }
-            return 0;
+            return user_type;
         } catch (SQLException e) {
             System.out.println(e);
         } catch (Exception e) {

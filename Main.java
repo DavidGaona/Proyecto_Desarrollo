@@ -1,7 +1,7 @@
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utilities.ConfirmBox;
-import view.ClientMenuScene;
 import view.Login;
 
 import java.awt.*;
@@ -23,18 +23,17 @@ public class Main extends Application {
         double width = screenSize.getWidth();  //2560 1920 1280 1152 1024; 768 40
         double height = screenSize.getHeight() - scnMax.bottom * 1.7;//1440 1080 720 648 576; 432 40
 
-        ClientMenuScene mainMenuClient = new ClientMenuScene(percentage, buttonFont);
-        Login login = new Login(percentage, buttonFont);
+
+        Login login = new Login(width,height,percentage, buttonFont);
+        Scene rootScene = login.renderLoginScene();
 
         window.setOnCloseRequest(e -> {
             e.consume();
             closeProgram(window);
         });
-
-        window.setScene(mainMenuClient.renderScene(width, height));
-        //window.setScene(login.renderLoginScene(width, height)); //1.8 si no te queda
         window.setTitle("Mobile plans solution");
         window.setResizable(false);
+        window.setScene(rootScene);
         window.show();
     }
 
