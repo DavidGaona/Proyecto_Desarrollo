@@ -14,7 +14,7 @@ public class DBconnect {
     ResultSet table;
 
     public DBconnect(String user, String password, String dataBaseName, String host) {
-        url = "jdbc:postgresql://" + host + ":5432/" + dataBaseName;
+        url = "jdbc:postgresql://" + host + ":8080/" + dataBaseName;
         this.user = user;
         this.password = password;
     }

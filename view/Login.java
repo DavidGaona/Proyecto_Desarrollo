@@ -1,9 +1,12 @@
 package view;
 
 import controller.DaoClient;
+import controller.DaoUser;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -11,18 +14,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import utilities.ProjectUtilities;
 
 public class Login {
 
+    private DaoUser user;
+    private double percentage;
+    private double buttonFont;
+
     public Login(double percentage, double buttonFont) {
-        client = new DaoClient();
+        user = new DaoUser();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
 
-    private DaoClient client;
-    private double percentage;
-    private double buttonFont;
+    private TextField id_text_field;
+    private PasswordField textFieldPassword;
+
 
     private TextField loginTextFieldTemplate() {
         TextField textField = new TextField();
@@ -46,18 +54,29 @@ public class Login {
         gridPane.setPrefSize(width * 0.6, height * 0.6);
         gridPane.setMaxWidth(width * 0.6);
 
-        Text text = loginTextTemplate("Número de documento");
+        Text text_numero_documento = loginTextTemplate("Número de documento");
+        id_text_field = loginTextFieldTemplate();
+        Text text_password = loginTextTemplate("Contraseña");
+        textFieldPassword = new PasswordField();
+        Button loginButton = new Button("Iniciar");
+        loginButton.setOnMouseClicked(e -> loginAcction());
 
-        TextField textField = loginTextFieldTemplate();
+        GridPane.setConstraints(text_numero_documento, 0, 0);
+        GridPane.setConstraints(id_text_field, 0, 1);
+        GridPane.setConstraints(text_password, 1, 0);
+        GridPane.setConstraints(textFieldPassword, 1, 1);
+        GridPane.setConstraints(loginButton, 1,2);
+        gridPane.getChildren().addAll(text_numero_documento, id_text_field, text_password,textFieldPassword,loginButton);
 
-        GridPane.setConstraints(text, 0, 0);
-        GridPane.setConstraints(textField, 0, 1);
-        gridPane.getChildren().addAll(text, textField);
 
         return gridPane;
     }
 
     private VBox mainLoginPane(double width, double height) {
+
+        // Solo para probar.
+        //user.saveNewUser("Alexander","Gonzalez","11144186919",(short) 1,true,"holamundo");
+
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
         background.setPrefSize(width, height);
@@ -67,6 +86,10 @@ public class Login {
         background.getChildren().addAll(gridPane);
         background.setAlignment(Pos.CENTER);
         return background;
+    }
+
+    private void loginAcction(){
+        user.loginUser(ProjectUtilities.clearWhiteSpaces(id_text_field.getText()),textFieldPassword.getText());
     }
 
     public Scene renderLoginScene(double width, double height) {

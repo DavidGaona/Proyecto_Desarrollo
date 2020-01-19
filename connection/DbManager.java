@@ -2,6 +2,7 @@ package connection;
 
 //import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import model.Client;
 import model.User;
 import utilities.AlertBox;
@@ -99,24 +100,26 @@ public class DbManager {
         return new Client("", "", (short) -1, "", "", "", (short) -1);
     }
 
-    public int loginUser(String id_usuario, String password) {
-        String sql_select = "SELECT id_usuario" +
-                "FROM public.usuario WHERE id_usuario = '" + id_usuario + "'";
+    public int loginUser(String documento_id_usuario, String password) {
+        String sql_select = "SELECT pass_usuario" +
+                " FROM public.usuario WHERE documento_id_usuario = '" + documento_id_usuario + "'";
 
         try {
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
             ResultSet tabla = sentencia.executeQuery(sql_select);
-            tabla.next();
-            String hashedPasswordFromBD = tabla.getString(1);
-            //final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
-            //if(!resultCompare.verified){
-            //    System.out.println("CONTRASEÑA INVALIDA");
-            //    return -1;
-            //}
-
-            /* ToDo */
-
+            String hashedPasswordFromBD;
+            if(!tabla.next()){
+                System.out.println("No se pudo encontrar el usuario");
+                return -1;
+            }
+            hashedPasswordFromBD = tabla.getString(1);
+            final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
+            if(!resultCompare.verified){
+                System.out.println("CONTRASEÑA INVALIDA");
+                return -1;
+            }
+            return 0;
         } catch (SQLException e) {
             System.out.println(e);
         } catch (Exception e) {
@@ -131,8 +134,7 @@ public class DbManager {
     public int saveNewUser(User user) {
         int numRows;
         String sql_guardar;
-        //final String hashWillBeStored = BCrypt.withDefaults().hashToString(12,user.getUserPassword.toCharArray());
-        String hashWillBeStored = "";
+        final String hashWillBeStored = BCrypt.withDefaults().hashToString(12,user.getUserPassword().toCharArray());
         sql_guardar = "INSERT INTO public.usuario(nombre_usuario,apellidos_usuario,documento_id_usuario,tipo_usuario,estado_usuario,pass_usuario)" +
                 " VALUES('" + user.getUserName() + "','" + user.getUserLastName() + "','" + user.getUserDocumentIdNumber() + "'," + user.getUserType() +
                 "," + user.getUserState() + ",'" + hashWillBeStored + "')" + " ON CONFLICT (id_usuario) DO NOTHING";

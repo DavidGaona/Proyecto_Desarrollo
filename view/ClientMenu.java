@@ -119,6 +119,7 @@ public class ClientMenu {
                 searchTextField.positionCaret(prevPos - 1);
             }
         });
+
     }
 
     private Button saveChangesButton;
