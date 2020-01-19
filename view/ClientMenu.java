@@ -32,7 +32,7 @@ public class ClientMenu {
     private boolean currentClientMode = true;
     private double buttonFont;
 
-    public HBox topBar(double width, double height) {
+    private HBox topBar(double width, double height) {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(0, 0, 0, 0));
         hbox.setPrefHeight(height * 0.05);
@@ -224,7 +224,7 @@ public class ClientMenu {
         return correct;
     }
 
-    public VBox addVBox(double width) {
+    private VBox addVBox(double width) {
         VBox vbox = new VBox();
         vbox.setPrefWidth(width * 0.2);
         vbox.setSpacing(10);
@@ -232,7 +232,7 @@ public class ClientMenu {
         return vbox;
     }
 
-    public VBox midPane(double width, double height) {
+    private VBox midPane(double width, double height) {
         VBox vbox = new VBox();
         vbox.setPrefSize(width * 0.6, height * 0.9);
         vbox.setAlignment(Pos.TOP_LEFT);
@@ -248,7 +248,7 @@ public class ClientMenu {
         return vbox;
     }
 
-    public HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane) {
+    private HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane) {
         //Vbox
         HBox hbox = new HBox();
         hbox.setPrefSize(width * 0.6, height);
@@ -293,7 +293,7 @@ public class ClientMenu {
         return hbox;
     }
 
-    public TextField clientTextFieldTemplate(String tittle) {
+    private TextField clientTextFieldTemplate(String tittle) {
         TextField clientTextField = new TextField(tittle);
         clientTextField.getStyleClass().add("client-text-field-template");
         clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage)));
@@ -301,7 +301,7 @@ public class ClientMenu {
         return clientTextField;
     }
 
-    public Text clientTextTemplate(String tittle, String color) {
+    private Text clientTextTemplate(String tittle, String color) {
         Text clientText = new Text(tittle);
         clientText.setFont(new Font("Consolas", 20 - (20 * percentage)));
         clientText.setFill(Color.web(color));
@@ -381,7 +381,7 @@ public class ClientMenu {
     private ComboBox<String> clientDocumentTypeComboBox;
     private ComboBox<String> clientTypeComboBox;
 
-    public GridPane personalInfoPane(double width, double height) {
+    private GridPane personalInfoPane(double width, double height) {
 
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
@@ -527,7 +527,7 @@ public class ClientMenu {
         return gridPane;
     }
 
-    public ScrollPane centerScrollPane(double width, double height) {
+    private ScrollPane centerScrollPane(double width, double height) {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
@@ -552,5 +552,18 @@ public class ClientMenu {
         return scrollPane;
     }
 
+    public BorderPane renderClientMenu(double width,double height){
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setPadding(new Insets(0, 0, 0, 0));
+        HBox hBoxTop = topBar(width, height);
+        HBox hBoxBot = botBar(width, height);
+        ScrollPane spCenter = centerScrollPane(width, height);
+
+        mainLayout.setBottom(hBoxBot);
+        mainLayout.setTop(hBoxTop);
+        mainLayout.setCenter(spCenter);
+
+        return mainLayout;
+    }
 
 }

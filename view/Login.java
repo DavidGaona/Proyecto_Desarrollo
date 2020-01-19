@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
@@ -21,11 +22,16 @@ public class Login {
     private DaoUser user;
     private double percentage;
     private double buttonFont;
+    private Scene loginScene;
+    private double width;
+    private double height;
 
-    public Login(double percentage, double buttonFont) {
+    public Login(double width, double height, double percentage, double buttonFont) {
         user = new DaoUser();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
+        this.width = width;
+        this.height = height;
     }
 
     private TextField id_text_field;
@@ -65,8 +71,8 @@ public class Login {
         GridPane.setConstraints(id_text_field, 0, 1);
         GridPane.setConstraints(text_password, 1, 0);
         GridPane.setConstraints(textFieldPassword, 1, 1);
-        GridPane.setConstraints(loginButton, 1,2);
-        gridPane.getChildren().addAll(text_numero_documento, id_text_field, text_password,textFieldPassword,loginButton);
+        GridPane.setConstraints(loginButton, 1, 2);
+        gridPane.getChildren().addAll(text_numero_documento, id_text_field, text_password, textFieldPassword, loginButton);
 
 
         return gridPane;
@@ -88,16 +94,27 @@ public class Login {
         return background;
     }
 
-    private void loginAcction(){
-        user.loginUser(ProjectUtilities.clearWhiteSpaces(id_text_field.getText()),textFieldPassword.getText());
+    private void loginAcction() {
+        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(id_text_field.getText()), textFieldPassword.getText());
+        switch (loginSuccess) {
+            case 1:
+                ClientMenu client = new ClientMenu(percentage, buttonFont);
+                loginScene.setRoot(client.renderClientMenu(width, height));
+                loginScene.getStylesheets().add("styles.css");
+                break;
+            case 0:
+                /* ToDo */ break;
+            default:
+                AlertBox.display("Error","Un error ha ocurrido al iniciar sesión","Contraseña o id incorrectos");
+        }
     }
 
-    public Scene renderLoginScene(double width, double height) {
-        Scene loginScene;
+    public Scene renderLoginScene() {
 
         loginScene = new Scene(mainLoginPane(width, height), width, height);
         loginScene.getStylesheets().add("loginStyle.css");
 
         return loginScene;
     }
+
 }

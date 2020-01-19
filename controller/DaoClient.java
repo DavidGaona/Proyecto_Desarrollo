@@ -5,7 +5,7 @@ import model.Client;
 
 public class DaoClient {
 
-    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "mobileplan", "localhost");
 
     public void saveNewClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
