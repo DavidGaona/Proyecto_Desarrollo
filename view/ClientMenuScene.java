@@ -8,19 +8,19 @@ import javafx.scene.layout.HBox;
 
 public class ClientMenuScene {
 
-    private ClientMenu clientMenu;
+    private EditMenu editMenu;
 
     public ClientMenuScene(double percentage, double buttonFont) {
-        clientMenu = new ClientMenu(percentage, buttonFont);
+        editMenu = new EditMenu(percentage, buttonFont);
     }
 
     public Scene renderScene(double width, double height) {
         Scene mainMenuClient;
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
-        HBox hBoxTop = clientMenu.topBar(width, height);
-        HBox hBoxBot = clientMenu.botBar(width, height);
-        ScrollPane spCenter = clientMenu.centerScrollPane(width, height);
+        HBox hBoxTop = editMenu.topBar(width, height);
+        HBox hBoxBot = editMenu.botBar(width, height);
+        ScrollPane spCenter = editMenu.centerScrollPane(width, height);
 
         mainLayout.setBottom(hBoxBot);
         mainLayout.setTop(hBoxTop);

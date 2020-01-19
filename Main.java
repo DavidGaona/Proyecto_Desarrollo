@@ -31,8 +31,8 @@ public class Main extends Application {
             closeProgram(window);
         });
 
-        //window.setScene(mainMenuClient.renderScene(width, height));
-        window.setScene(login.renderLoginScene(width, height)); //1.8 si no te queda
+        window.setScene(mainMenuClient.renderScene(width, height));
+        //window.setScene(login.renderLoginScene(width, height)); //1.8 si no te queda
         window.setTitle("Mobile plans solution");
         window.setResizable(false);
         window.show();

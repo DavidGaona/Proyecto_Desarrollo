@@ -54,19 +54,21 @@ public class Login {
         gridPane.setPrefSize(width * 0.6, height * 0.6);
         gridPane.setMaxWidth(width * 0.6);
 
-        Text text_numero_documento = loginTextTemplate("Número de documento");
+        Text idDocumentNumber = loginTextTemplate("Número de documento");
         id_text_field = loginTextFieldTemplate();
+
         Text text_password = loginTextTemplate("Contraseña");
         textFieldPassword = new PasswordField();
+
         Button loginButton = new Button("Iniciar");
         loginButton.setOnMouseClicked(e -> loginAcction());
 
-        GridPane.setConstraints(text_numero_documento, 0, 0);
+        GridPane.setConstraints(idDocumentNumber, 0, 0);
         GridPane.setConstraints(id_text_field, 0, 1);
         GridPane.setConstraints(text_password, 1, 0);
         GridPane.setConstraints(textFieldPassword, 1, 1);
         GridPane.setConstraints(loginButton, 1,2);
-        gridPane.getChildren().addAll(text_numero_documento, id_text_field, text_password,textFieldPassword,loginButton);
+        gridPane.getChildren().addAll(idDocumentNumber, id_text_field, text_password,textFieldPassword,loginButton);
 
 
         return gridPane;

@@ -1,5 +1,7 @@
 package utilities;
 
+import javafx.scene.control.TextField;
+
 public class ProjectUtilities {
 
     public static boolean isNumeric(String inputData) {
@@ -89,6 +91,18 @@ public class ProjectUtilities {
             return clientTypes[1];
         }
         return clientTypes[0];
+    }
+
+    public static void onlyNumericTextField(TextField searchTextField) {
+        searchTextField.setOnKeyTyped(e -> {
+            if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
+                String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
+                int prevPos = searchTextField.getCaretPosition();
+                searchTextField.setText(correctText);
+                searchTextField.positionCaret(prevPos - 1);
+            }
+        });
+
     }
 
 }
