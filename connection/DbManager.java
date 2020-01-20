@@ -110,14 +110,14 @@ public class DbManager {
             ResultSet tabla = sentencia.executeQuery(sql_select);
             String hashedPasswordFromBD;
             short user_type;
-            if(!tabla.next()){
+            if (!tabla.next()) {
                 System.out.println("No se pudo encontrar el usuario");
                 return -1;
             }
             hashedPasswordFromBD = tabla.getString(1);
             user_type = tabla.getShort(2);
             final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
-            if(!resultCompare.verified){
+            if (!resultCompare.verified) {
                 System.out.println("CONTRASEÑA INVALIDA");
                 return -1;
             }
@@ -135,14 +135,14 @@ public class DbManager {
 
     public int saveNewUser(User user) {
         int numRows;
-        String sql_guardar;
-        final String hashWillBeStored = BCrypt.withDefaults().hashToString(12,user.getUserPassword().toCharArray());
-        sql_guardar = "INSERT INTO public.usuario(nombre_usuario,apellidos_usuario,documento_id_usuario,tipo_usuario,estado_usuario,pass_usuario)" +
+        String saveQuerry;
+        final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getUserPassword().toCharArray());
+        saveQuerry = "INSERT INTO public.usuario(nombre_usuario,apellidos_usuario,documento_id_usuario,tipo_usuario,estado_usuario,pass_usuario)" +
                 " VALUES('" + user.getUserName() + "','" + user.getUserLastName() + "','" + user.getUserDocumentIdNumber() + "'," + user.getUserType() +
                 "," + user.getUserState() + ",'" + hashWillBeStored + "')" + " ON CONFLICT (id_usuario) DO NOTHING";
         try {
             Statement sentencia = conexion.createStatement();
-            numRows = sentencia.executeUpdate(sql_guardar);
+            numRows = sentencia.executeUpdate(saveQuerry);
             return numRows;
 
         } catch (SQLException e) {
@@ -155,7 +155,7 @@ public class DbManager {
 
 
     public boolean openDBConnection() {
-        conexion = fachada.getconnetion();
+        conexion = fachada.getConnetion();
         return conexion != null;
     }
 

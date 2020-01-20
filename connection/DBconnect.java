@@ -36,7 +36,7 @@ public class DBconnect {
 
     }
 
-    public Connection getconnetion() {
+    public Connection getConnetion() {
         try {
             if (connection == null || connection.isClosed())
                 return this.connect();
@@ -49,9 +49,7 @@ public class DBconnect {
     public void closeConnection(Connection c) {
         try {
             assert connection != null;
-            if (connection != null || !connection.isClosed()) {
-                c.close();
-            }
+            c.close();
 
         } catch (SQLException e) {
             System.out.println("No se pudo cerrar la coneccion.");
