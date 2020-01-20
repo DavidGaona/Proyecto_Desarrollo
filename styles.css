@@ -3,9 +3,9 @@
     -fx-background: #3D3946;
     -fx-background-color: #3D3946;
     -fx-text-fill: #FFFFFF;
-    -fx-font-size: 20px;
     -fx-border-radius: 2;
     -fx-border-width: 2;
+    -fx-font-size: 20px;
 }
 
 .combo-box > .cell
@@ -61,7 +61,9 @@
     -fx-text-fill: #FFFFFF;
     -fx-border-radius: 2;
     -fx-border-width: 2;
+    -fx-font-family: Consolas;
     -fx-border-color: #3d3d3d;
+    -fx-font-size: 20px;
 }
 
 .client-text-field-template-wrong {

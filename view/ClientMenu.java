@@ -97,7 +97,7 @@ public class ClientMenu {
         return hBox;
     }
 
-    public HBox botBar(HBox hBox, double width, double height) {
+    private HBox botBar(HBox hBox, double width, double height) {
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
         marginRect1.setWidth(width * 0.205);
@@ -192,7 +192,7 @@ public class ClientMenu {
         return correct;
     }
 
-    public void clearTextFields() {
+    private void clearTextFields() {
         clientNameTextField.setText("");
         clientNameTextField.setText("");
         clientLastNameTextField.setText("");
@@ -204,11 +204,12 @@ public class ClientMenu {
         AlertBox.display("", "Celdas Limpiadas", "");
     }
 
-    public TextField clientTextFieldTemplate(String tittle) {
+    private TextField clientTextFieldTemplate(String tittle) {
         TextField clientTextField = new TextField(tittle);
         clientTextField.getStyleClass().add("client-text-field-template");
-        clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage)));
-        clientTextField.setPrefSize(350 - (350 * percentage), 30 - (30 * percentage));
+        clientTextField.setStyle(clientTextField.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
+        clientTextField.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
+        clientTextField.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
         return clientTextField;
     }
 
@@ -259,7 +260,7 @@ public class ClientMenu {
         }
     }
 
-    public GridPane personalInfoPane(double width, double height) {
+    private GridPane personalInfoPane(double width, double height) {
 
         GridPane gridPane = new GridPane();
         //gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
@@ -326,6 +327,8 @@ public class ClientMenu {
         //document type combobox
         clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
+        clientDocumentTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
+        clientDocumentTypeComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
         clientDocumentTypeComboBox.setId("CB6");
 
         //document type text
@@ -336,6 +339,7 @@ public class ClientMenu {
         clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
+        clientTypeComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
         clientTypeComboBox.setId("CB7");
 
         //Install listener for color highlight
