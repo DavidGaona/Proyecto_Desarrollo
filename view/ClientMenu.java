@@ -1,22 +1,22 @@
 package view;
 
+import controller.DaoClient;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import utilities.AlertBox;
 import model.Client;
-import controller.DaoClient;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class ClientMenu {
@@ -27,16 +27,21 @@ public class ClientMenu {
         this.buttonFont = buttonFont;
     }
 
-    private DaoClient client;
+    private TextField clientNameTextField;
+    private TextField clientLastNameTextField;
+    private TextField clientDocumentIdTextField;
+    private TextField clientEmailTextField;
+    private TextField clientDirectionTextField;
+    private ComboBox<String> clientDocumentTypeComboBox;
+    private ComboBox<String> clientTypeComboBox;
+    private Button saveChangesButton;
+
     private double percentage;
+    private DaoClient client;
     private boolean currentClientMode = true;
     private double buttonFont;
 
-    private HBox topBar(double width, double height) {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(0, 0, 0, 0));
-        hbox.setPrefHeight(height * 0.05);
-        hbox.getStyleClass().add("top-bar-color");
+    private HBox topBar(HBox hBox, double width, double height) {
 
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
@@ -54,12 +59,12 @@ public class ClientMenu {
         searchTextField.setPrefSize(width * 0.296, height * 0.03); // 0.296 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
-        onlyNumericTextField(searchTextField);
+        ProjectUtilities.onlyNumericTextField(searchTextField);
 
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
             if (!searchedClient.isBlank()) {
-                resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
+                ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                         clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
 
                 clientNameTextField.setText(searchedClient.getName());
@@ -81,54 +86,18 @@ public class ClientMenu {
         newClientButton.getStyleClass().add("client-buttons-template");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
-            resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
+            ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                     clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
             saveChangesButton.setText("Agregar cliente");
             currentClientMode = true;
             searchTextField.setText("");
         });
 
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
-        return hbox;
+        hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
+        return hBox;
     }
 
-    private void resetNodeBorderColor(Node... nodes) {
-        for (Node node : nodes) {
-            node.setStyle(node.getStyle() + "\n-fx-border-color: #3d3d3d;");
-        }
-    }
-
-    private void onlyWordsTextField(TextField searchTextField) {
-        searchTextField.setOnKeyTyped(e -> {
-            if (!(ProjectUtilities.onlyLetters(searchTextField.getText()))) {
-                String correctText = searchTextField.getText().replaceAll("[^A-Za-zñÑ\\s+]", "");
-                int prevPos = searchTextField.getCaretPosition();
-                searchTextField.setText(correctText);
-                searchTextField.positionCaret(prevPos - 1);
-            }
-        });
-    }
-
-    private void onlyNumericTextField(TextField searchTextField) {
-        searchTextField.setOnKeyTyped(e -> {
-            if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
-                String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
-                int prevPos = searchTextField.getCaretPosition();
-                searchTextField.setText(correctText);
-                searchTextField.positionCaret(prevPos - 1);
-            }
-        });
-
-    }
-
-    private Button saveChangesButton;
-
-    public HBox botBar(double width, double height) {
-        HBox hbox = new HBox();
-        hbox.setPrefHeight(height * 0.05);
-        hbox.getStyleClass().add("bot-bar-color");
-
+    public HBox botBar(HBox hBox, double width, double height) {
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
         marginRect1.setWidth(width * 0.205);
@@ -146,7 +115,7 @@ public class ClientMenu {
         clearButton.getStyleClass().add("client-buttons-template");
         clearButton.setOnMouseClicked(e -> {
             clearTextFields();
-            resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
+            ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                     clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
         });
 
@@ -162,9 +131,8 @@ public class ClientMenu {
             }
         });
 
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
-        return hbox;
+        hBox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
+        return hBox;
     }
 
     private void saveNewClient() {
@@ -224,76 +192,19 @@ public class ClientMenu {
         return correct;
     }
 
-    private VBox addVBox(double width) {
-        VBox vbox = new VBox();
-        vbox.setPrefWidth(width * 0.2);
-        vbox.setSpacing(10);
-        vbox.setStyle("-fx-background-color: #18171C;"); // #336699
-        return vbox;
+    public void clearTextFields() {
+        clientNameTextField.setText("");
+        clientNameTextField.setText("");
+        clientLastNameTextField.setText("");
+        clientDocumentIdTextField.setText("");
+        clientEmailTextField.setText("");
+        clientDirectionTextField.setText("");
+        clientDocumentTypeComboBox.valueProperty().set(null);
+        clientTypeComboBox.valueProperty().set(null);
+        AlertBox.display("", "Celdas Limpiadas", "");
     }
 
-    private VBox midPane(double width, double height) {
-        VBox vbox = new VBox();
-        vbox.setPrefSize(width * 0.6, height * 0.9);
-        vbox.setAlignment(Pos.TOP_LEFT);
-        vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
-
-        GridPane delete = new GridPane();
-
-        HBox infoHbox = centerHboxTemplate(width, height * 0.45, "Información Personal", personalInfoPane(width, height * 0.45));
-        HBox centerHbox = centerHboxTemplate(width, height * 0.6, "Información Del Plan", delete);
-        HBox botHbox = centerHboxTemplate(width, height * 0.3, "Información Bancaria", delete);
-
-        vbox.getChildren().addAll(infoHbox, centerHbox, botHbox);
-        return vbox;
-    }
-
-    private HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane) {
-        //Vbox
-        HBox hbox = new HBox();
-        hbox.setPrefSize(width * 0.6, height);
-        hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #24222A;");
-
-        //StackPane
-        StackPane stackPane = new StackPane();
-        stackPane.setAlignment(Pos.TOP_LEFT);
-        stackPane.setPrefSize(width * 0.2, height);
-
-        //Rectangle bg
-        Rectangle rect = new Rectangle();
-        rect.setHeight(Math.max(height, 280.0));
-        rect.setWidth(width * 0.2);
-        rect.setFill(Color.web("#24222A"));
-
-        //VBox to center the text
-        VBox centerText = new VBox();
-        centerText.setMaxWidth(width * 0.2);
-        centerText.setAlignment(Pos.TOP_CENTER);
-
-        //Text with message
-        Text text = new Text(message);
-        text.setFont(new Font("Consolas", 30 - (30 * percentage))); // 30
-        text.setFill(Color.web("#FFFFFF"));
-
-        //Margin for the text
-        Rectangle marginRect = new Rectangle();
-        marginRect.setHeight(30);
-        marginRect.setWidth(0);
-        marginRect.setFill(Color.web("#24222A"));
-
-        centerText.getChildren().addAll(marginRect, text);
-        stackPane.getChildren().addAll(rect, centerText);
-        hbox.getChildren().addAll(stackPane, gridPane);
-
-        //ReSize
-        hbox.maxHeightProperty().bind(gridPane.heightProperty());
-        //hbox.maxWidthProperty().bind(gridPane.widthProperty());
-
-        return hbox;
-    }
-
-    private TextField clientTextFieldTemplate(String tittle) {
+    public TextField clientTextFieldTemplate(String tittle) {
         TextField clientTextField = new TextField(tittle);
         clientTextField.getStyleClass().add("client-text-field-template");
         clientTextField.setFont(new Font("Consolas", 20 - (20 * percentage)));
@@ -348,44 +259,12 @@ public class ClientMenu {
         }
     }
 
-    private void addTextFieldCharacterLimit(int limit, TextField... textFields) {
-        for (TextField textField : textFields) {
-            textField.textProperty().addListener(e -> {
-                if (textField.getText().length() > limit) {
-                    int prevPos = textField.getCaretPosition();
-                    String limitedText = textField.getText().substring(0, prevPos) + textField.getText().substring(prevPos + 1);
-                    textField.setText(limitedText);
-                    textField.positionCaret(prevPos);
-                }
-            });
-        }
-    }
-
-    private void clearTextFields() {
-        clientNameTextField.setText("");
-        clientNameTextField.setText("");
-        clientLastNameTextField.setText("");
-        clientDocumentIdTextField.setText("");
-        clientEmailTextField.setText("");
-        clientDirectionTextField.setText("");
-        clientDocumentTypeComboBox.valueProperty().set(null);
-        clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Celdas Limpiadas", "");
-    }
-
-    private TextField clientNameTextField;
-    private TextField clientLastNameTextField;
-    private TextField clientDocumentIdTextField;
-    private TextField clientEmailTextField;
-    private TextField clientDirectionTextField;
-    private ComboBox<String> clientDocumentTypeComboBox;
-    private ComboBox<String> clientTypeComboBox;
-
-    private GridPane personalInfoPane(double width, double height) {
+    public GridPane personalInfoPane(double width, double height) {
 
         GridPane gridPane = new GridPane();
-        gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
-        //gridPane.setPadding(new Insets(10, 10, 10, 10));
+        //gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
+        gridPane.setPrefWidth(width * 0.4);
+        gridPane.setPadding(new Insets(25, 10, 25, 10));
         gridPane.setVgap(25);
         gridPane.setHgap(10); // 10
         gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
@@ -406,7 +285,6 @@ public class ClientMenu {
         clientNameTextField = clientTextFieldTemplate("");
         clientNameTextField.setId("TF1");
 
-
         //last name text
         Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
         clientLastNameText.setId("T2");
@@ -423,7 +301,7 @@ public class ClientMenu {
         //Document id text field actions
         clientDocumentIdTextField = clientTextFieldTemplate("");
         clientDocumentIdTextField.setId("TF3");
-        onlyNumericTextField(clientDocumentIdTextField);
+        ProjectUtilities.onlyNumericTextField(clientDocumentIdTextField);
 
         //Email Text
         Text clientEmailText = clientTextTemplate("Email:", textColor);
@@ -449,7 +327,6 @@ public class ClientMenu {
         clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
         clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientDocumentTypeComboBox.setId("CB6");
-        //clientDocumentTypeComboBox.setOnAction(e -> client.setType(utilities.ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue())));
 
         //document type text
         Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
@@ -458,8 +335,8 @@ public class ClientMenu {
         //document type combobox
         clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
         clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
+        clientTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
         clientTypeComboBox.setId("CB7");
-        //clientTypeComboBox.setOnAction(e -> client.setType(utilities.ProjectUtilities.convertClientType(clientTypeComboBox.getValue())));
 
         //Install listener for color highlight
         focusListener(gridPane,
@@ -469,13 +346,13 @@ public class ClientMenu {
                 clientTypeComboBox);
 
         //install listener for length limit
-        addTextFieldCharacterLimit(50, clientNameTextField, clientLastNameTextField);
-        addTextFieldCharacterLimit(20, clientDocumentIdTextField);
-        addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
+        ProjectUtilities.addTextFieldCharacterLimit(50, clientNameTextField, clientLastNameTextField);
+        ProjectUtilities.addTextFieldCharacterLimit(20, clientDocumentIdTextField);
+        ProjectUtilities.addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
 
         int colText = 4;
         int colTextField = 5;
-        int rowStart = 1;
+        int rowStart = 0;
         //Constrains
         GridPane.setConstraints(clientNameText, colText, rowStart);
         GridPane.setHalignment(clientNameText, HPos.RIGHT);
@@ -505,13 +382,6 @@ public class ClientMenu {
         GridPane.setHalignment(clientTypeText, HPos.RIGHT);
         GridPane.setConstraints(clientTypeComboBox, colTextField, rowStart + 6);
 
-        Rectangle emptyRect = new Rectangle();
-        emptyRect.setWidth(0.0);
-        emptyRect.setHeight(0.0);
-        GridPane.setConstraints(emptyRect, colText, rowStart + 7);
-        GridPane.setHalignment(emptyRect, HPos.RIGHT);
-        GridPane.setConstraints(emptyRect, colTextField, rowStart + 7);
-
         //Adding all nodes
         gridPane.getChildren().addAll(
                 //currentImage,
@@ -521,49 +391,19 @@ public class ClientMenu {
                 clientDocumentIdText, clientDocumentIdTextField,
                 clientEmailText, clientEmailTextField,
                 clientDirectionText, clientDirectionTextField,
-                clientTypeText, clientTypeComboBox,
-                emptyRect);
+                clientTypeText, clientTypeComboBox);
 
+        gridPane.setId("Información Personal");
         return gridPane;
     }
 
-    private ScrollPane centerScrollPane(double width, double height) {
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
-
-        BorderPane layout = new BorderPane();
-        VBox vBoxLeft = addVBox(width);
-        VBox vBoxRight = addVBox(width);
-        VBox vBoxCenter = midPane(width, height);
-        vBoxCenter.setId("a1");
-
-        layout.setCenter(vBoxCenter);
-        layout.setLeft(vBoxLeft);
-        layout.setRight(vBoxRight);
-
-        scrollPane.setContent(layout);
-        layout.setOnScroll(e -> {
-            double deltaY = e.getDeltaY() * 3; // *6 to make the scrolling a bit faster
-            double widthSpeed = scrollPane.getContent().getBoundsInLocal().getWidth();
-            double value = scrollPane.getVvalue();
-            scrollPane.setVvalue(value + -deltaY / widthSpeed);
-        });
-        return scrollPane;
+    public BorderPane renderClientEditMenu(double width, double height) {
+        EditingMenu menu = new EditingMenu();
+        BorderPane clientMenu;
+        clientMenu = menu.renderClientMenu(width, height, percentage, personalInfoPane(width, height));
+        clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));
+        clientMenu.setBottom(botBar((HBox) clientMenu.getBottom(), width, height));
+        clientMenu.setCenter(clientMenu.getCenter());
+        return clientMenu;
     }
-
-    public BorderPane renderClientMenu(double width,double height){
-        BorderPane mainLayout = new BorderPane();
-        mainLayout.setPadding(new Insets(0, 0, 0, 0));
-        HBox hBoxTop = topBar(width, height);
-        HBox hBoxBot = botBar(width, height);
-        ScrollPane spCenter = centerScrollPane(width, height);
-
-        mainLayout.setBottom(hBoxBot);
-        mainLayout.setTop(hBoxTop);
-        mainLayout.setCenter(spCenter);
-
-        return mainLayout;
-    }
-
 }

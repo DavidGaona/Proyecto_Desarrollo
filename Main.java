@@ -31,6 +31,7 @@ public class Main extends Application {
             e.consume();
             closeProgram(window);
         });
+
         window.setTitle("Mobile plans solution");
         window.setResizable(false);
         window.setScene(rootScene);

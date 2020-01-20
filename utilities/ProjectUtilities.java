@@ -1,5 +1,6 @@
 package utilities;
 
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
 public class ProjectUtilities {
@@ -103,6 +104,25 @@ public class ProjectUtilities {
             }
         });
 
+    }
+
+    public static void resetNodeBorderColor(Node... nodes) {
+        for (Node node : nodes) {
+            node.setStyle(node.getStyle() + "\n-fx-border-color: #3d3d3d;");
+        }
+    }
+
+    public static void addTextFieldCharacterLimit(int limit, TextField... textFields) {
+        for (TextField textField : textFields) {
+            textField.textProperty().addListener(e -> {
+                if (textField.getText().length() > limit) {
+                    int prevPos = textField.getCaretPosition();
+                    String limitedText = textField.getText().substring(0, prevPos) + textField.getText().substring(prevPos + 1);
+                    textField.setText(limitedText);
+                    textField.positionCaret(prevPos);
+                }
+            });
+        }
     }
 
 }

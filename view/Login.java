@@ -1,6 +1,5 @@
 package view;
 
-import controller.DaoClient;
 import controller.DaoUser;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -65,7 +63,7 @@ public class Login {
         Text text_password = loginTextTemplate("Contraseña");
         textFieldPassword = new PasswordField();
         Button loginButton = new Button("Iniciar");
-        loginButton.setOnMouseClicked(e -> loginAcction());
+        loginButton.setOnMouseClicked(e -> loginAcction(width, height));
 
         GridPane.setConstraints(text_numero_documento, 0, 0);
         GridPane.setConstraints(id_text_field, 0, 1);
@@ -81,7 +79,7 @@ public class Login {
     private VBox mainLoginPane(double width, double height) {
 
         // Solo para probar.
-        //user.saveNewUser("Alexander","Gonzalez","11144186919",(short) 1,true,"holamundo");
+        user.saveNewUser("Alexander","Gonzalez","1234",(short) 1,true,"1234");
 
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
@@ -94,12 +92,12 @@ public class Login {
         return background;
     }
 
-    private void loginAcction() {
+    private void loginAcction(double width, double height) {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(id_text_field.getText()), textFieldPassword.getText());
         switch (loginSuccess) {
             case 1:
                 ClientMenu client = new ClientMenu(percentage, buttonFont);
-                loginScene.setRoot(client.renderClientMenu(width, height));
+                loginScene.setRoot(client.renderClientEditMenu(width, height));
                 loginScene.getStylesheets().add("styles.css");
                 break;
             case 0:
