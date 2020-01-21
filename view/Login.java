@@ -9,9 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
@@ -20,12 +17,9 @@ public class Login {
     private DaoUser user;
     private double percentage;
     private double buttonFont;
-    private double buttonFontLogin;
     private Scene loginScene;
     private double width;
     private double height;
-    private double labelFont;
-    private double textFFont;
 
     public Login(double width, double height, double percentage, double buttonFont) {
         user = new DaoUser();
@@ -33,7 +27,6 @@ public class Login {
         this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
-        this.buttonFont = buttonFont;
     }
 
     private TextField userIdTextField;
@@ -41,6 +34,7 @@ public class Login {
 
     private TextField loginTextFieldTemplate(double width, double height, String message) {
         TextField textField = new TextField();
+        textField.getStyleClass().add("text-field-login");
         textField.setPromptText(message);
         textField.setPrefSize(width, height);
         textField.setMaxSize(width, height);
@@ -52,9 +46,9 @@ public class Login {
         double percentageHeight = (1440 - height) / 1440;
         double percentageLogin = Math.max(percentageWidth, percentageHeight);
 
-        textFFont = 30 - ( 30 * percentageLogin);
-        labelFont = 60 - ( 60 * percentageLogin);
-        buttonFontLogin = 40 - (40 * percentageLogin);
+        double textFFont = 30 - (30 * percentageLogin);
+        double labelFont = 60 - (60 * percentageLogin);
+        double buttonFontLogin = 40 - (40 * percentageLogin);
 
         VBox vBox = new VBox();
         vBox.setSpacing(height * 0.05);
@@ -92,18 +86,20 @@ public class Login {
         loginLabel.setStyle(loginLabel.getStyle() + "-fx-font-size: " + labelFont + "px;");
         stackPane.getChildren().addAll(loginLabel);
 
-        userIdTextField = loginTextFieldTemplate(width * 0.25 , height * 0.05 , "Número de documento");
-        userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: "+ textFFont +"px; ");
+        userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05, "Número de documento");
+        userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
 
         passwordTextField = new PasswordField();
-        passwordTextField.setMaxSize(width * 0.25 , height * 0.05 );
-        passwordTextField.setPrefSize(width * 0.25 , height * 0.05 );
-        passwordTextField.setStyle(passwordTextField.getStyle() + " -fx-font-size: "+ textFFont +"px; ");
+        passwordTextField.setMaxSize(width * 0.25, height * 0.05);
+        passwordTextField.setPrefSize(width * 0.25, height * 0.05);
+        passwordTextField.getStyleClass().add("text-field-login");
+        passwordTextField.setStyle(passwordTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
         passwordTextField.setPromptText("Contraseña");
+        passwordTextField.setOnAction(e -> loginAction(width, height));
 
         Button loginButton = new Button("Iniciar sesión");
-        loginButton.setPrefSize(width * 0.25 , height * 0.05 );
-        loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: "+ buttonFontLogin + "px;");
+        loginButton.setPrefSize(width * 0.25, height * 0.05);
+        loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
         loginButton.setOnMouseClicked(e -> loginAction(width, height));
 
         vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
@@ -114,7 +110,7 @@ public class Login {
     private VBox mainLoginPane(double width, double height) {
 
         // Solo para robar.
-        //user.saveNewUser("Alexander","Gonzalez","1234",(short) 1,true,"1234");
+        user.saveNewUser("Alexander", "Gonzalez", "1234", (short) 0, (short) 2, true);
 
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
@@ -130,13 +126,17 @@ public class Login {
     private void loginAction(double width, double height) {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
         switch (loginSuccess) {
-            case 1:
+            case 0:
                 ClientMenu client = new ClientMenu(percentage, buttonFont);
                 loginScene.setRoot(client.renderClientEditMenu(width, height));
                 loginScene.getStylesheets().add("styles.css");
                 break;
-            case 0:
-                /* ToDo */
+            case 1:
+                //ToDo
+            case 2:
+                UserMenu user = new UserMenu(percentage, buttonFont);
+                loginScene.setRoot(user.renderUserEditMenu(width, height));
+                loginScene.getStylesheets().add("styles.css");
                 break;
             default:
                 AlertBox.display("Error", "Contraseña o id incorrectos", "");

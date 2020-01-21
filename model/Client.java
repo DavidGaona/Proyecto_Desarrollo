@@ -19,7 +19,9 @@ public class Client {
         this.type = type;
     }
 
-    public boolean isBlank(){ return name.isBlank() || lastName.isBlank() || documentId.isBlank() || email.isBlank() || direction.isBlank(); }
+    public boolean isBlank() {
+        return name.isBlank() || lastName.isBlank() || documentId.isBlank() || email.isBlank() || direction.isBlank();
+    }
 
     public short getType() {
         return type;

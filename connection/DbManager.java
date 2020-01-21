@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 
 public class DbManager {
@@ -135,28 +136,76 @@ public class DbManager {
 
     public int saveNewUser(User user) {
         int numRows;
-        String saveQuerry;
-        final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getUserPassword().toCharArray());
-        saveQuerry = "INSERT INTO public.usuario(nombre_usuario,apellidos_usuario,documento_id_usuario,tipo_usuario,estado_usuario,pass_usuario)" +
-                " VALUES('" + user.getUserName() + "','" + user.getUserLastName() + "','" + user.getUserDocumentIdNumber() + "'," + user.getUserType() +
-                "," + user.getUserState() + ",'" + hashWillBeStored + "')" + " ON CONFLICT (id_usuario) DO NOTHING";
+        String saveQuery;
+        final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
+        saveQuery = "INSERT INTO public.usuario(nombre_usuario, apellidos_usuario, documento_id_usuario, tipo_usuario, estado_usuario, pass_usuario, document_type)" +
+                " VALUES('" + user.getName() + "','" + user.getLastName() + "','" + user.getDocumentIdNumber() + "'," + user.getType() +
+                "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (id_usuario) DO NOTHING";
         try {
             Statement sentencia = conexion.createStatement();
-            numRows = sentencia.executeUpdate(saveQuerry);
+            numRows = sentencia.executeUpdate(saveQuery);
+            AlertBox.display("Operación exitosa", "Usuario creado", "");
             return numRows;
-
-        } catch (SQLException e) {
-            System.out.println(e);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         return -1;
     }
 
+    public void editUser(User user) {
+        int numRows;
+        String sql_update = "UPDATE public.usuario" +
+                " SET nombre_usuario = '" + user.getName() + "', apellidos_usuario = '" + user.getLastName() +
+                "', documento_id_usuario = '" + user.getDocumentIdNumber() + "', tipo_cliente = " + user.getType() +
+                ", tipo_documento = " + user.getDocumentType() + ", document_type = " + user.getDocumentType() +
+                " WHERE documento_id_usuario = '" + user.getDocumentIdNumber() + "'";
+        try {
+            Statement sentencia = conexion.createStatement();
+            numRows = sentencia.executeUpdate(sql_update);
+            AlertBox.display("Operación exitosa", "Usuario editado", "");
+            System.out.println("up " + numRows);
+        } catch (SQLException e) {
+            AlertBox.display("Error", " Error al editar al usuario", "");
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    } //loadUser
 
-    public boolean openDBConnection() {
+    public User loadUser(String documentNumber) {
+
+        String sql_select = "SELECT nombre_usuario, apellidos_usuario, documento_id_usuario, document_type," +
+                " tipo_usuario, estado_usuario " +
+                "FROM public.usuario WHERE documento_id_usuario = '" + documentNumber + "'";
+        try {
+
+            System.out.println("Consultando en la base de datos");
+            Statement sentencia = conexion.createStatement();
+            ResultSet tabla = sentencia.executeQuery(sql_select);
+            tabla.next();
+            User user = new User(
+                    tabla.getString(1),
+                    tabla.getString(2),
+                    tabla.getString(3),
+                    tabla.getShort(4),
+                    tabla.getShort(5),
+                    tabla.getBoolean(6)
+            );
+            System.out.println(user.getName());
+            AlertBox.display("Operación exitosa", "Usuario Encontrado", "");
+            return user;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            AlertBox.display("Error", "Problema en la base de datos", "tabla: usuario");
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("ERROR Fatal en la base de datos");
+        }
+        return new User("", "", "", (short) -1, (short) -1, false);
+    }
+
+    public void openDBConnection() {
         conexion = fachada.getConnetion();
-        return conexion != null;
     }
 
     public void closeDBConnection() {

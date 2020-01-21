@@ -2,47 +2,56 @@ package model;
 
 public class User {
 
-    private String userName;
-    private String userLastName;
-    private String userDocumentIdNumber;
-    private short userType;
-    private Boolean userState;
-    private String userPassword;
+    private String name;
+    private String lastName;
+    private String DocumentIdNumber;
+    private short documentType;
+    private short Type;
+    private Boolean State;
+    private String password;
 
     public boolean isBlank() {
-        return userName.isBlank() || userLastName.isBlank() || userDocumentIdNumber.isBlank() || userPassword.isBlank();
+        return name.isBlank() || lastName.isBlank() || DocumentIdNumber.isBlank();
     }
 
-    public User(String userName, String userLastName, String userIdDocumentNumber, short userType, Boolean userStatus, String userPassword) {
-        this.userName = userName;
-        this.userLastName = userLastName;
-        this.userDocumentIdNumber = userIdDocumentNumber;
-        this.userType = userType;
-        this.userState = userStatus;
-        this.userPassword = userPassword;
+    public User(String name, String lastName, String documentIdNumber, short documentType, short type, Boolean state) {
+        this.name = name;
+        this.lastName = lastName;
+        DocumentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+        Type = type;
+        State = state;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public String getUserLastName() {
-        return userLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getUserDocumentIdNumber() {
-        return userDocumentIdNumber;
+    public String getDocumentIdNumber() {
+        return DocumentIdNumber;
     }
 
-    public short getUserType() {
-        return userType;
+    public short getType() {
+        return Type;
     }
 
-    public Boolean getUserState() {
-        return userState;
+    public Boolean getState() {
+        return State;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public short getDocumentType() {
+        return documentType;
     }
 }

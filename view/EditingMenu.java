@@ -138,7 +138,7 @@ public class EditingMenu {
         return scrollPane;
     }
 
-    public BorderPane renderClientMenu(double width, double height, double percentage, GridPane... gridPanes) {
+    public BorderPane renderMenuTemplate(double width, double height, double percentage, GridPane... gridPanes) {
         BorderPane mainLayout = new BorderPane();
         this.percentage = percentage;
         mainLayout.setPadding(new Insets(0, 0, 0, 0));

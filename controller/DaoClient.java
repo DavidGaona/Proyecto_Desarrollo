@@ -32,4 +32,8 @@ public class DaoClient {
         return client;
     }
 
+    public void changeClientPassword(String password) {
+        //ToDo
+    }
+
 }

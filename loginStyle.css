@@ -2,7 +2,7 @@
     -fx-text-fill: #FFFFFF;
 }
 
-.text-field {
+.text-field-login {
     -fx-background-color: #2E3538;
     -fx-text-fill: #FFFFFF;
     -fx-border-radius: 3;

@@ -11,6 +11,7 @@ public class ProjectUtilities {
 
     public static final String[] documentTypes = {"Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
     public static final String[] clientTypes = {"Natural", "Corporativo"};
+    public static final String[] userTypes = {"Operador", "Gerente", "Administrador"};
 
     public static short convertDocumentType(String documentType) {
         if (documentTypes[0].equals(documentType)) {
@@ -51,18 +52,6 @@ public class ProjectUtilities {
         return newString.toString();
     }
 
-    public static Boolean onlyLetters(String word){
-        Boolean answer = false;
-        String aux = word.replaceAll("[A-Za-zñÑ\\s+]", "");
-        if( aux.length() == 0)
-        {
-            answer = true;
-        }
-        return answer;
-    }
-
-
-
     public static String convertDocumentTypeString(short documentType) {
         if (documentType == (short) 0) {
             return documentTypes[0];
@@ -90,6 +79,28 @@ public class ProjectUtilities {
             return clientTypes[0];
         } else if (type == (short) 1) {
             return clientTypes[1];
+        }
+        return clientTypes[0];
+    }
+
+    public static short convertUserType(String type) {
+        if (userTypes[0].equals(type)) {
+            return (short) 0;
+        } else if (userTypes[1].equals(type)) {
+            return (short) 1;
+        } else if (userTypes[2].equals(type)){
+            return (short) 2;
+        }
+        return (short) -1;
+    }
+
+    public static String convertUserTypeString(short type) {
+        if (type == (short) 0) {
+            return userTypes[0];
+        } else if (type == (short) 1) {
+            return userTypes[1];
+        } else if (type == (short) 2){
+            return userTypes[2];
         }
         return clientTypes[0];
     }
