@@ -42,7 +42,7 @@ public class Login {
         textField.setMaxSize(width, height);
         return textField;
     }
-    
+
     private VBox loginGridPane(double width, double height) {
         VBox vBox = new VBox();
         vBox.setSpacing(height * 0.05);
