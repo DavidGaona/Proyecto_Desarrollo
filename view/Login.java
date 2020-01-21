@@ -42,14 +42,7 @@ public class Login {
         textField.setMaxSize(width, height);
         return textField;
     }
-
-    private Text loginTextTemplate(String tittle) {
-        Text text = new Text(tittle);
-        text.setFill(Color.web("#FFFFFF"));
-        text.setFont(new Font("Consolas", 20 - (20 * percentage)));
-        return text;
-    }
-
+    
     private VBox loginGridPane(double width, double height) {
         VBox vBox = new VBox();
         vBox.setSpacing(height * 0.05);
