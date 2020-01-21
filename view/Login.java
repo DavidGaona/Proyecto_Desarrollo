@@ -23,11 +23,12 @@ public class Login {
     private Scene loginScene;
     private double width;
     private double height;
+    private double labelFont;
+    private double textFFont;
 
-    public Login(double width, double height, double percentage, double buttonFont) {
+    public Login(double width, double height, double percentage) {
         user = new DaoUser();
         this.percentage = percentage;
-        this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
     }
@@ -44,6 +45,10 @@ public class Login {
     }
 
     private VBox loginGridPane(double width, double height) {
+        textFFont = 30 - ( 30 * percentage);
+        labelFont = 60 - ( 60 * percentage * 1.2);
+        buttonFont = 40 - (40 * percentage);
+
         VBox vBox = new VBox();
         vBox.setSpacing(height * 0.05);
         vBox.setPadding(new Insets(0, 0, 25, 0));
@@ -75,18 +80,23 @@ public class Login {
 
         hBox.getChildren().addAll(leftPane, stackPane, rightPane);
 
+
         Label loginLabel = new Label("INICIAR SESIÓN");
+        loginLabel.setStyle(loginLabel.getStyle() + "-fx-font-size: " + labelFont + "px;");
         stackPane.getChildren().addAll(loginLabel);
 
-        userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05, "Número de documento");
+        userIdTextField = loginTextFieldTemplate(width * 0.25 , height * 0.05 , "Número de documento");
+        userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: "+ textFFont +"px; ");
 
         passwordTextField = new PasswordField();
-        passwordTextField.setMaxSize(width * 0.25, height * 0.05);
-        passwordTextField.setPrefSize(width * 0.25, height * 0.05);
+        passwordTextField.setMaxSize(width * 0.25 , height * 0.05 );
+        passwordTextField.setPrefSize(width * 0.25 , height * 0.05 );
+        passwordTextField.setStyle(passwordTextField.getStyle() + " -fx-font-size: "+ textFFont +"px; ");
         passwordTextField.setPromptText("Contraseña");
 
         Button loginButton = new Button("Iniciar sesión");
-        loginButton.setPrefSize(width * 0.25, height * 0.05);
+        loginButton.setPrefSize(width * 0.25 , height * 0.05 );
+        loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: "+ buttonFont + "px;");
         loginButton.setOnMouseClicked(e -> loginAction(width, height));
 
         vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
