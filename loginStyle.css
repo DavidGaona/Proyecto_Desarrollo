@@ -5,9 +5,26 @@
 .text-field {
     -fx-background-color: #2E3538;
     -fx-text-fill: #FFFFFF;
-    -fx-border-radius: 2;
-    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-border-width: 3;
     -fx-font-family: Consolas;
-    -fx-font-size: 20;
-    -fx-border-color: #212628;
+    -fx-font-size: 30px;
+    -fx-prompt-text-fill: #22282A;
+    -fx-border-color: #3C4448;
+}
+
+.label {
+    -fx-text-fill: #3986AC;
+    -fx-font-family: Consolas;
+    -fx-font-weight: bold;
+    -fx-font-size: 60px;
+    -fx-text-transform: uppercase;
+}
+
+.button {
+    -fx-background-color: #3986AC;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 2;
+    -fx-font-family: Consolas;
+    -fx-font-size: 40px;
 }

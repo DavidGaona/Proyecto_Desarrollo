@@ -5,10 +5,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -32,13 +32,14 @@ public class Login {
         this.height = height;
     }
 
-    private TextField id_text_field;
-    private PasswordField textFieldPassword;
+    private TextField userIdTextField;
+    private TextField passwordTextField;
 
-
-    private TextField loginTextFieldTemplate() {
+    private TextField loginTextFieldTemplate(double width, double height, String message) {
         TextField textField = new TextField();
-        textField.setPrefSize(350, 40);
+        textField.setPromptText(message);
+        textField.setPrefSize(width, height);
+        textField.setMaxSize(width, height);
         return textField;
     }
 
@@ -49,51 +50,75 @@ public class Login {
         return text;
     }
 
-    private GridPane loginGridPane(double width, double height) {
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(25);
-        gridPane.setHgap(25);
-        gridPane.setPadding(new Insets(25, 25, 25, 25));
-        gridPane.setStyle("-fx-background-color: #22282A");
-        gridPane.setPrefSize(width * 0.6, height * 0.6);
-        gridPane.setMaxWidth(width * 0.6);
+    private VBox loginGridPane(double width, double height) {
+        VBox vBox = new VBox();
+        vBox.setSpacing(height * 0.05);
+        vBox.setPadding(new Insets(0, 0, 25, 0));
+        vBox.setStyle("-fx-background-color: #22282A;\n -fx-border-width: 0 3 3 3;\n -fx-border-color: #3C4448;\n -fx-border-radius: 5;"); //2D333B
+        vBox.setPrefSize(width * 0.3, height * 0.6);
+        vBox.setMaxWidth(width * 0.3);
+        vBox.setAlignment(Pos.TOP_CENTER);
 
-        Text text_numero_documento = loginTextTemplate("Número de documento");
-        id_text_field = loginTextFieldTemplate();
-        Text text_password = loginTextTemplate("Contraseña");
-        textFieldPassword = new PasswordField();
-        Button loginButton = new Button("Iniciar");
-        loginButton.setOnMouseClicked(e -> loginAcction(width, height));
+        HBox hBox = new HBox();
+        hBox.setPrefSize(width * 0.3, height * 0.1);
+        hBox.setAlignment(Pos.TOP_CENTER);
 
-        GridPane.setConstraints(text_numero_documento, 0, 0);
-        GridPane.setConstraints(id_text_field, 0, 1);
-        GridPane.setConstraints(text_password, 1, 0);
-        GridPane.setConstraints(textFieldPassword, 1, 1);
-        GridPane.setConstraints(loginButton, 1, 2);
-        gridPane.getChildren().addAll(text_numero_documento, id_text_field, text_password, textFieldPassword, loginButton);
+        Pane leftPane = new Pane();
+        leftPane.setStyle("-fx-background-color: #22282A;\n -fx-border-width: 3 0 0 0;\n -fx-border-color: #3C4448;");
+        leftPane.setMaxSize(width * 0.025, height * 0.1);
+        leftPane.setMinSize(width * 0.025, height * 0.1);
 
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefSize(width * 0.25, height * 0.1);
+        stackPane.setMaxWidth(width * 0.25);
+        stackPane.setStyle("-fx-background-color: #171A1C;\n -fx-border-width: 0 3 3 3;\n -fx-border-color: #3C4448;\n -fx-border-radius: 0 0 3 3;");
+        stackPane.setPadding(new Insets(20, 0, 0, 0));
+        stackPane.setAlignment(Pos.TOP_CENTER);
 
-        return gridPane;
+        Pane rightPane = new HBox();
+        rightPane.setStyle("-fx-background-color: #22282A;\n -fx-border-width: 3 0 0 0;\n -fx-border-color: #3C4448;");
+        rightPane.setMaxSize(width * 0.025, height * 0.1);
+        rightPane.setMinSize(width * 0.025, height * 0.1);
+
+        hBox.getChildren().addAll(leftPane, stackPane, rightPane);
+
+        Label loginLabel = new Label("INICIAR SESIÓN");
+        stackPane.getChildren().addAll(loginLabel);
+
+        userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05, "Número de documento");
+
+        passwordTextField = new PasswordField();
+        passwordTextField.setMaxSize(width * 0.25, height * 0.05);
+        passwordTextField.setPrefSize(width * 0.25, height * 0.05);
+        passwordTextField.setPromptText("Contraseña");
+
+        Button loginButton = new Button("Iniciar sesión");
+        loginButton.setPrefSize(width * 0.25, height * 0.05);
+        loginButton.setOnMouseClicked(e -> loginAction(width, height));
+
+        vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
+
+        return vBox;
     }
 
     private VBox mainLoginPane(double width, double height) {
 
-        // Solo para probar.
-        user.saveNewUser("Alexander","Gonzalez","1234",(short) 1,true,"1234");
+        // Solo para robar.
+        //user.saveNewUser("Alexander","Gonzalez","1234",(short) 1,true,"1234");
 
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
         background.setPrefSize(width, height);
 
-        GridPane gridPane = loginGridPane(width, height);
+        VBox gridPane = loginGridPane(width, height);
 
         background.getChildren().addAll(gridPane);
         background.setAlignment(Pos.CENTER);
         return background;
     }
 
-    private void loginAcction(double width, double height) {
-        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(id_text_field.getText()), textFieldPassword.getText());
+    private void loginAction(double width, double height) {
+        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
         switch (loginSuccess) {
             case 1:
                 ClientMenu client = new ClientMenu(percentage, buttonFont);
@@ -101,9 +126,10 @@ public class Login {
                 loginScene.getStylesheets().add("styles.css");
                 break;
             case 0:
-                /* ToDo */ break;
+                /* ToDo */
+                break;
             default:
-                AlertBox.display("Error","Un error ha ocurrido al iniciar sesión","Contraseña o id incorrectos");
+                AlertBox.display("Error", "Contraseña o id incorrectos", "");
         }
     }
 

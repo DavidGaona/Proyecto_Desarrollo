@@ -45,14 +45,14 @@ public class ClientMenu {
 
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.205);
+        marginRect1.setWidth(width * 0.2035);
 
         double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
 
         Rectangle marginRect2 = new Rectangle();
         marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.195 - rect2Reduction)); //0.195
+        marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar cliente por documento");
@@ -100,14 +100,14 @@ public class ClientMenu {
     private HBox botBar(HBox hBox, double width, double height) {
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.205);
+        marginRect1.setWidth(width * 0.2035);
 
         double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
 
         Rectangle marginRect2 = new Rectangle();
         marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.391 - rect2Reduction * 2)); //0.391
+        marginRect2.setWidth(width * (0.394 - rect2Reduction * 2));
 
         Button clearButton = new Button("Limpiar celdas");
         clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
