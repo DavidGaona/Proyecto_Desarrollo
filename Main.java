@@ -24,7 +24,7 @@ public class Main extends Application {
         double height = screenSize.getHeight() - scnMax.bottom * 1.7;//1440 1080 720 648 576; 432 40
 
 
-        Login login = new Login(width,height,percentage, buttonFont);
+        Login login = new Login(width,height,percentage);
         Scene rootScene = login.renderLoginScene();
 
         window.setOnCloseRequest(e -> {
