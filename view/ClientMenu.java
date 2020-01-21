@@ -204,8 +204,8 @@ public class ClientMenu {
         AlertBox.display("", "Celdas Limpiadas", "");
     }
 
-    private TextField clientTextFieldTemplate(String tittle) {
-        TextField clientTextField = new TextField(tittle);
+    private TextField clientTextFieldTemplate() {
+        TextField clientTextField = new TextField();
         clientTextField.getStyleClass().add("client-text-field-template");
         clientTextField.setStyle(clientTextField.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
         clientTextField.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
@@ -283,7 +283,7 @@ public class ClientMenu {
         clientNameText.setId("T1");
 
         //name text field actions
-        clientNameTextField = clientTextFieldTemplate("");
+        clientNameTextField = clientTextFieldTemplate();
         clientNameTextField.setId("TF1");
 
         //last name text
@@ -292,7 +292,7 @@ public class ClientMenu {
 
 
         //name text field actions
-        clientLastNameTextField = clientTextFieldTemplate("");
+        clientLastNameTextField = clientTextFieldTemplate();
         clientLastNameTextField.setId("TF2");
 
         //document id text
@@ -300,7 +300,7 @@ public class ClientMenu {
         clientDocumentIdText.setId("T3");
 
         //Document id text field actions
-        clientDocumentIdTextField = clientTextFieldTemplate("");
+        clientDocumentIdTextField = clientTextFieldTemplate();
         clientDocumentIdTextField.setId("TF3");
         ProjectUtilities.onlyNumericTextField(clientDocumentIdTextField);
 
@@ -309,7 +309,7 @@ public class ClientMenu {
         clientEmailText.setId("T4");
 
         //Email TextField
-        clientEmailTextField = clientTextFieldTemplate("");
+        clientEmailTextField = clientTextFieldTemplate();
         clientEmailTextField.setId("TF4");
 
         //Direction Text
@@ -317,7 +317,7 @@ public class ClientMenu {
         clientDirectionText.setId("T5");
 
         //Direction TextField
-        clientDirectionTextField = clientTextFieldTemplate("");
+        clientDirectionTextField = clientTextFieldTemplate();
         clientDirectionTextField.setId("TF5");
 
         //document type text

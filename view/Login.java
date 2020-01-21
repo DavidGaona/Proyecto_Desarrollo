@@ -26,11 +26,12 @@ public class Login {
     private double labelFont;
     private double textFFont;
 
-    public Login(double width, double height, double percentage) {
+    public Login(double width, double height, double percentage, double buttonFont) {
         user = new DaoUser();
         this.percentage = percentage;
         this.width = width;
         this.height = height;
+        this.buttonFont = buttonFont;
     }
 
     private TextField userIdTextField;
