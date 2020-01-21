@@ -29,25 +29,24 @@ public class AlertBox {
 
         Label label = new Label();
         Label label2 = new Label();
-        double fontLabel = 20 - ( 20 * percentage);
+        double fontLabel = 20 - (20 * percentage);
         label.setText(message);
         label2.setText(message2);
-        label.setStyle("-fx-font-size: "+fontLabel+"px");
-        label2.setStyle("-fx-font-size: "+fontLabel+"px");
+        label.setStyle("-fx-font-size: " + fontLabel + "px;");
+        label2.setStyle("-fx-font-size: " + fontLabel + "px;");
 
         Button closeButton = new Button();
-        double fontButton = 16 - ( 16 * percentage);
+        double fontButton = 16 - (16 * percentage);
         closeButton.setText("Cerrar");
         closeButton.setOnAction(e -> window.close());
         closeButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.025);// 163.2 , 34
-        closeButton.setStyle("-fx-font-size: "+fontButton+"px");
+        closeButton.setStyle("-fx-font-size: " + fontButton + "px");
 
         VBox layout = new VBox();
-        if(message2 == "") {
+        if (message2.equals("")) {
             layout.getChildren().addAll(label, closeButton);
-        }
-        else{
-            layout.getChildren().addAll(label,label2, closeButton);
+        } else {
+            layout.getChildren().addAll(label, label2, closeButton);
         }
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #22282A");
@@ -58,8 +57,8 @@ public class AlertBox {
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
-        window.setX((screenSize.getWidth()/2) - ((screenSize.getWidth() * 0.3)/2));
-        window.setY((screenSize.getHeight()/2) - ((screenSize.getHeight() * 0.25)/2));
+        window.setX((screenSize.getWidth() / 2) - ((screenSize.getWidth() * 0.3) / 2));
+        window.setY((screenSize.getHeight() / 2) - ((screenSize.getHeight() * 0.25) / 2));
         window.setResizable(false);
         window.showAndWait();
 
