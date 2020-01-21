@@ -20,6 +20,7 @@ public class Login {
     private DaoUser user;
     private double percentage;
     private double buttonFont;
+    private double buttonFontLogin;
     private Scene loginScene;
     private double width;
     private double height;
@@ -29,6 +30,7 @@ public class Login {
     public Login(double width, double height, double percentage, double buttonFont) {
         user = new DaoUser();
         this.percentage = percentage;
+        this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
         this.buttonFont = buttonFont;
@@ -46,9 +48,13 @@ public class Login {
     }
 
     private VBox loginGridPane(double width, double height) {
-        textFFont = 30 - ( 30 * percentage);
-        labelFont = 60 - ( 60 * percentage * 1.2);
-        buttonFont = 40 - (40 * percentage);
+        double percentageWidth = (2560 - width) / 2560;
+        double percentageHeight = (1440 - height) / 1440;
+        double percentageLogin = Math.max(percentageWidth, percentageHeight);
+
+        textFFont = 30 - ( 30 * percentageLogin);
+        labelFont = 60 - ( 60 * percentageLogin);
+        buttonFontLogin = 40 - (40 * percentageLogin);
 
         VBox vBox = new VBox();
         vBox.setSpacing(height * 0.05);
@@ -97,7 +103,7 @@ public class Login {
 
         Button loginButton = new Button("Iniciar sesión");
         loginButton.setPrefSize(width * 0.25 , height * 0.05 );
-        loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: "+ buttonFont + "px;");
+        loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: "+ buttonFontLogin + "px;");
         loginButton.setOnMouseClicked(e -> loginAction(width, height));
 
         vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
