@@ -41,13 +41,20 @@ public class ClientMenu {
     private boolean currentClientMode = true;
     private double buttonFont;
 
+    private Button clientButtonTemplate(double width, double height, String message){
+        Button button = new Button(message);
+        button.setPrefSize(width , height);
+        button.setStyle("-fx-font-size: " + buttonFont);
+        button.getStyleClass().add("client-buttons-template");
+        return button;
+    }
+
     private HBox topBar(HBox hBox, double width, double height) {
 
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
         marginRect1.setWidth(width * 0.2035);
 
-        double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
 
         Rectangle marginRect2 = new Rectangle();
@@ -80,10 +87,7 @@ public class ClientMenu {
             }
         });
 
-        Button newClientButton = new Button("Nuevo cliente");
-        newClientButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
-        newClientButton.setStyle("-fx-font-size: " + buttonFont);
-        newClientButton.getStyleClass().add("client-buttons-template");
+        Button newClientButton = clientButtonTemplate(width * 0.15, height * 0.03, "Nuevo cliente");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
             ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
@@ -109,20 +113,14 @@ public class ClientMenu {
         marginRect2.setHeight(0);
         marginRect2.setWidth(width * (0.394 - rect2Reduction * 2));
 
-        Button clearButton = new Button("Limpiar celdas");
-        clearButton.setPrefSize(width * optimalWidth, height * 0.03); //0.10 , 0.03
-        clearButton.setStyle("-fx-font-size: " + buttonFont);
-        clearButton.getStyleClass().add("client-buttons-template");
+        Button clearButton = clientButtonTemplate(width * 0.15, height * 0.03,"Limpiar celdas");
         clearButton.setOnMouseClicked(e -> {
             clearTextFields();
             ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                     clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
         });
 
-        saveChangesButton = new Button("Agregar cliente");
-        saveChangesButton.setPrefSize(width * optimalWidth, height * 0.03); // 0.10 , 0.03
-        saveChangesButton.setStyle("-fx-font-size: " + buttonFont);
-        saveChangesButton.getStyleClass().add("client-buttons-template");
+        saveChangesButton = clientButtonTemplate(width * 0.15, height * 0.03,"Agregar cliente");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentClientMode) {
                 saveNewClient();
@@ -404,7 +402,7 @@ public class ClientMenu {
     public BorderPane renderClientEditMenu(double width, double height) {
         EditingMenu menu = new EditingMenu();
         BorderPane clientMenu;
-        clientMenu = menu.renderClientMenu(width, height, percentage, personalInfoPane(width, height));
+        clientMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width, height));
         clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));
         clientMenu.setBottom(botBar((HBox) clientMenu.getBottom(), width, height));
         clientMenu.setCenter(clientMenu.getCenter());
