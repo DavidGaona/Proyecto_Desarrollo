@@ -253,10 +253,9 @@ public class UserMenu {
         }
     }
 
-    private GridPane personalInfoPane(double width, double height) {
+    private GridPane personalInfoPane(double width) {
 
         GridPane gridPane = new GridPane();
-        //gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
         gridPane.setPrefWidth(width * 0.4);
         gridPane.setPadding(new Insets(25, 10, 25, 10));
         gridPane.setVgap(25);
@@ -382,7 +381,7 @@ public class UserMenu {
     public BorderPane renderUserEditMenu(double width, double height) {
         EditingMenu menu = new EditingMenu();
         BorderPane userMenu;
-        userMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width, height));
+        userMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width));
         userMenu.setTop(topBar((HBox) userMenu.getTop(), width, height));
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());

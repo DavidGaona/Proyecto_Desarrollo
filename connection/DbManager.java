@@ -17,11 +17,11 @@ import java.util.Arrays;
 
 public class DbManager {
     private DBconnect fachada;
-    private Connection conexion;
+    private Connection connection;
 
     public DbManager(String usuario, String password, String nombreBaseDeDatos, String host) {
         fachada = new DBconnect(usuario, password, nombreBaseDeDatos, host);
-        conexion = null;
+        connection = null;
     }
 
     public int saveNewClient(Client client) {
@@ -32,16 +32,16 @@ public class DbManager {
                 client.getDocumentId() + "', '" + client.getEmail() + "', '" + client.getDirection() + "'," +
                 client.getType() + ", " + client.getDocumentType() + ")" + " ON CONFLICT (id_cliente) DO NOTHING";
         try {
-            Statement sentencia = conexion.createStatement();
-            numFilas = sentencia.executeUpdate(sql_guardar);
+            Statement statement = connection.createStatement();
+            numFilas = statement.executeUpdate(sql_guardar);
             AlertBox.display("Operación exitosa", "Cliente creado", "");
             return numFilas;
 
         } catch (SQLException e) {
             AlertBox.display("Error", " Error al crear el cliente", "");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return -1;
     }
@@ -55,15 +55,15 @@ public class DbManager {
                 ", tipo_documento = " + client.getDocumentType() +
                 " WHERE documento_id_cliente = '" + client.getDocumentId() + "'";
         try {
-            Statement sentencia = conexion.createStatement();
-            numRows = sentencia.executeUpdate(sql_update);
+            Statement statement = connection.createStatement();
+            numRows = statement.executeUpdate(sql_update);
             AlertBox.display("Operación exitosa", "Cliente editado", "");
             System.out.println("up " + numRows);
         } catch (SQLException e) {
             AlertBox.display("Error", " Error al editar al cliente", "");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -75,8 +75,8 @@ public class DbManager {
         try {
 
             System.out.println("consultando en la base de datos");
-            Statement sentencia = conexion.createStatement();
-            ResultSet tabla = sentencia.executeQuery(sql_select);
+            Statement statement = connection.createStatement();
+            ResultSet tabla = statement.executeQuery(sql_select);
             tabla.next();
             Client client = new Client(
                     tabla.getString(1),
@@ -91,11 +91,11 @@ public class DbManager {
             AlertBox.display("Operación exitosa", "Cliente Encontrado", "");
             return client;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             AlertBox.display("Error", "Problema en la base de datos", "tabla: cliente");
             //System.out.println("Problema en la base de datos tabla: cliente");
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(Arrays.toString(e.getStackTrace()));
             System.out.println("ERROR Fatal en la base de datos");
         }
 
@@ -108,8 +108,8 @@ public class DbManager {
 
         try {
             System.out.println("consultando en la base de datos");
-            Statement sentencia = conexion.createStatement();
-            ResultSet table = sentencia.executeQuery(sql_select);
+            Statement statement = connection.createStatement();
+            ResultSet table = statement.executeQuery(sql_select);
             String hashedPasswordFromBD;
             short user_type;
             if (!table.next()) {
@@ -131,10 +131,10 @@ public class DbManager {
                 return 3;
             return user_type;
         } catch (SQLException e) {
-            System.out.println(e);
-        } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             System.out.println("ERROR Fatal en la base de datos");
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
 
         return -1;
@@ -149,8 +149,8 @@ public class DbManager {
                 " VALUES('" + user.getName() + "','" + user.getLastName() + "','" + user.getDocumentIdNumber() + "'," + user.getType() +
                 "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (id_usuario) DO NOTHING";
         try {
-            Statement sentencia = conexion.createStatement();
-            numRows = sentencia.executeUpdate(saveQuery);
+            Statement statement = connection.createStatement();
+            numRows = statement.executeUpdate(saveQuery);
             AlertBox.display("Operación exitosa", "Usuario creado", "");
             return numRows;
         } catch (Exception e) {
@@ -167,15 +167,15 @@ public class DbManager {
                 ", document_type = " + user.getDocumentType() + ", estado_usuario = " + user.getState() +
                 " WHERE documento_id_usuario = '" + user.getDocumentIdNumber() + "'";
         try {
-            Statement statement = conexion.createStatement();
+            Statement statement = connection.createStatement();
             numRows = statement.executeUpdate(sql_update);
             AlertBox.display("Operación exitosa", "Usuario editado", "");
             System.out.println("up " + numRows);
         } catch (SQLException e) {
             AlertBox.display("Error", " Error al editar al usuario", "");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
     } //loadUser
 
@@ -187,7 +187,7 @@ public class DbManager {
         try {
 
             System.out.println("Consultando en la base de datos");
-            Statement statement = conexion.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet tabla = statement.executeQuery(sql_select);
             tabla.next();
             User user = new User(
@@ -217,7 +217,7 @@ public class DbManager {
 
         try {
             System.out.println("consultando en la base de datos user: " + documentNumber);
-            Statement statement = conexion.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet table = statement.executeQuery(sql_select);
             String hashedPasswordFromBD;
             if (!table.next()) {
@@ -232,11 +232,8 @@ public class DbManager {
             }
 
             return true;
-        } catch (SQLException e) {
-            System.out.println(e);
         } catch (Exception e) {
-            System.out.println(e);
-            System.out.println("ERROR Fatal en la base de datos");
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -250,7 +247,7 @@ public class DbManager {
                 "WHERE documento_id_usuario = '" + documentNumber + "';";
 
         try {
-            Statement statement = conexion.createStatement();
+            Statement statement = connection.createStatement();
             statement.executeUpdate(sql_update);
             AlertBox.display("Logrado", "La contraseña fue cambiada", "con éxito");
             Login.currentWindow.set(Login.currentWindow.get() + 1);
@@ -261,11 +258,11 @@ public class DbManager {
     }
 
     public void openDBConnection() {
-        conexion = fachada.getConnetion();
+        connection = fachada.getConnection();
     }
 
     public void closeDBConnection() {
-        fachada.closeConnection(conexion);
+        fachada.closeConnection(connection);
     }
 
 }

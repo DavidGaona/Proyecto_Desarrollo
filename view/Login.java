@@ -138,7 +138,7 @@ public class Login {
                 loginScene.getStylesheets().add("styles.css");
                 break;
             case 1:
-                //ToDo
+                //ToDo manager
             case 2:
                 UserMenu user = new UserMenu(percentage, buttonFont);
                 loginScene.setRoot(user.renderUserEditMenu(width, height));

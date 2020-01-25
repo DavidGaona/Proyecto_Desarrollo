@@ -1,7 +1,6 @@
 package controller;
 
 import connection.DbManager;
-import model.Client;
 import model.User;
 
 public class DaoUser {

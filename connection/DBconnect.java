@@ -10,8 +10,6 @@ public class DBconnect {
 
     String url, user, password;
     Connection connection = null;
-    Statement instruction;
-    ResultSet table;
 
     public DBconnect(String user, String password, String dataBaseName, String host) {
         url = "jdbc:postgresql://" + host + ":5432/" + dataBaseName;
@@ -36,7 +34,7 @@ public class DBconnect {
 
     }
 
-    public Connection getConnetion() {
+    public Connection getConnection() {
         try {
             if (connection == null || connection.isClosed())
                 return this.connect();
