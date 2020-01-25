@@ -13,14 +13,14 @@
     -fx-border-color: #3C4448;
 }
 
-.label {
+.login-label {
     -fx-text-fill: #3986AC;
     -fx-font-family: Consolas;
     -fx-font-weight: bold;
     -fx-font-size: 60px;
 }
 
-.button {
+.login-button {
     -fx-background-color: #3986AC;
     -fx-text-fill: #FFFFFF;
     -fx-border-radius: 2;

@@ -1,0 +1,76 @@
+package view;
+
+import javafx.animation.FillTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Pos;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+
+
+public class SwitchButton extends StackPane {
+
+    private BooleanProperty switchedOn = new SimpleBooleanProperty(false);
+    private TranslateTransition translateAnimation = new TranslateTransition(Duration.seconds(0.125));
+    private FillTransition fillAnimation = new FillTransition(Duration.seconds(0.125));
+    private ParallelTransition animation = new ParallelTransition(translateAnimation, fillAnimation);
+
+    public BooleanProperty switchedOnProperty() {
+        return switchedOn;
+    }
+
+    public void invertSwitchedOn(){
+        switchedOn.set(!switchedOn.get());
+    }
+
+    public void setSwitchedButton(boolean state){
+        switchedOn.set(!state);
+    }
+
+    public SwitchButton(double width) {
+        setMinSize(width, 50);
+
+        Rectangle background = new Rectangle(width, 50);
+        background.setArcWidth(50);
+        background.setArcHeight(50);
+        background.setFill(Color.web("#88B300"));
+        background.setStroke(Color.web("#3D3D3E"));
+
+        Circle trigger = new Circle(25);
+        trigger.setCenterX(25);
+        trigger.setCenterY(25);
+        trigger.setFill(Color.web("#FFFFFF"));
+        trigger.setStroke(Color.web("#3D3D3E"));
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(2);
+        trigger.setEffect(shadow);
+
+        Text message = new Text("Activado");
+        message.setFont(new Font("Consolas", 20));
+        message.setFill(Color.web("#FFFFFF"));
+
+        translateAnimation.setNode(trigger);
+        fillAnimation.setShape(background);
+
+        getChildren().addAll(background, trigger, message);
+        setAlignment(trigger, Pos.CENTER_LEFT);
+
+        switchedOn.addListener((obs, oldState, newState) -> {
+            boolean isOn = newState;
+            translateAnimation.setToX(isOn ? (width) - 50 : 0);
+            fillAnimation.setFromValue(isOn ? Color.web("#88B300") : Color.web("#ED1221"));
+            fillAnimation.setToValue(isOn ? Color.web("#ED1221") : Color.web("#88B300"));
+            message.setText(isOn ? "Desactivado" : "Activado");
+            animation.play();
+        });
+    }
+}

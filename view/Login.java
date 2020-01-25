@@ -1,6 +1,7 @@
 package view;
 
 import controller.DaoUser;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,9 @@ import utilities.ProjectUtilities;
 
 public class Login {
 
+    public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(-9999999);
+    public static String currentUser = null;
+
     private DaoUser user;
     private double percentage;
     private double buttonFont;
@@ -21,27 +25,28 @@ public class Login {
     private double width;
     private double height;
 
-    public Login(double width, double height, double percentage, double buttonFont) {
+    public Login(double width, double height, double percentage, double buttonFont, SimpleIntegerProperty currentWindow2) {
         user = new DaoUser();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
+        currentWindow2.bind(currentWindow);
     }
 
     private TextField userIdTextField;
     private TextField passwordTextField;
 
-    private TextField loginTextFieldTemplate(double width, double height, String message) {
+    private TextField loginTextFieldTemplate(double width, double height) {
         TextField textField = new TextField();
         textField.getStyleClass().add("text-field-login");
-        textField.setPromptText(message);
+        textField.setPromptText("Número de documento");
         textField.setPrefSize(width, height);
         textField.setMaxSize(width, height);
         return textField;
     }
 
-    private VBox loginGridPane(double width, double height) {
+    private VBox loginVBox(double width, double height) {
         double percentageWidth = (2560 - width) / 2560;
         double percentageHeight = (1440 - height) / 1440;
         double percentageLogin = Math.max(percentageWidth, percentageHeight);
@@ -83,10 +88,11 @@ public class Login {
 
 
         Label loginLabel = new Label("INICIAR SESIÓN");
+        loginLabel.getStyleClass().add("login-label");
         loginLabel.setStyle(loginLabel.getStyle() + "-fx-font-size: " + labelFont + "px;");
         stackPane.getChildren().addAll(loginLabel);
 
-        userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05, "Número de documento");
+        userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05);
         userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
 
         passwordTextField = new PasswordField();
@@ -99,6 +105,7 @@ public class Login {
 
         Button loginButton = new Button("Iniciar sesión");
         loginButton.setPrefSize(width * 0.25, height * 0.05);
+        loginButton.getStyleClass().add("login-button");
         loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
         loginButton.setOnMouseClicked(e -> loginAction(width, height));
 
@@ -110,21 +117,20 @@ public class Login {
     private VBox mainLoginPane(double width, double height) {
 
         // Solo para robar.
-        user.saveNewUser("Alexander", "Gonzalez", "1234", (short) 0, (short) 2, true);
+       // user.saveNewUser("Alexander", "Gonzalez", "1234", (short) 0, (short) 2, true);
 
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
         background.setPrefSize(width, height);
 
-        VBox gridPane = loginGridPane(width, height);
-
-        background.getChildren().addAll(gridPane);
+        background.getChildren().addAll(loginVBox(width, height));
         background.setAlignment(Pos.CENTER);
         return background;
     }
 
     private void loginAction(double width, double height) {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
+        currentUser = userIdTextField.getText();
         switch (loginSuccess) {
             case 0:
                 ClientMenu client = new ClientMenu(percentage, buttonFont);
@@ -138,8 +144,18 @@ public class Login {
                 loginScene.setRoot(user.renderUserEditMenu(width, height));
                 loginScene.getStylesheets().add("styles.css");
                 break;
+            case 3:
+                UserPasswordChange userPasswordChange = new UserPasswordChange();
+                loginScene.setRoot(userPasswordChange.BackGroundPane(width, height));
+                break;
+            case -2:
+                currentUser = null;
+                AlertBox.display("Error", "No tiene permisos para ingresar", "contacte a un administrador");
+                break;
             default:
+                currentUser = null;
                 AlertBox.display("Error", "Contraseña o id incorrectos", "");
+                break;
         }
     }
 

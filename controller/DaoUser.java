@@ -33,15 +33,28 @@ public class DaoUser {
         return user;
     }
 
-    public int loginUser(String id_usuario, String password) {
+    public int loginUser(String DocumentNumber, String password) {
         dbManager.openDBConnection();
-        int role = dbManager.loginUser(id_usuario, password);
+        int role = dbManager.loginUser(DocumentNumber, password);
         dbManager.closeDBConnection();
-        if (role == 0) {
+        if (role >= 0) {
             System.out.println("Iniciada sesión correctamente");
         } else {
             System.out.println("No se pudo iniciar sesión");
         }
         return role;
+    }
+
+    public boolean checkPassword(String DocumentNumber, String password){
+        dbManager.openDBConnection();
+        boolean success = dbManager.checkPassword(DocumentNumber, password);
+        dbManager.closeDBConnection();
+        return success;
+    }
+
+    public void changePassword(String DocumentNumber, String password){
+        dbManager.openDBConnection();
+        dbManager.changePassword(DocumentNumber, password);
+        dbManager.closeDBConnection();
     }
 }

@@ -6,6 +6,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import model.Client;
 import model.User;
 import utilities.AlertBox;
+import view.Login;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -102,26 +103,32 @@ public class DbManager {
     }
 
     public int loginUser(String documento_id_usuario, String password) {
-        String sql_select = "SELECT pass_usuario,tipo_usuario" +
+        String sql_select = "SELECT pass_usuario, tipo_usuario, estado_usuario, up_to_date_password" +
                 " FROM public.usuario WHERE documento_id_usuario = '" + documento_id_usuario + "'";
 
         try {
             System.out.println("consultando en la base de datos");
             Statement sentencia = conexion.createStatement();
-            ResultSet tabla = sentencia.executeQuery(sql_select);
+            ResultSet table = sentencia.executeQuery(sql_select);
             String hashedPasswordFromBD;
             short user_type;
-            if (!tabla.next()) {
+            if (!table.next()) {
                 System.out.println("No se pudo encontrar el usuario");
                 return -1;
             }
-            hashedPasswordFromBD = tabla.getString(1);
-            user_type = tabla.getShort(2);
+            hashedPasswordFromBD = table.getString(1);
+            user_type = table.getShort(2);
             final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
             if (!resultCompare.verified) {
                 System.out.println("CONTRASEÑA INVALIDA");
                 return -1;
             }
+
+            if (!table.getBoolean(3))
+                return -2;
+
+            if(!table.getBoolean(4))
+                return 3;
             return user_type;
         } catch (SQLException e) {
             System.out.println(e);
@@ -156,12 +163,12 @@ public class DbManager {
         int numRows;
         String sql_update = "UPDATE public.usuario" +
                 " SET nombre_usuario = '" + user.getName() + "', apellidos_usuario = '" + user.getLastName() +
-                "', documento_id_usuario = '" + user.getDocumentIdNumber() + "', tipo_cliente = " + user.getType() +
-                ", tipo_documento = " + user.getDocumentType() + ", document_type = " + user.getDocumentType() +
+                "', documento_id_usuario = '" + user.getDocumentIdNumber() + "', tipo_usuario = " + user.getType() +
+                ", document_type = " + user.getDocumentType() + ", estado_usuario = " + user.getState() +
                 " WHERE documento_id_usuario = '" + user.getDocumentIdNumber() + "'";
         try {
-            Statement sentencia = conexion.createStatement();
-            numRows = sentencia.executeUpdate(sql_update);
+            Statement statement = conexion.createStatement();
+            numRows = statement.executeUpdate(sql_update);
             AlertBox.display("Operación exitosa", "Usuario editado", "");
             System.out.println("up " + numRows);
         } catch (SQLException e) {
@@ -180,8 +187,8 @@ public class DbManager {
         try {
 
             System.out.println("Consultando en la base de datos");
-            Statement sentencia = conexion.createStatement();
-            ResultSet tabla = sentencia.executeQuery(sql_select);
+            Statement statement = conexion.createStatement();
+            ResultSet tabla = statement.executeQuery(sql_select);
             tabla.next();
             User user = new User(
                     tabla.getString(1),
@@ -202,6 +209,55 @@ public class DbManager {
             System.out.println("ERROR Fatal en la base de datos");
         }
         return new User("", "", "", (short) -1, (short) -1, false);
+    }
+
+    public boolean checkPassword(String documentNumber, String password){
+        String sql_select = "SELECT pass_usuario" +
+                " FROM public.usuario WHERE documento_id_usuario = '" + documentNumber + "'";
+
+        try {
+            System.out.println("consultando en la base de datos user: " + documentNumber);
+            Statement statement = conexion.createStatement();
+            ResultSet table = statement.executeQuery(sql_select);
+            String hashedPasswordFromBD;
+            if (!table.next()) {
+                System.out.println("No se pudo encontrar el usuario");
+                return false;
+            }
+            hashedPasswordFromBD = table.getString(1);
+            final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
+            if (!resultCompare.verified) {
+                System.out.println("CONTRASEÑA INVALIDA");
+                return false;
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("ERROR Fatal en la base de datos");
+        }
+
+        return false;
+    }
+
+    public void changePassword(String documentNumber, String password){
+        final String encryptedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        String sql_update =
+                "UPDATE public.usuario " +
+                "SET pass_usuario = '" + encryptedPassword + "', up_to_date_password = true " +
+                "WHERE documento_id_usuario = '" + documentNumber + "';";
+
+        try {
+            Statement statement = conexion.createStatement();
+            statement.executeUpdate(sql_update);
+            AlertBox.display("Logrado", "La contraseña fue cambiada", "con éxito");
+            Login.currentWindow.set(Login.currentWindow.get() + 1);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public void openDBConnection() {

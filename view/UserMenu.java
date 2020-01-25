@@ -1,7 +1,6 @@
 package view;
 
 import controller.DaoUser;
-import controller.DaoUser;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -34,6 +33,7 @@ public class UserMenu {
     private ComboBox<String> userDocumentTypeComboBox;
     private ComboBox<String> userTypeComboBox;
     private Button saveChangesButton;
+    private SwitchButton userStateButton;
 
     private double percentage;
     private DaoUser user;
@@ -70,15 +70,15 @@ public class UserMenu {
         searchTextField.setOnAction(e -> {
             User searchedUser = user.loadUser(searchTextField.getText());
             if (!searchedUser.isBlank()) {
-                ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField, userDocumentIdTextField,
-                        userDocumentTypeComboBox, userTypeComboBox);
+                ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
+                        userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
 
                 userNameTextField.setText(searchedUser.getName());
                 userLastNameTextField.setText(searchedUser.getLastName());
                 userDocumentIdTextField.setText(searchedUser.getDocumentIdNumber());
                 userDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedUser.getDocumentType()));
                 userTypeComboBox.valueProperty().set(ProjectUtilities.convertUserTypeString(searchedUser.getType()));
-
+                userStateButton.setSwitchedButton(searchedUser.getState());
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
             }
@@ -86,13 +86,16 @@ public class UserMenu {
 
         Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
         newUserButton.setOnMouseClicked(e -> {
-            clearTextFields();
+            clearFields();
             ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
                     userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
             searchTextField.setText("");
+            userStateButton.setSwitchedButton(true);
         });
+
+
 
         hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField);
         return hBox;
@@ -111,9 +114,11 @@ public class UserMenu {
 
         Button clearButton = userButtonTemplate(width, height, "Limpiar celdas");
         clearButton.setOnMouseClicked(e -> {
-            clearTextFields();
+            clearFields();
             ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
                     userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
+            userStateButton.setSwitchedButton(true);
+            Login.currentWindow.set(Login.currentWindow.get() + 1);
         });
 
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");
@@ -139,7 +144,7 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(userDocumentIdTextField.getText()),
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
-                    true);
+                    !userStateButton.switchedOnProperty().get());
         }
     }
 
@@ -153,7 +158,7 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(userDocumentIdTextField.getText()),
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
-                    true);
+                    !userStateButton.switchedOnProperty().get());
         }
     }
 
@@ -182,7 +187,7 @@ public class UserMenu {
         return correct;
     }
 
-    private void clearTextFields() {
+    private void clearFields() {
         userNameTextField.setText("");
         userNameTextField.setText("");
         userLastNameTextField.setText("");
@@ -312,7 +317,16 @@ public class UserMenu {
         userTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
         userTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
         userTypeComboBox.setStyle(userDocumentTypeComboBox.getStyle() + "-fx-font-size: " + (20 - (20 * percentage)) + "px;");
-        userTypeComboBox.setId("CB6");
+        userTypeComboBox.setId("CB5");
+
+        //User state text
+        Text userStateText = userTextTemplate("Estado del usuario:", textColor);
+        userStateText.setId("T6");
+
+        //User state button
+        userStateButton = new SwitchButton(350 - (350 * percentage));
+        userStateButton.setOnMouseClicked(e -> userStateButton.invertSwitchedOn());
+        userStateButton.setId("UB6");
 
         //Install listener for color highlight
         focusListener(gridPane,
@@ -348,13 +362,18 @@ public class UserMenu {
         GridPane.setHalignment(userTypeText, HPos.RIGHT);
         GridPane.setConstraints(userTypeComboBox, colTextField, rowStart + 4);
 
+        GridPane.setConstraints(userStateText, colText, rowStart + 5);
+        GridPane.setHalignment(userStateText, HPos.RIGHT);
+        GridPane.setConstraints(userStateButton, colTextField, rowStart + 5);
+
         //Adding all nodes
         gridPane.getChildren().addAll(
                 userNameText, userNameTextField,
                 userLastNameText, userLastNameTextField,
                 userDocumentTypeText, userDocumentTypeComboBox,
                 userDocumentIdText, userDocumentIdTextField,
-                userTypeText, userTypeComboBox);
+                userTypeText, userTypeComboBox,
+                userStateText, userStateButton);
 
         gridPane.setId("Información Personal");
         return gridPane;

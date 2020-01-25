@@ -106,7 +106,6 @@ public class ClientMenu {
         marginRect1.setHeight(0);
         marginRect1.setWidth(width * 0.2035);
 
-        double optimalWidth = 0.15;
         double rect2Reduction = 0.05;
 
         Rectangle marginRect2 = new Rectangle();

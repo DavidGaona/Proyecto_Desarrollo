@@ -7,7 +7,6 @@ public class Resolution {
         int[][] resList = new int[11][2];
         fillResList(resList);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
         return resList;
     }
 
