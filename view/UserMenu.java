@@ -194,7 +194,6 @@ public class UserMenu {
         userDocumentIdTextField.setText("");
         userDocumentTypeComboBox.valueProperty().set(null);
         userTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Celdas Limpiadas", "");
     }
 
     private TextField userTextFieldTemplate() {

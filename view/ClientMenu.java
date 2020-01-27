@@ -200,7 +200,6 @@ public class ClientMenu {
         clientDirectionTextField.setText("");
         clientDocumentTypeComboBox.valueProperty().set(null);
         clientTypeComboBox.valueProperty().set(null);
-        AlertBox.display("", "Celdas Limpiadas", "");
     }
 
     private TextField clientTextFieldTemplate() {
