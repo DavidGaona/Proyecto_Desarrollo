@@ -54,6 +54,8 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-family: Consolas;
     -fx-font-size: 18;
+    -fx-border-color: #2E293D;
+    -fx-border-width: 2;
 }
 
 .client-text-field-template {

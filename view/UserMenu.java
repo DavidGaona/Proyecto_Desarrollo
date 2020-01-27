@@ -84,6 +84,8 @@ public class UserMenu {
             }
         });
 
+        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
+
         Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
         newUserButton.setOnMouseClicked(e -> {
             clearFields();
@@ -94,8 +96,6 @@ public class UserMenu {
             searchTextField.setText("");
             userStateButton.setSwitchedButton(true);
         });
-
-
 
         hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField);
         return hBox;
@@ -144,7 +144,7 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(userDocumentIdTextField.getText()),
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
-                    !userStateButton.switchedOnProperty().get());
+                    userStateButton.switchedOnProperty().get());
         }
     }
 
@@ -158,7 +158,7 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(userDocumentIdTextField.getText()),
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
-                    !userStateButton.switchedOnProperty().get());
+                    userStateButton.switchedOnProperty().get());
         }
     }
 
@@ -211,46 +211,6 @@ public class UserMenu {
         userText.setFont(new Font("Consolas", 20 - (20 * percentage)));
         userText.setFill(Color.web(color));
         return userText;
-    }
-
-    private Node selectedNode, lastSelectedNode;
-
-    private void focusListener(GridPane layout, Node... nodes) {
-        // Install the same listener on all of them
-        for (Node textField : nodes) {
-            textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
-
-                // Set the selectedTextField to null whenever focus is lost. This accounts for the
-                // TextField losing focus to another control that is NOT a TextField
-                selectedNode = null;
-
-                if (newValue) {
-                    // The new node is focused, so set the global reference
-                    lastSelectedNode = textField;
-                    selectedNode = textField;
-                    String textFieldId = selectedNode.getId();
-                    selectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #C2B8E0;");
-                    for (Node node : layout.getChildren()) {
-                        if (textFieldId.substring(2).equals(node.getId().substring(1))) {
-                            ((Text) node).setFill(Color.web("#C2B8E0"));
-                            break;
-                        }
-                    }
-                } else {
-                    String textFieldId = lastSelectedNode.getId();
-                    if (lastSelectedNode != null) {
-                        lastSelectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #3d3d3d;");
-                        for (Node node : layout.getChildren()) {
-                            if (textFieldId.substring(2).equals(node.getId().substring(1))) {
-                                ((Text) node).setFill(Color.web("#948FA3"));
-                                break;
-                            }
-                        }
-                    }
-                }
-
-            });
-        }
     }
 
     private GridPane personalInfoPane(double width) {
@@ -328,7 +288,7 @@ public class UserMenu {
         userStateButton.setId("UB6");
 
         //Install listener for color highlight
-        focusListener(gridPane,
+        ProjectUtilities.focusListener(gridPane,
                 userNameTextField, userLastNameTextField,
                 userDocumentIdTextField, userDocumentTypeComboBox,
                 userTypeComboBox);

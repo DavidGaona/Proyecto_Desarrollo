@@ -92,7 +92,7 @@ public class DbManager {
             return client;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            AlertBox.display("Error", "Problema en la base de datos", "tabla: cliente");
+            AlertBox.display("Error", "Cliente no encontrado", "");
             //System.out.println("Problema en la base de datos tabla: cliente");
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -203,7 +203,7 @@ public class DbManager {
             return user;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            AlertBox.display("Error", "Problema en la base de datos", "tabla: usuario");
+            AlertBox.display("Error", "Usuario no encontrado", "");
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             System.out.println("ERROR Fatal en la base de datos");

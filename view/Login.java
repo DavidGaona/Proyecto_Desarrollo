@@ -103,6 +103,8 @@ public class Login {
         passwordTextField.setPromptText("Contraseña");
         passwordTextField.setOnAction(e -> loginAction(width, height));
 
+        ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField);
+
         Button loginButton = new Button("Iniciar sesión");
         loginButton.setPrefSize(width * 0.25, height * 0.05);
         loginButton.getStyleClass().add("login-button");

@@ -87,6 +87,8 @@ public class ClientMenu {
             }
         });
 
+        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
+
         Button newClientButton = clientButtonTemplate(width * 0.15, height * 0.03, "Nuevo cliente");
         newClientButton.setOnMouseClicked(e -> {
             clearTextFields();
@@ -217,47 +219,7 @@ public class ClientMenu {
         return clientText;
     }
 
-    private Node selectedNode, lastSelectedNode;
-
-    private void focusListener(GridPane layout, Node... nodes) {
-        // Install the same listener on all of them
-        for (Node textField : nodes) {
-            textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
-
-                // Set the selectedTextField to null whenever focus is lost. This accounts for the
-                // TextField losing focus to another control that is NOT a TextField
-                selectedNode = null;
-
-                if (newValue) {
-                    // The new node is focused, so set the global reference
-                    lastSelectedNode = textField;
-                    selectedNode = textField;
-                    String textFieldId = selectedNode.getId();
-                    selectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #C2B8E0;");
-                    for (Node node : layout.getChildren()) {
-                        if (textFieldId.substring(2).equals(node.getId().substring(1))) {
-                            ((Text) node).setFill(Color.web("#C2B8E0"));
-                            break;
-                        }
-                    }
-                } else {
-                    String textFieldId = lastSelectedNode.getId();
-                    if (lastSelectedNode != null) {
-                        lastSelectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #3d3d3d;");
-                        for (Node node : layout.getChildren()) {
-                            if (textFieldId.substring(2).equals(node.getId().substring(1))) {
-                                ((Text) node).setFill(Color.web("#948FA3"));
-                                break;
-                            }
-                        }
-                    }
-                }
-
-            });
-        }
-    }
-
-    private GridPane personalInfoPane(double width, double height) {
+    private GridPane personalInfoPane(double width) {
 
         GridPane gridPane = new GridPane();
         //gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
@@ -340,7 +302,7 @@ public class ClientMenu {
         clientTypeComboBox.setId("CB7");
 
         //Install listener for color highlight
-        focusListener(gridPane,
+        ProjectUtilities.focusListener(gridPane,
                 clientNameTextField, clientLastNameTextField,
                 clientDocumentIdTextField, clientEmailTextField,
                 clientDirectionTextField, clientDocumentTypeComboBox,
@@ -401,7 +363,7 @@ public class ClientMenu {
     public BorderPane renderClientEditMenu(double width, double height) {
         EditingMenu menu = new EditingMenu();
         BorderPane clientMenu;
-        clientMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width, height));
+        clientMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width));
         clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));
         clientMenu.setBottom(botBar((HBox) clientMenu.getBottom(), width, height));
         clientMenu.setCenter(clientMenu.getCenter());

@@ -46,8 +46,12 @@ public class UserPasswordChange {
         TextField confirmPasswordTextField = textFieldTemplate(width * 0.25, height * 0.05, "Confirmar nueva contraseña");
         confirmPasswordTextField.setOnKeyTyped(e -> {
             if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
-                confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #008000;");
+                if (!confirmPasswordTextField.getText().isEmpty())
+                    confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #008000;");
+                else
+                    confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #3985AB;");
             } else {
+
                 confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #FF0000;");
             }
         });
@@ -75,6 +79,8 @@ public class UserPasswordChange {
             }
         });
 
+        ProjectUtilities.focusListener("3C4448", "3985AB", currentPasswordTextField, newPasswordTextField, confirmPasswordTextField);
+
         background.getChildren().addAll(
                 tittleLabel, currentPasswordTextField,
                 styleLine, newPasswordTextField,
@@ -82,6 +88,10 @@ public class UserPasswordChange {
         );
 
         return background;
+    }
+
+    private boolean passwordMeetsStandard(String password){
+        return (password.length() > 7);
     }
 
     public VBox BackGroundPane(double width, double height) {

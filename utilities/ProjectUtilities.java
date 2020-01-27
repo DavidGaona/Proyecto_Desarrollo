@@ -2,6 +2,9 @@ package utilities;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class ProjectUtilities {
 
@@ -132,6 +135,63 @@ public class ProjectUtilities {
                     textField.setText(limitedText);
                     textField.positionCaret(prevPos);
                 }
+            });
+        }
+    }
+
+    private static Node selectedNode, lastSelectedNode;
+    public static void focusListener(GridPane layout, Node... nodes) {
+        // Install the same listener on all of them
+        for (Node textField : nodes) {
+            textField.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
+
+                // Set the selectedTextField to null whenever focus is lost. This accounts for the
+                // TextField losing focus to another control that is NOT a TextField
+                selectedNode = null;
+
+                if (newValue) {
+                    // The new node is focused, so set the global reference
+                    lastSelectedNode = textField;
+                    selectedNode = textField;
+                    String textFieldId = selectedNode.getId();
+                    selectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #C2B8E0;");
+                    for (Node node : layout.getChildren()) {
+                        if (textFieldId.substring(2).equals(node.getId().substring(1))) {
+                            ((Text) node).setFill(Color.web("#C2B8E0"));
+                            break;
+                        }
+                    }
+                } else {
+                    String textFieldId = lastSelectedNode.getId();
+                    if (lastSelectedNode != null) {
+                        lastSelectedNode.setStyle(textField.getStyle() + "\n-fx-border-color: #3d3d3d;");
+                        for (Node node : layout.getChildren()) {
+                            if (textFieldId.substring(2).equals(node.getId().substring(1))) {
+                                ((Text) node).setFill(Color.web("#948FA3"));
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            });
+        }
+    }
+
+    public static void focusListener(String oldColor, String newColor, Node... nodes) {
+        for (Node node : nodes) {
+            node.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
+                selectedNode = null;
+                if (newValue) {
+                    lastSelectedNode = node;
+                    selectedNode = node;
+                    selectedNode.setStyle(node.getStyle() + "\n-fx-border-color: #" + newColor + ";");
+                } else {
+                    if (lastSelectedNode != null) {
+                        lastSelectedNode.setStyle(node.getStyle() + "\n-fx-border-color: #" + oldColor + ";");
+                    }
+                }
+
             });
         }
     }

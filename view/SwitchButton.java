@@ -18,7 +18,7 @@ import javafx.util.Duration;
 
 public class SwitchButton extends StackPane {
 
-    private BooleanProperty switchedOn = new SimpleBooleanProperty(false);
+    private BooleanProperty switchedOn = new SimpleBooleanProperty(true);
     private TranslateTransition translateAnimation = new TranslateTransition(Duration.seconds(0.125));
     private FillTransition fillAnimation = new FillTransition(Duration.seconds(0.125));
     private ParallelTransition animation = new ParallelTransition(translateAnimation, fillAnimation);
@@ -41,7 +41,7 @@ public class SwitchButton extends StackPane {
         Rectangle background = new Rectangle(width, 50);
         background.setArcWidth(50);
         background.setArcHeight(50);
-        background.setFill(Color.web("#88B300"));
+        background.setFill(Color.web("#5639AC"));
         background.setStroke(Color.web("#3D3D3E"));
 
         Circle trigger = new Circle(25);
@@ -55,21 +55,21 @@ public class SwitchButton extends StackPane {
         trigger.setEffect(shadow);
 
         Text message = new Text("Activado");
-        message.setFont(new Font("Consolas", 20));
+        message.setFont(new Font("Consolas", 25));
         message.setFill(Color.web("#FFFFFF"));
 
         translateAnimation.setNode(trigger);
         fillAnimation.setShape(background);
 
         getChildren().addAll(background, trigger, message);
-        setAlignment(trigger, Pos.CENTER_LEFT);
+        setAlignment(trigger, Pos.CENTER_RIGHT);
 
         switchedOn.addListener((obs, oldState, newState) -> {
             boolean isOn = newState;
-            translateAnimation.setToX(isOn ? (width) - 50 : 0);
-            fillAnimation.setFromValue(isOn ? Color.web("#88B300") : Color.web("#ED1221"));
-            fillAnimation.setToValue(isOn ? Color.web("#ED1221") : Color.web("#88B300"));
-            message.setText(isOn ? "Desactivado" : "Activado");
+            translateAnimation.setToX(isOn ? 0 : -(width) + 50);
+            fillAnimation.setFromValue(isOn ? Color.web("#3D3946") : Color.web("#5639AC"));
+            fillAnimation.setToValue(isOn ? Color.web("#5639AC") : Color.web("#3D3946"));
+            message.setText(isOn ? "Activado" : "Desactivado");
             animation.play();
         });
     }
