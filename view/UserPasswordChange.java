@@ -27,10 +27,18 @@ public class UserPasswordChange {
     }
 
     private VBox passwordChangePane(double width, double height) {
+        double percentageWidth = (2560 - width) / 2560;
+        double percentageHeight = (1440 - height) / 1440;
+        double percentageChange = Math.max(percentageWidth, percentageHeight);
+
+        double textFFont = 30 - (30 * percentageChange);
+        double labelFont = 60 - (60 * percentageChange);
+        double buttonFontChange = 40 - (40 * percentageChange);
+
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
         background.setPadding(new Insets(25, 0, 25, 0));
-        background.setSpacing(50);
+        background.setSpacing(50 - (50 * percentageChange));
         background.setPrefSize(width * 0.3, height * 0.6);
         background.setMaxWidth(width * 0.3);
         background.setAlignment(Pos.TOP_CENTER);
@@ -39,11 +47,15 @@ public class UserPasswordChange {
 
         Label tittleLabel = new Label("Cambiar contraseña");
         tittleLabel.getStyleClass().add("login-label");
-        tittleLabel.setStyle(tittleLabel.getStyle() + "-fx-font-size: " + 60 + "px;");
+        tittleLabel.setStyle(tittleLabel.getStyle() + "-fx-font-size: " + labelFont + "px;");
 
         TextField currentPasswordTextField = textFieldTemplate(width * 0.25, height * 0.05, "Contraseña actual");
         TextField newPasswordTextField = textFieldTemplate(width * 0.25, height * 0.05, "Contraseña nueva");
         TextField confirmPasswordTextField = textFieldTemplate(width * 0.25, height * 0.05, "Confirmar nueva contraseña");
+        currentPasswordTextField.setStyle(currentPasswordTextField.getStyle() + "-fx-font-size: " + textFFont + "px;");
+        newPasswordTextField.setStyle(newPasswordTextField.getStyle() + "-fx-font-size: " + textFFont + "px;");
+        confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-font-size: " + textFFont + "px;");
+
         confirmPasswordTextField.setOnKeyTyped(e -> {
             if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
                 if (!confirmPasswordTextField.getText().isEmpty())
@@ -65,6 +77,8 @@ public class UserPasswordChange {
         Button changePasswordButton = new Button("Cambiar contraseña");
         changePasswordButton.setPrefSize(width * 0.25, height * 0.05);
         changePasswordButton.getStyleClass().add("login-button");
+        changePasswordButton.setStyle(changePasswordButton.getStyle() + "-fx-font-size: "+ buttonFontChange + "px;");
+
         changePasswordButton.setOnMouseClicked(e -> {
             DaoUser user = new DaoUser();
             if (user.checkPassword(Login.currentUser, currentPasswordTextField.getText())) {
