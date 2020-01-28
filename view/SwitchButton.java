@@ -15,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 
 public class SwitchButton extends StackPane {
 
@@ -32,21 +34,26 @@ public class SwitchButton extends StackPane {
     }
 
     public void setSwitchedButton(boolean state){
-        switchedOn.set(!state);
+        switchedOn.set(state);
     }
 
-    public SwitchButton(double width) {
-        setMinSize(width, 50);
+    public SwitchButton(double width, double height) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
+        double percentageHeight = (1080 - screenSize.getHeight()) / 1080;
+        double percentage = Math.max(percentageWidth, percentageHeight);
 
-        Rectangle background = new Rectangle(width, 50);
-        background.setArcWidth(50);
-        background.setArcHeight(50);
+        setMinSize(width, height);
+
+        Rectangle background = new Rectangle(width, height);
+        background.setArcWidth(height);
+        background.setArcHeight(height);
         background.setFill(Color.web("#5639AC"));
         background.setStroke(Color.web("#3D3D3E"));
 
-        Circle trigger = new Circle(25);
-        trigger.setCenterX(25);
-        trigger.setCenterY(25);
+        Circle trigger = new Circle(height/2);
+        trigger.setCenterX(height/2);
+        trigger.setCenterY(height/2);
         trigger.setFill(Color.web("#FFFFFF"));
         trigger.setStroke(Color.web("#3D3D3E"));
 
@@ -55,7 +62,7 @@ public class SwitchButton extends StackPane {
         trigger.setEffect(shadow);
 
         Text message = new Text("Activado");
-        message.setFont(new Font("Consolas", 25));
+        message.setFont(new Font("Consolas", 20 - (20 * percentage)));
         message.setFill(Color.web("#FFFFFF"));
 
         translateAnimation.setNode(trigger);
@@ -66,7 +73,7 @@ public class SwitchButton extends StackPane {
 
         switchedOn.addListener((obs, oldState, newState) -> {
             boolean isOn = newState;
-            translateAnimation.setToX(isOn ? 0 : -(width) + 50);
+            translateAnimation.setToX(isOn ? 0 : -(width) + height);
             fillAnimation.setFromValue(isOn ? Color.web("#3D3946") : Color.web("#5639AC"));
             fillAnimation.setToValue(isOn ? Color.web("#5639AC") : Color.web("#3D3946"));
             message.setText(isOn ? "Activado" : "Desactivado");
