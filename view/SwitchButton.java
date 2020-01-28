@@ -32,7 +32,7 @@ public class SwitchButton extends StackPane {
     }
 
     public void setSwitchedButton(boolean state){
-        switchedOn.set(!state);
+        switchedOn.set(state);
     }
 
     public SwitchButton(double width) {
