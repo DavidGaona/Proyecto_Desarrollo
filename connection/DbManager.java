@@ -25,17 +25,17 @@ public class DbManager {
     }
 
     public int saveNewClient(Client client) {
-        String sql_guardar;
-        int numFilas;
-        sql_guardar = "INSERT INTO public.cliente(nombre_cliente, apellidos_cliente, documento_id_cliente, email_cliente, direccion_cliente, tipo_cliente, tipo_documento)" +
+        String sql_insert;
+        int numRows;
+        sql_insert = "INSERT INTO public.client(client_name, client_last_name, client_document_number, client_email, client_address, client_type, client_document_type)" +
                 " VALUES ('" + client.getName() + "', '" + client.getLastName() + "', '" +
                 client.getDocumentId() + "', '" + client.getEmail() + "', '" + client.getDirection() + "'," +
-                client.getType() + ", " + client.getDocumentType() + ")" + " ON CONFLICT (id_cliente) DO NOTHING";
+                client.getType() + ", " + client.getDocumentType() + ")" + " ON CONFLICT (client_id) DO NOTHING";
         try {
             Statement statement = connection.createStatement();
-            numFilas = statement.executeUpdate(sql_guardar);
+            numRows = statement.executeUpdate(sql_insert);
             AlertBox.display("Operación exitosa", "Cliente creado", "");
-            return numFilas;
+            return numRows;
 
         } catch (SQLException e) {
             AlertBox.display("Error", " Error al crear el cliente", "");
@@ -48,12 +48,12 @@ public class DbManager {
 
     public void editClient(Client client) {
         int numRows;
-        String sql_update = "UPDATE public.cliente" +
-                " SET nombre_cliente = '" + client.getName() + "', apellidos_cliente = '" + client.getLastName() +
-                "', documento_id_cliente = '" + client.getDocumentId() + "', email_cliente = '" + client.getEmail() +
-                "', direccion_cliente = '" + client.getDirection() + "', tipo_cliente = " + client.getType() +
-                ", tipo_documento = " + client.getDocumentType() +
-                " WHERE documento_id_cliente = '" + client.getDocumentId() + "'";
+        String sql_update = "UPDATE public.client " +
+                "SET client_name = '" + client.getName() + "', client_last_name = '" + client.getLastName() +
+                "', client_document_number = '" + client.getDocumentId() + "', client_email = '" + client.getEmail() +
+                "', client_address = '" + client.getDirection() + "', client_type = " + client.getType() +
+                ", client_document_type = " + client.getDocumentType() +
+                " WHERE client_document_number = '" + client.getDocumentId() + "' AND client_document_type = " + client.getDocumentType();
         try {
             Statement statement = connection.createStatement();
             numRows = statement.executeUpdate(sql_update);
@@ -69,9 +69,9 @@ public class DbManager {
 
     public Client loadClient(String documentNumber) {
 
-        String sql_select = "SELECT nombre_cliente, apellidos_cliente, tipo_documento, documento_id_cliente," +
-                " email_cliente, direccion_cliente, tipo_cliente " +
-                "FROM public.cliente WHERE documento_id_cliente = '" + documentNumber + "'";
+        String sql_select = "SELECT client_name, client_last_name, client_document_type," +
+                " client_email, client_address, client_type " +
+                "FROM public.client WHERE client_document_number = '" + documentNumber + "'";
         try {
 
             System.out.println("consultando en la base de datos");
@@ -82,10 +82,10 @@ public class DbManager {
                     tabla.getString(1),
                     tabla.getString(2),
                     tabla.getShort(3),
+                    documentNumber,
                     tabla.getString(4),
                     tabla.getString(5),
-                    tabla.getString(6),
-                    tabla.getShort(7)
+                    tabla.getShort(6)
             );
             System.out.println(client.getName());
             AlertBox.display("Operación exitosa", "Cliente Encontrado", "");
@@ -93,7 +93,6 @@ public class DbManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             AlertBox.display("Error", "Cliente no encontrado", "");
-            //System.out.println("Problema en la base de datos tabla: cliente");
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             System.out.println("ERROR Fatal en la base de datos");
@@ -103,8 +102,8 @@ public class DbManager {
     }
 
     public int loginUser(String documento_id_usuario, String password) {
-        String sql_select = "SELECT pass_usuario, tipo_usuario, estado_usuario, up_to_date_password" +
-                " FROM public.usuario WHERE documento_id_usuario = '" + documento_id_usuario + "'";
+        String sql_select = "SELECT user_password, user_type, user_state, up_to_date_password" +
+                " FROM public.user WHERE user_document_number = '" + documento_id_usuario + "'";
 
         try {
             System.out.println("consultando en la base de datos");
@@ -145,9 +144,9 @@ public class DbManager {
         int numRows;
         String saveQuery;
         final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
-        saveQuery = "INSERT INTO public.usuario(nombre_usuario, apellidos_usuario, documento_id_usuario, tipo_usuario, estado_usuario, pass_usuario, document_type)" +
+        saveQuery = "INSERT INTO public.user(user_name, user_last_name, user_document_number, user_type, user_state, user_password, user_document_type)" +
                 " VALUES('" + user.getName() + "','" + user.getLastName() + "','" + user.getDocumentIdNumber() + "'," + user.getType() +
-                "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (id_usuario) DO NOTHING";
+                "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (user_id) DO NOTHING";
         try {
             Statement statement = connection.createStatement();
             numRows = statement.executeUpdate(saveQuery);
@@ -161,11 +160,11 @@ public class DbManager {
 
     public void editUser(User user) {
         int numRows;
-        String sql_update = "UPDATE public.usuario" +
-                " SET nombre_usuario = '" + user.getName() + "', apellidos_usuario = '" + user.getLastName() +
-                "', documento_id_usuario = '" + user.getDocumentIdNumber() + "', tipo_usuario = " + user.getType() +
-                ", document_type = " + user.getDocumentType() + ", estado_usuario = " + user.getState() +
-                " WHERE documento_id_usuario = '" + user.getDocumentIdNumber() + "'";
+        String sql_update = "UPDATE public.user" +
+                " SET user_name = '" + user.getName() + "', user_last_name = '" + user.getLastName() +
+                "', user_document_number = '" + user.getDocumentIdNumber() + "', user_type = " + user.getType() +
+                ", user_document_type = " + user.getDocumentType() + ", user_state = " + user.getState() +
+                " WHERE user_document_number = '" + user.getDocumentIdNumber() + "'";
         try {
             Statement statement = connection.createStatement();
             numRows = statement.executeUpdate(sql_update);
@@ -181,9 +180,9 @@ public class DbManager {
 
     public User loadUser(String documentNumber) {
 
-        String sql_select = "SELECT nombre_usuario, apellidos_usuario, documento_id_usuario, document_type," +
-                " tipo_usuario, estado_usuario " +
-                "FROM public.usuario WHERE documento_id_usuario = '" + documentNumber + "'";
+        String sql_select = "SELECT user_name, user_last_name, user_document_number, user_document_type," +
+                " user_type, user_state " +
+                "FROM public.user WHERE user_document_number = '" + documentNumber + "'";
         try {
 
             System.out.println("Consultando en la base de datos");
@@ -212,8 +211,8 @@ public class DbManager {
     }
 
     public boolean checkPassword(String documentNumber, String password){
-        String sql_select = "SELECT pass_usuario" +
-                " FROM public.usuario WHERE documento_id_usuario = '" + documentNumber + "'";
+        String sql_select = "SELECT user_password" +
+                " FROM public.user WHERE user_document_number = '" + documentNumber + "'";
 
         try {
             System.out.println("consultando en la base de datos user: " + documentNumber);
@@ -242,9 +241,9 @@ public class DbManager {
     public void changePassword(String documentNumber, String password){
         final String encryptedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
         String sql_update =
-                "UPDATE public.usuario " +
-                "SET pass_usuario = '" + encryptedPassword + "', up_to_date_password = true " +
-                "WHERE documento_id_usuario = '" + documentNumber + "';";
+                "UPDATE public.user " +
+                        "SET user_password = '" + encryptedPassword + "', up_to_date_password = true " +
+                        "WHERE user_document_number = '" + documentNumber + "';";
 
         try {
             Statement statement = connection.createStatement();

@@ -282,7 +282,7 @@ public class UserMenu {
         userStateText.setId("T6");
 
         //User state button
-        userStateButton = new SwitchButton(350 - (350 * percentage));
+        userStateButton = new SwitchButton(350 - (350 * percentage), 45 - (45 * percentage));
         userStateButton.setOnMouseClicked(e -> userStateButton.invertSwitchedOn());
         userStateButton.setId("UB6");
 
