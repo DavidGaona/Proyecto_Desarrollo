@@ -68,23 +68,12 @@ public class SignOut {
         window.setWidth(screenSize.getWidth() * 0.10); //408
         window.setHeight(screenSize.getHeight() * 0.25); //340
 
-
-        javafx.scene.control.Button closeButton = new Button();
-        double fontButton = 16 - (16 * percentage);
-        closeButton.setText("Cerrar");
-        closeButton.setOnAction(e -> {
-            window.close();
-            ownerStage.close();
-        });
-        closeButton.setPrefSize(screenSize.getWidth() * 0.10, screenSize.getHeight() * 0.025);// 163.2 , 34
-        closeButton.setStyle("-fx-font-size: " + fontButton + "px");
-
         Label label1 = labelGenerator("pru", width, height);
         Label label2 = labelGenerator("Cerrar sesión",width, height);
 
         label2.setOnMouseClicked( e ->{
-            window.close();
-            ownerStage.close();
+            /*window.close();
+            ownerStage.close();*/
             boolean answer = ConfirmBox.display("Cerrar sesión", "¿ Quieres cerrar sesión?");
             if(answer)
             {
@@ -100,7 +89,7 @@ public class SignOut {
         });
 
         VBox layout = new VBox();
-        layout.getChildren().addAll( label1, separator(width), label2, separator(width), closeButton);
+        layout.getChildren().addAll( label1, separator(width), label2, separator(width));
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #22282A");
         layout.setPadding(new Insets(20, 20, 20, 20));
