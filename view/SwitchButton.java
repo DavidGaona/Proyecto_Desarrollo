@@ -15,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 
 public class SwitchButton extends StackPane {
 
@@ -36,6 +38,11 @@ public class SwitchButton extends StackPane {
     }
 
     public SwitchButton(double width, double height) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
+        double percentageHeight = (1080 - screenSize.getHeight()) / 1080;
+        double percentage = Math.max(percentageWidth, percentageHeight);
+
         setMinSize(width, height);
 
         Rectangle background = new Rectangle(width, height);
@@ -55,7 +62,7 @@ public class SwitchButton extends StackPane {
         trigger.setEffect(shadow);
 
         Text message = new Text("Activado");
-        message.setFont(new Font("Consolas", 25));
+        message.setFont(new Font("Consolas", 20 - (20 * percentage)));
         message.setFill(Color.web("#FFFFFF"));
 
         translateAnimation.setNode(trigger);

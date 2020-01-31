@@ -8,13 +8,16 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import model.User;
 import utilities.AlertBox;
 import utilities.ProjectUtilities;
@@ -39,6 +42,7 @@ public class UserMenu {
     private DaoUser user;
     private boolean currentUserMode = true;
     private double buttonFont;
+    private boolean signOutStageShowed = false;
 
     private Button userButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -59,6 +63,24 @@ public class UserMenu {
         Rectangle marginRect2 = new Rectangle();
         marginRect2.setHeight(0);
         marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
+
+        double result = width * 0.2035 + width * (0.198 - rect2Reduction) + width * 0.296 + width * 0.15;
+        System.out.println(result);
+
+        Rectangle marginRect3 = new Rectangle();
+        marginRect3.setHeight(0);
+
+        marginRect3.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+
+        Circle circleSO = new Circle((height * 0.045)/2);
+        circleSO.setCenterX((height * 0.045)/2);
+        circleSO.setCenterY((height * 0.045)/2);
+        circleSO.setFill(Color.web("#FFFFFF"));
+        circleSO.setStroke(Color.web("#3D3D3E"));
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(20);
+        circleSO.setEffect(shadow);
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar usuario por documento");
@@ -97,7 +119,11 @@ public class UserMenu {
             userStateButton.setSwitchedButton(true);
         });
 
-        hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField);
+        circleSO.setOnMouseClicked( e -> {
+            SignOut.display();
+        });
+
+        hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField, marginRect3, circleSO);
         return hBox;
     }
 
