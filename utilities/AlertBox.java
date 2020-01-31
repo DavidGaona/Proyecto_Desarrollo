@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.*;
 
@@ -49,7 +50,7 @@ public class AlertBox {
             layout.getChildren().addAll(label, label2, closeButton);
         }
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #22282A");
+        layout.setStyle("-fx-background-color: #22282A;" + "-fx-border-color: black;");
         layout.setPadding(new Insets(20, 20, 20, 20));
         layout.setSpacing(20);
 
@@ -57,6 +58,7 @@ public class AlertBox {
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
+        window.initStyle(StageStyle.UNDECORATED);
         window.setX((screenSize.getWidth() / 2) - ((screenSize.getWidth() * 0.3) / 2));
         window.setY((screenSize.getHeight() / 2) - ((screenSize.getHeight() * 0.25) / 2));
         window.setResizable(false);
