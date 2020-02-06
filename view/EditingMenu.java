@@ -23,6 +23,7 @@ public class EditingMenu {
 
     private double percentage;
 
+
     private HBox topBar(double height) {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(0, 0, 0, 0));

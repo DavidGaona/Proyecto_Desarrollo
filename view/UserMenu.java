@@ -42,7 +42,8 @@ public class UserMenu {
     private DaoUser user;
     private boolean currentUserMode = true;
     private double buttonFont;
-    private boolean signOutStageShowed = false;
+    private SignOut signOut = new SignOut();
+    private String currentUser = null;
 
     private Button userButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -103,6 +104,7 @@ public class UserMenu {
                 userStateButton.setSwitchedButton(searchedUser.getState());
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
+                currentUser = userDocumentIdTextField.getText();
             }
         });
 
@@ -117,10 +119,16 @@ public class UserMenu {
             currentUserMode = true;
             searchTextField.setText("");
             userStateButton.setSwitchedButton(true);
+            currentUser = null;
         });
 
         circleSO.setOnMouseClicked( e -> {
-            SignOut.display();
+            if (signOut.isShowAble){
+                signOut.display();
+                signOut.isShowAble = false;
+            } else {
+                signOut.isShowAble = true;
+            }
         });
 
         hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField, marginRect3, circleSO);

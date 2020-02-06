@@ -14,7 +14,9 @@ import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 
+
 public class UserPasswordChange {
+
 
     private TextField textFieldTemplate(double width, double height, String tittle) {
         TextField textField = new PasswordField();
