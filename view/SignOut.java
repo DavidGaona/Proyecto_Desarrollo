@@ -14,9 +14,10 @@ import utilities.ConfirmBox;
 import java.awt.*;
 
 public class SignOut {
-    private static double percentage;
+    private double percentage;
+    public boolean isShowAble = true;
 
-    private static Rectangle separator(double width){
+    private Rectangle separator(double width){
         javafx.scene.shape.Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(1);
         marginRect1.setWidth(width * 0.2);
@@ -24,7 +25,7 @@ public class SignOut {
         return marginRect1;
     }
 
-    private static Label labelGenerator(String message, double width, double height){
+    private Label labelGenerator(String message, double width, double height){
         double fontLabel = 13 - (13 * percentage);
         javafx.scene.control.Label label = new javafx.scene.control.Label();
         label.setText(message);
@@ -44,7 +45,7 @@ public class SignOut {
     }
 
 
-    public static void display() {
+    public void display() {
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double width = screenSize.getWidth();
@@ -73,8 +74,8 @@ public class SignOut {
         double fontButton = 16 - (16 * percentage);
         closeButton.setText("Cerrar");
         closeButton.setOnAction(e -> {
-            window.close();
-            ownerStage.close();
+            //window.close();
+            //ownerStage.close();
         });
         closeButton.setPrefSize(screenSize.getWidth() * 0.10, screenSize.getHeight() * 0.025);// 163.2 , 34
         closeButton.setStyle("-fx-font-size: " + fontButton + "px");
@@ -83,8 +84,6 @@ public class SignOut {
         Label label2 = labelGenerator("Cerrar sesión",width, height);
 
         label2.setOnMouseClicked( e ->{
-            window.close();
-            ownerStage.close();
             boolean answer = ConfirmBox.display("Cerrar sesión", "¿ Quieres cerrar sesión?");
             if(answer)
             {
