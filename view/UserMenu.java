@@ -65,9 +65,6 @@ public class UserMenu {
         marginRect2.setHeight(0);
         marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
 
-        double result = width * 0.2035 + width * (0.198 - rect2Reduction) + width * 0.296 + width * 0.15;
-        System.out.println(result);
-
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
 
