@@ -32,14 +32,8 @@ public class SignOut {
         label.setPrefWidth(width * 0.1);
         label.setPrefHeight(height * 0.035);
         label.setStyle("-fx-font-size: " + fontLabel + "px;");
-
-        label.setOnMouseEntered( e -> {
-            label.setStyle(label.getStyle() + "-fx-background-color: #171A1C;");
-        });
-
-        label.setOnMouseExited( e ->{
-            label.setStyle(label.getStyle() + "-fx-background-color: #22282A;");
-        });
+        label.setOnMouseEntered( e -> label.setStyle(label.getStyle() + "-fx-background-color: #171A1C;"));
+        label.setOnMouseExited( e -> label.setStyle(label.getStyle() + "-fx-background-color: #22282A;"));
 
         return label;
     }
