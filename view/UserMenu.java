@@ -35,6 +35,7 @@ public class UserMenu {
     private TextField userDocumentIdTextField;
     private ComboBox<String> userDocumentTypeComboBox;
     private ComboBox<String> userTypeComboBox;
+    private ComboBox<String> userDocumentTypeAbbComboBox;
     private Button saveChangesButton;
     private SwitchButton userStateButton;
 
@@ -67,8 +68,11 @@ public class UserMenu {
 
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
-
         marginRect3.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+
+        Rectangle marginRect4 = new Rectangle();
+        marginRect4.setHeight(0);
+        marginRect4.setWidth(width * 0.004);
 
         Circle circleSO = new Circle((height * 0.045)/2);
         circleSO.setCenterX((height * 0.045)/2);
@@ -82,10 +86,16 @@ public class UserMenu {
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar usuario por documento");
-        searchTextField.setPrefSize(width * 0.296, height * 0.03); // 0.296 , 0.03
+        searchTextField.setPrefSize(width * 0.24, height * 0.03); // 0.24 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         ProjectUtilities.onlyNumericTextField(searchTextField);
+
+        userDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
+        userDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
+        userDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
+        userDocumentTypeAbbComboBox.setStyle(userDocumentTypeComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
+        userDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
             User searchedUser = user.loadUser(searchTextField.getText());
@@ -128,7 +138,8 @@ public class UserMenu {
             }
         });
 
-        hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2, searchTextField, marginRect3, circleSO);
+        hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2,
+                userDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, circleSO);
         return hBox;
     }
 
@@ -149,7 +160,6 @@ public class UserMenu {
             ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
                     userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
             userStateButton.setSwitchedButton(true);
-            Login.currentWindow.set(Login.currentWindow.get() + 1);
         });
 
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");
