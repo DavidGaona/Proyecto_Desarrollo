@@ -8,10 +8,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -34,12 +36,14 @@ public class ClientMenu {
     private TextField clientDirectionTextField;
     private ComboBox<String> clientDocumentTypeComboBox;
     private ComboBox<String> clientTypeComboBox;
+    private ComboBox<String> clientDocumentTypeAbbComboBox;
     private Button saveChangesButton;
 
     private double percentage;
     private DaoClient client;
     private boolean currentClientMode = true;
     private double buttonFont;
+    private SignOut signOut = new SignOut();
 
     private Button clientButtonTemplate(double width, double height, String message){
         Button button = new Button(message);
@@ -61,12 +65,36 @@ public class ClientMenu {
         marginRect2.setHeight(0);
         marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
 
+        Rectangle marginRect3 = new Rectangle();
+        marginRect3.setHeight(0);
+        marginRect3.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+
+        Rectangle marginRect4 = new Rectangle();
+        marginRect4.setHeight(0);
+        marginRect4.setWidth(width * 0.004);
+
+        Circle circleSO = new Circle((height * 0.045)/2);
+        circleSO.setCenterX((height * 0.045)/2);
+        circleSO.setCenterY((height * 0.045)/2);
+        circleSO.setFill(Color.web("#FFFFFF"));
+        circleSO.setStroke(Color.web("#3D3D3E"));
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(20);
+        circleSO.setEffect(shadow);
+
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar cliente por documento");
-        searchTextField.setPrefSize(width * 0.296, height * 0.03); // 0.296 , 0.03
+        searchTextField.setPrefSize(width * 0.24, height * 0.03); // 0.24 , 0.03
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         ProjectUtilities.onlyNumericTextField(searchTextField);
+
+        clientDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
+        clientDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
+        clientDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
+        clientDocumentTypeAbbComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
+        clientDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText());
@@ -99,7 +127,17 @@ public class ClientMenu {
             searchTextField.setText("");
         });
 
-        hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2, searchTextField);
+        circleSO.setOnMouseClicked( e -> {
+            if (signOut.isShowAble){
+                signOut.display();
+                signOut.isShowAble = false;
+            } else {
+                signOut.isShowAble = true;
+            }
+        });
+
+        hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2,
+                clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, circleSO);
         return hBox;
     }
 
