@@ -1,3 +1,37 @@
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button{
+    -fx-background-color : #18171C;
+    -fx-border-color: #18171C;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-background-color : #18171C;
+    -fx-border-color: #18171C;
+}
+
+.scroll-bar:vertical .track{
+    -fx-background-color : #18171C;
+    -fx-border-color :#18171C;
+}
+
+.scroll-bar:vertical .corner{
+    -fx-background-color : #18171C;
+    -fx-border-color : #18171C;
+}
+
+.scroll-bar:vertical .thumb{
+    -fx-background-color : #24222A;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color : #302E38;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
 
 .lower-res .combo-box {
     -fx-background: #3D3946;

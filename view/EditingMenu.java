@@ -146,6 +146,7 @@ public class EditingMenu {
         HBox hBoxTop = topBar(height);
         HBox hBoxBot = botBar(height);
         ScrollPane spCenter = centerScrollPane(width, height, gridPanes);
+        spCenter.getStyleClass().add("scroll-bar:vertical");
 
         mainLayout.setBottom(hBoxBot);
         mainLayout.setTop(hBoxTop);
