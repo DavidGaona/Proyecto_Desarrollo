@@ -1,3 +1,8 @@
+.scroll-bar{
+    -fx-background-color : #18171C;
+    -fx-border-color: #18171C;
+}
+
 .scroll-bar:vertical .increment-button ,
 .scroll-bar:vertical .decrement-button{
     -fx-background-color : #18171C;
@@ -23,6 +28,8 @@
 
 .scroll-bar:vertical .thumb{
     -fx-background-color : #24222A;
+    -fx-arc-height: 3;
+    -fx-arc-width: 3;
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
 }
