@@ -97,7 +97,7 @@ public class ClientMenu {
         clientDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
-            Client searchedClient = client.loadClient(searchTextField.getText());
+            Client searchedClient = client.loadClient(searchTextField.getText(),clientDocumentTypeAbbComboBox.getValue());
             if (!searchedClient.isBlank()) {
                 ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                         clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);

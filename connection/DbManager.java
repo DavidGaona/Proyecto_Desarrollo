@@ -67,11 +67,11 @@ public class DbManager {
         }
     }
 
-    public Client loadClient(String documentNumber) {
+    public Client loadClient(String documentNumber, short clientDocumentType) {
 
         String sql_select = "SELECT client_name, client_last_name, client_document_type," +
                 " client_email, client_address, client_type " +
-                "FROM public.client WHERE client_document_number = '" + documentNumber + "'";
+                "FROM public.client WHERE client_document_number = '" + documentNumber + "'"+" AND "+"client_document_type = "+clientDocumentType;
         try {
 
             System.out.println("consultando en la base de datos");
@@ -178,11 +178,11 @@ public class DbManager {
         }
     } //loadUser
 
-    public User loadUser(String documentNumber) {
+    public User loadUser(String documentNumber,short userDocumentType) {
 
         String sql_select = "SELECT user_name, user_last_name, user_document_number, user_document_type," +
                 " user_type, user_state " +
-                "FROM public.user WHERE user_document_number = '" + documentNumber + "'";
+                "FROM public.user WHERE user_document_number = '" + documentNumber + "'"+" AND "+"user_document_type = "+userDocumentType;
         try {
 
             System.out.println("Consultando en la base de datos");

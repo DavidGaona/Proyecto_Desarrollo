@@ -98,7 +98,7 @@ public class UserMenu {
         userDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
-            User searchedUser = user.loadUser(searchTextField.getText());
+            User searchedUser = user.loadUser(searchTextField.getText(),userDocumentTypeAbbComboBox.getValue());
             if (!searchedUser.isBlank()) {
                 ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
                         userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);

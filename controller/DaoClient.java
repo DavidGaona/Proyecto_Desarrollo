@@ -2,6 +2,7 @@ package controller;
 
 import connection.DbManager;
 import model.Client;
+import utilities.ProjectUtilities;
 
 public class DaoClient {
 
@@ -25,9 +26,9 @@ public class DaoClient {
         }
     }
 
-    public Client loadClient(String documentNumber) {
+    public Client loadClient(String documentNumber,String clientDocumentType) {
         dbManager.openDBConnection();
-        Client client = dbManager.loadClient(documentNumber);
+        Client client = dbManager.loadClient(documentNumber, ProjectUtilities.convertDocumentType(clientDocumentType));
         dbManager.closeDBConnection();
         return client;
     }

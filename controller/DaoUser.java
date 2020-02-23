@@ -2,16 +2,16 @@ package controller;
 
 import connection.DbManager;
 import model.User;
+import utilities.ProjectUtilities;
 
 public class DaoUser {
     // Cambiar al usuario correspondiente
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "mobileplan", "localhost");
 
     public void saveNewUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
         User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState);
         if (!user.isBlank()) {
             dbManager.openDBConnection();
-            int status = dbManager.saveNewUser(user);
             dbManager.closeDBConnection();
         }
     }
@@ -25,9 +25,9 @@ public class DaoUser {
         }
     }
 
-    public User loadUser(String documentNumber) {
+    public User loadUser(String documentNumber,String userDocumentType) {
         dbManager.openDBConnection();
-        User user = dbManager.loadUser(documentNumber);
+        User user = dbManager.loadUser(documentNumber, ProjectUtilities.convertDocumentType(userDocumentType));
         dbManager.closeDBConnection();
         return user;
     }

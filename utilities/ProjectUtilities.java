@@ -18,17 +18,18 @@ public class ProjectUtilities {
     public static final String[] documentTypesAbb = {"TI", "CC", "PA", "CE"};
 
     public static short convertDocumentType(String documentType) {
-        if (documentTypes[0].equals(documentType)) {
+        if (documentTypes[0].equals(documentType) || documentTypesAbb[1].equals(documentType)) {
             return (short) 0;
-        } else if (documentTypes[1].equals(documentType)) {
+        } else if (documentTypes[1].equals(documentType) || documentTypesAbb[0].equals(documentType)) {
             return (short) 1;
-        } else if (documentTypes[2].equals(documentType)) {
+        } else if (documentTypes[2].equals(documentType) || documentTypesAbb[3].equals(documentType)) {
             return (short) 2;
-        } else if (documentTypes[3].equals(documentType)) {
+        } else if (documentTypes[3].equals(documentType) || documentTypesAbb[2].equals(documentType)) {
             return (short) 3;
         }
         return (short) -1;
     }
+
 
     public static String clearWhiteSpaces(String inputString) {
         StringBuilder newString = new StringBuilder();
