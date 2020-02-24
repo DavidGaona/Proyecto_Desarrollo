@@ -7,8 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
 import utilities.ConfirmBox;
 
 import java.awt.*;
@@ -18,10 +20,10 @@ public class SignOut {
     public boolean isShowAble = true;
 
     private Rectangle separator(double width){
-        javafx.scene.shape.Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(1);
-        marginRect1.setWidth(width * 0.2);
-        marginRect1.setStyle("-fx-background-color: #171A1C;");
+        Rectangle marginRect1 = new Rectangle();
+        marginRect1.setHeight(2);
+        marginRect1.setWidth(width * 0.1);
+        marginRect1.setFill(Color.web("#22282A"));
         return marginRect1;
     }
 
@@ -32,6 +34,7 @@ public class SignOut {
         label.setPrefWidth(width * 0.1);
         label.setPrefHeight(height * 0.035);
         label.setStyle("-fx-font-size: " + fontLabel + "px;");
+
         label.setOnMouseEntered( e -> label.setStyle(label.getStyle() + "-fx-background-color: #171A1C;"));
         label.setOnMouseExited( e -> label.setStyle(label.getStyle() + "-fx-background-color: #22282A;"));
 
@@ -60,22 +63,17 @@ public class SignOut {
 
         window.initOwner(ownerStage);
         window.initStyle(StageStyle.TRANSPARENT);
-        window.setWidth(screenSize.getWidth() * 0.10); //408
-        window.setHeight(screenSize.getHeight() * 0.25); //340
+        window.setWidth(width * 0.10); //408
+        window.setHeight(height * 0.25); //340
 
+        Label label1 = labelGenerator("Cambiar Contraseña", width, height);
+        label1.setAlignment(Pos.CENTER);
+        Label label2 = labelGenerator("Cerrar Sesión",width, height);
+        label2.setAlignment(Pos.CENTER);
 
-        javafx.scene.control.Button closeButton = new Button();
-        double fontButton = 16 - (16 * percentage);
-        closeButton.setText("Cerrar");
-        closeButton.setOnAction(e -> {
-            //window.close();
-            //ownerStage.close();
+        label1.setOnMouseClicked(e -> {
+
         });
-        closeButton.setPrefSize(screenSize.getWidth() * 0.10, screenSize.getHeight() * 0.025);// 163.2 , 34
-        closeButton.setStyle("-fx-font-size: " + fontButton + "px");
-
-        Label label1 = labelGenerator("pru", width, height);
-        Label label2 = labelGenerator("Cerrar sesión",width, height);
 
         label2.setOnMouseClicked( e ->{
             boolean answer = ConfirmBox.display("Cerrar sesión", "¿ Quieres cerrar sesión?");
@@ -93,17 +91,17 @@ public class SignOut {
         });
 
         VBox layout = new VBox();
-        layout.getChildren().addAll( label1, separator(width), label2, separator(width), closeButton);
+        layout.getChildren().addAll( label1, separator(width), label2);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #22282A");
-        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.setPadding(new Insets(20, 0, 20, 0));
 
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
-        window.setX(screenSize.getWidth() - screenSize.getWidth() * 0.15);
-        window.setY(screenSize.getHeight() * 0.097);
+        window.setX(width - width * 0.15);
+        window.setY(height * 0.097);
         window.setResizable(false);
         ownerStage.show();
         window.show();
