@@ -46,11 +46,11 @@ public class DBconnect {
 
     public void closeConnection(Connection c) {
         try {
-            assert connection != null;
-            c.close();
-
+            if(c != null) {
+                c.close();
+            }
         } catch (SQLException e) {
-            System.out.println("No se pudo cerrar la coneccion.");
+            System.out.println("No se pudo cerrar la conexion.");
         }
     }
 

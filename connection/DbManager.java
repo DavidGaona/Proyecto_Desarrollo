@@ -107,12 +107,17 @@ public class DbManager {
 
         try {
             System.out.println("consultando en la base de datos");
+            if(connection == null){
+                AlertBox.display("Login view","No se pudo establecer conexión","Con el sistema");
+                return -1;
+            }
             Statement statement = connection.createStatement();
             ResultSet table = statement.executeQuery(sql_select);
             String hashedPasswordFromBD;
             short user_type;
             if (!table.next()) {
                 System.out.println("No se pudo encontrar el usuario");
+                AlertBox.display("Error", "Contraseña o id incorrectos", "");
                 return -1;
             }
             hashedPasswordFromBD = table.getString(1);
@@ -120,18 +125,21 @@ public class DbManager {
             final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
             if (!resultCompare.verified) {
                 System.out.println("CONTRASEÑA INVALIDA");
+                AlertBox.display("Error", "Contraseña o id incorrectos", "");
                 return -1;
             }
 
-            if (!table.getBoolean(3))
-                return -2;
-
+            if (!table.getBoolean(3)) {
+                AlertBox.display("Error", "No tiene permisos para ingresar", "contacte a un administrador");
+                return -1;
+            }
             if(!table.getBoolean(4))
                 return 3;
             return user_type;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("ERROR Fatal en la base de datos");
+            AlertBox.display("Error Login","No se pudo establecer conexión","con el sistema");
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }

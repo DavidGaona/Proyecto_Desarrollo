@@ -150,13 +150,8 @@ public class Login {
                 UserPasswordChange userPasswordChange = new UserPasswordChange();
                 loginScene.setRoot(userPasswordChange.BackGroundPane(width, height));
                 break;
-            case -2:
-                currentUser = null;
-                AlertBox.display("Error", "No tiene permisos para ingresar", "contacte a un administrador");
-                break;
             default:
                 currentUser = null;
-                AlertBox.display("Error", "Contraseña o id incorrectos", "");
                 break;
         }
     }
