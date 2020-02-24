@@ -133,6 +133,7 @@ public class Login {
     private void loginAction(double width, double height) {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
         currentUser = userIdTextField.getText();
+        System.out.println("En el login: " + percentage);
         switch (loginSuccess) {
             case 0:
                 ClientMenu client = new ClientMenu(percentage, buttonFont);
@@ -157,7 +158,8 @@ public class Login {
     }
 
     public Scene renderLoginScene() {
-
+        System.out.println("En el main: " + width);
+        System.out.println("En el main: " + height);
         loginScene = new Scene(mainLoginPane(width, height), width, height);
         loginScene.getStylesheets().add("loginStyle.css");
 

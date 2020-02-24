@@ -27,6 +27,9 @@ public class Main extends Application {
         double height = screenSize.getHeight() - scnMax.bottom * 1.685;//1440 1080 720 648 576; 432 40
 
         Login login = new Login(width, height, percentage, buttonFont, currentWindow);
+        System.out.println("En el main: " + percentage);
+        System.out.println("En el main: " + width);
+        System.out.println("En el main: " + height);
         AtomicReference<Scene> rootScene = new AtomicReference<>(login.renderLoginScene());
         currentWindow.addListener((obs, oldState, newState) -> {
             rootScene.set(login.renderLoginScene());
