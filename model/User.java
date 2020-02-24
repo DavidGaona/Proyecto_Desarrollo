@@ -9,18 +9,20 @@ public class User {
     private short Type;
     private Boolean State;
     private String password;
+    private boolean passwordReset;
 
-    public boolean isBlank() {
-        return name.isBlank() || lastName.isBlank() || DocumentIdNumber.isBlank();
+    public boolean isNotBlank() {
+        return !name.isBlank() && !lastName.isBlank() && !DocumentIdNumber.isBlank();
     }
 
-    public User(String name, String lastName, String documentIdNumber, short documentType, short type, Boolean state) {
+    public User(String name, String lastName, String documentIdNumber, short documentType, short type, Boolean state, boolean passwordReset) {
         this.name = name;
         this.lastName = lastName;
         DocumentIdNumber = documentIdNumber;
         this.documentType = documentType;
         Type = type;
         State = state;
+        this.passwordReset = passwordReset;
     }
 
     public String getName() {
@@ -53,5 +55,9 @@ public class User {
 
     public short getDocumentType() {
         return documentType;
+    }
+
+    public boolean isPasswordReset() {
+        return passwordReset;
     }
 }

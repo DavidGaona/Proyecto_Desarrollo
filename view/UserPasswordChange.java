@@ -65,10 +65,10 @@ public class UserPasswordChange {
                 else
                     confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #3985AB;");
             } else {
-
                 confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #FF0000;");
             }
         });
+
         ProjectUtilities.addTextFieldCharacterLimit(50, currentPasswordTextField, newPasswordTextField, confirmPasswordTextField);
 
         Rectangle styleLine = new Rectangle();
@@ -81,7 +81,7 @@ public class UserPasswordChange {
         changePasswordButton.getStyleClass().add("login-button");
         changePasswordButton.setStyle(changePasswordButton.getStyle() + "-fx-font-size: "+ buttonFontChange + "px;");
 
-        changePasswordButton.setOnMouseClicked(e -> {
+        changePasswordButton.setOnAction(e -> {
             DaoUser user = new DaoUser();
             if (user.checkPassword(Login.currentUser, currentPasswordTextField.getText())) {
                 if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
@@ -94,6 +94,10 @@ public class UserPasswordChange {
                 AlertBox.display("Error", "Contraseña incorrecta", "");
             }
         });
+
+        changePasswordButton.setOnMouseClicked(e -> changePasswordButton.fire());
+        newPasswordTextField.setOnAction(e -> changePasswordButton.fire());
+        confirmPasswordTextField.setOnAction(e -> changePasswordButton.fire());
 
         ProjectUtilities.focusListener("3C4448", "3985AB", currentPasswordTextField, newPasswordTextField, confirmPasswordTextField);
 

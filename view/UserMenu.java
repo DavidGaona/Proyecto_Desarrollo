@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -18,9 +17,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import model.User;
-import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class UserMenu {
@@ -101,7 +98,7 @@ public class UserMenu {
 
         searchTextField.setOnAction(e -> {
             User searchedUser = user.loadUser(searchTextField.getText(),userDocumentTypeAbbComboBox.getValue());
-            if (!searchedUser.isBlank()) {
+            if (searchedUser.isNotBlank()) {
                 ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
                         userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
 
@@ -111,6 +108,7 @@ public class UserMenu {
                 userDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedUser.getDocumentType()));
                 userTypeComboBox.valueProperty().set(ProjectUtilities.convertUserTypeString(searchedUser.getType()));
                 userStateButton.setSwitchedButton(searchedUser.getState());
+                userPasswordResetButton.setSwitchedButton(!searchedUser.isPasswordReset());
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
                 currentUser = userDocumentIdTextField.getText();
@@ -188,7 +186,8 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(userDocumentIdTextField.getText()),
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
-                    userStateButton.switchedOnProperty().get());
+                    userStateButton.switchedOnProperty().get(),
+                    !userPasswordResetButton.switchedOnProperty().get());
         }
     }
 
@@ -318,7 +317,7 @@ public class UserMenu {
         userStateButton.setId("UB6");
 
         //User password reset text
-        Text userPasswordResetText = userTextTemplate("Estado del usuario:", textColor);
+        Text userPasswordResetText = userTextTemplate("Resetear contraseña:", textColor);
         userPasswordResetText.setId("T7");
 
         //User password reset button

@@ -2,25 +2,24 @@ package controller;
 
 import connection.DbManager;
 import model.User;
-import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class DaoUser {
-    // Cambiar al usuario correspondiente
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public void saveNewUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
-        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState);
-        if (!user.isBlank()) {
+        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, true);
+        if (user.isNotBlank()) {
             dbManager.openDBConnection();
             dbManager.saveNewUser(user);
             dbManager.closeDBConnection();
         }
     }
 
-    public void editUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
-        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState);
-        if (!user.isBlank()) {
+    public void editUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, boolean userPasswordReset) {
+        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, userPasswordReset);
+        if (user.isNotBlank()) {
             dbManager.openDBConnection();
             dbManager.editUser(user);
             dbManager.closeDBConnection();
