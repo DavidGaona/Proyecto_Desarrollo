@@ -3,14 +3,15 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utilities.ConfirmBox;
+import view.ClientMenu;
 import view.Login;
+import view.UserMenu;
+import view.UserPasswordChange;
 
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicReference;
-
 
 public class Main extends Application {
-    public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(-9999999);
+    public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(0);
 
     @Override
     public void start(Stage window) {
@@ -27,10 +28,52 @@ public class Main extends Application {
         double height = screenSize.getHeight() - scnMax.bottom * 1.685;//1440 1080 720 648 576; 432 40
 
         Login login = new Login(width, height, percentage, buttonFont, currentWindow);
-        AtomicReference<Scene> rootScene = new AtomicReference<>(login.renderLoginScene());
+        Scene rootScene = new Scene(login.mainLoginPane());
+        rootScene.getStylesheets().add("loginStyle.css");
         currentWindow.addListener((obs, oldState, newState) -> {
-            rootScene.set(login.renderLoginScene());
-            window.setScene(rootScene.get());
+            switch (currentWindow.get()) {
+                case 0:
+                    //User Login scene
+                    window.setScene(rootScene);
+                    break;
+                case 1:
+                    //Default user menu
+                    System.out.println("aqui fue: " +percentage);
+                    ClientMenu client = new ClientMenu(percentage, buttonFont);
+                    Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height));
+                    clientMenuScene.getStylesheets().add("styles.css");
+                    window.setScene(clientMenuScene);
+                    break;
+                case 2:
+                    //
+
+                    break;
+                case 3:
+                    //Admin user menu
+                    System.out.println("aqui fue: " +percentage);
+                    UserMenu user = new UserMenu(percentage, buttonFont);
+                    Scene userMenuScene = new Scene(user.renderUserEditMenu(width, height));
+                    userMenuScene.getStylesheets().add("styles.css");
+                    window.setScene(userMenuScene);
+                    break;
+                case 4:
+                    //User Password Reset scene
+                    UserPasswordChange userPasswordChange = new UserPasswordChange();
+                    Scene passwordChangeScene = new Scene(userPasswordChange.BackGroundPane(width, height));
+                    passwordChangeScene.getStylesheets().add("loginStyle.css");
+                    window.setScene(passwordChangeScene);
+                    break;
+                case 5:
+                    System.out.println("Friday");
+                    break;
+                case 6:
+                    System.out.println("Saturday");
+                    break;
+                case 7:
+                    System.out.println("Sunday");
+                    break;
+            }
+
         });
 
         window.setOnCloseRequest(e -> {
@@ -40,12 +83,12 @@ public class Main extends Application {
 
         window.setTitle("Mobile plans solution");
         window.setResizable(false);
-        window.setScene(rootScene.get());
+        window.setScene(rootScene);
         window.show();
     }
 
     private void closeProgram(Stage window) {
-        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?")) {
+        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?", "Si quiero cerrar", "No quiero cerrar")) {
             window.close();
         }
     }
