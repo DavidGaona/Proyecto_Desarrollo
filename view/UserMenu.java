@@ -4,6 +4,7 @@ import controller.DaoUser;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -38,6 +39,7 @@ public class UserMenu {
     private ComboBox<String> userDocumentTypeAbbComboBox;
     private Button saveChangesButton;
     private SwitchButton userStateButton;
+    private SwitchButton userPasswordResetButton;
 
     private double percentage;
     private DaoUser user;
@@ -68,21 +70,21 @@ public class UserMenu {
 
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+        marginRect3.setWidth(width * 0.10125 - (height * 0.045) / 2); //0.1475
 
         Rectangle marginRect4 = new Rectangle();
         marginRect4.setHeight(0);
         marginRect4.setWidth(width * 0.004);
 
-        Circle circleSO = new Circle((height * 0.045)/2);
-        circleSO.setCenterX((height * 0.045)/2);
-        circleSO.setCenterY((height * 0.045)/2);
-        circleSO.setFill(Color.web("#FFFFFF"));
-        circleSO.setStroke(Color.web("#3D3D3E"));
+        Circle logOut = new Circle((height * 0.045) / 2);
+        logOut.setCenterX((height * 0.045) / 2);
+        logOut.setCenterY((height * 0.045) / 2);
+        logOut.setFill(Color.web("#FFFFFF"));
+        logOut.setStroke(Color.web("#3D3D3E"));
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(20);
-        circleSO.setEffect(shadow);
+        logOut.setEffect(shadow);
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar usuario por documento");
@@ -125,11 +127,12 @@ public class UserMenu {
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
             searchTextField.setText("");
-            userStateButton.setSwitchedButton(true);
+            userStateButton.setSwitchedButton(false);
+            userPasswordResetButton.setSwitchedButton(true);
             currentUser = null;
         });
 
-        circleSO.setOnMouseClicked( e -> {
+        logOut.setOnMouseClicked( e -> {
             if (signOut.isShowAble){
                 signOut.display();
                 signOut.isShowAble = false;
@@ -139,28 +142,11 @@ public class UserMenu {
         });
 
         hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2,
-                userDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, circleSO);
+                userDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
         return hBox;
     }
 
     private HBox botBar(HBox hBox, double width, double height) {
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.2035);
-
-        double rect2Reduction = 0.05;
-
-        Rectangle marginRect2 = new Rectangle();
-        marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.394 - rect2Reduction * 2));
-
-        Button clearButton = userButtonTemplate(width, height, "Limpiar celdas");
-        clearButton.setOnMouseClicked(e -> {
-            clearFields();
-            ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
-                    userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
-            userStateButton.setSwitchedButton(true);
-        });
 
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");
         saveChangesButton.setOnMouseClicked(e -> {
@@ -171,7 +157,9 @@ public class UserMenu {
             }
         });
 
-        hBox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
+        hBox.setAlignment(Pos.CENTER);
+
+        hBox.getChildren().addAll(saveChangesButton);
         return hBox;
     }
 
@@ -186,6 +174,7 @@ public class UserMenu {
                     ProjectUtilities.convertDocumentType(userDocumentTypeComboBox.getValue()),
                     ProjectUtilities.convertUserType(userTypeComboBox.getValue()),
                     userStateButton.switchedOnProperty().get());
+
         }
     }
 
@@ -323,9 +312,20 @@ public class UserMenu {
         userStateText.setId("T6");
 
         //User state button
-        userStateButton = new SwitchButton(350 - (350 * percentage), 45 - (45 * percentage));
+        userStateButton = new SwitchButton(350 - (350 * percentage), 45 - (45 * percentage), false,
+                "Activado", "Desactivado");
         userStateButton.setOnMouseClicked(e -> userStateButton.invertSwitchedOn());
         userStateButton.setId("UB6");
+
+        //User password reset text
+        Text userPasswordResetText = userTextTemplate("Estado del usuario:", textColor);
+        userPasswordResetText.setId("T7");
+
+        //User password reset button
+        userPasswordResetButton = new SwitchButton(350 - (350 * percentage), 45 - (45 * percentage), true,
+                "Cambio pendiende", "Cambio realizado");
+        userPasswordResetButton.setOnMouseClicked(e -> userPasswordResetButton.invertSwitchedOn());
+        userPasswordResetButton.setId("UB7");
 
         //Install listener for color highlight
         ProjectUtilities.focusListener(gridPane,
@@ -365,6 +365,10 @@ public class UserMenu {
         GridPane.setHalignment(userStateText, HPos.RIGHT);
         GridPane.setConstraints(userStateButton, colTextField, rowStart + 5);
 
+        GridPane.setConstraints(userPasswordResetText, colText, rowStart + 6);
+        GridPane.setHalignment(userPasswordResetText, HPos.RIGHT);
+        GridPane.setConstraints(userPasswordResetButton, colTextField, rowStart + 6);
+
         //Adding all nodes
         gridPane.getChildren().addAll(
                 userNameText, userNameTextField,
@@ -372,7 +376,8 @@ public class UserMenu {
                 userDocumentTypeText, userDocumentTypeComboBox,
                 userDocumentIdText, userDocumentIdTextField,
                 userTypeText, userTypeComboBox,
-                userStateText, userStateButton);
+                userStateText, userStateButton,
+                userPasswordResetText, userPasswordResetButton);
 
         gridPane.setId("Información Personal");
         return gridPane;

@@ -6,12 +6,13 @@ import utilities.ProjectUtilities;
 
 public class DaoUser {
     // Cambiar al usuario correspondiente
-    private DbManager dbManager = new DbManager("postgres", "postgres", "mobileplan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public void saveNewUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
         User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState);
         if (!user.isBlank()) {
             dbManager.openDBConnection();
+            dbManager.saveNewUser(user);
             dbManager.closeDBConnection();
         }
     }

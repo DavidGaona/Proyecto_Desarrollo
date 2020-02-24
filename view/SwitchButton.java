@@ -24,6 +24,8 @@ public class SwitchButton extends StackPane {
     private TranslateTransition translateAnimation = new TranslateTransition(Duration.seconds(0.125));
     private FillTransition fillAnimation = new FillTransition(Duration.seconds(0.125));
     private ParallelTransition animation = new ParallelTransition(translateAnimation, fillAnimation);
+    private String onMessage;
+    private String offMessage;
 
     public BooleanProperty switchedOnProperty() {
         return switchedOn;
@@ -37,11 +39,13 @@ public class SwitchButton extends StackPane {
         switchedOn.set(state);
     }
 
-    public SwitchButton(double width, double height) {
+    public SwitchButton(double width, double height, boolean startState, String onMessage, String offMessage) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
         double percentageHeight = (1080 - screenSize.getHeight()) / 1080;
         double percentage = Math.max(percentageWidth, percentageHeight);
+        this.onMessage = onMessage;
+        this.offMessage = offMessage;
 
         setMinSize(width, height);
 
@@ -61,7 +65,7 @@ public class SwitchButton extends StackPane {
         shadow.setRadius(2);
         trigger.setEffect(shadow);
 
-        Text message = new Text("Activado");
+        Text message = new Text(onMessage);
         message.setFont(new Font("Consolas", 20 - (20 * percentage)));
         message.setFill(Color.web("#FFFFFF"));
 
@@ -76,8 +80,13 @@ public class SwitchButton extends StackPane {
             translateAnimation.setToX(isOn ? 0 : -(width) + height);
             fillAnimation.setFromValue(isOn ? Color.web("#3D3946") : Color.web("#5639AC"));
             fillAnimation.setToValue(isOn ? Color.web("#5639AC") : Color.web("#3D3946"));
-            message.setText(isOn ? "Activado" : "Desactivado");
+            message.setText(isOn ? this.onMessage : this.offMessage);
             animation.play();
         });
+
+        if (!startState){
+            invertSwitchedOn();
+        }
+
     }
 }
