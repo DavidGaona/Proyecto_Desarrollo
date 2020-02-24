@@ -4,13 +4,11 @@ import controller.DaoUser;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
@@ -19,15 +17,11 @@ public class Login {
     public static String currentUser = null;
 
     private DaoUser user;
-    private double percentage;
-    private double buttonFont;
     private double width;
     private double height;
 
-    public Login(double width, double height, double percentage, double buttonFont, SimpleIntegerProperty currentWindow2) {
+    public Login(double width, double height, SimpleIntegerProperty currentWindow2) {
         user = new DaoUser();
-        this.percentage = percentage;
-        this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
         currentWindow2.bind(currentWindow);
@@ -114,22 +108,29 @@ public class Login {
         return vBox;
     }
 
+    private void clear(){
+        userIdTextField.setText("");
+        passwordTextField.setText("");
+    }
+
     private void loginAction() {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
         currentUser = userIdTextField.getText();
         switch (loginSuccess) {
             case 0:
+                clear();
                 Login.currentWindow.set(-1);
                 Login.currentWindow.set(1);
                 break;
             case 1:
                 //ToDo manager
             case 2:
+                clear();
                 Login.currentWindow.set(-1);
                 Login.currentWindow.set(3);
-
                 break;
             case 3:
+                clear();
                 Login.currentWindow.set(-1);
                 Login.currentWindow.set(4);
                 break;

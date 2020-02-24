@@ -253,11 +253,17 @@ public class DbManager {
                         "SET user_password = '" + encryptedPassword + "', up_to_date_password = true " +
                         "WHERE user_document_number = '" + documentNumber + "';";
 
+        String sql_select =
+                "select user_type from public.user where user_document_number = '" + documentNumber + "';";
+
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql_update);
             AlertBox.display("Logrado", "La contraseña fue cambiada", "con éxito");
-            Login.currentWindow.set(Login.currentWindow.get() + 1);
+            ResultSet resultSet = statement.executeQuery(sql_select);
+            resultSet.next();
+            Login.currentWindow.set(-1);
+            Login.currentWindow.set(resultSet.getShort(1) + 1);
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

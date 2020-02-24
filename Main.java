@@ -27,7 +27,7 @@ public class Main extends Application {
         double width = screenSize.getWidth();  //2560 1920 1280 1152 1024; 768 40
         double height = screenSize.getHeight() - scnMax.bottom * 1.685;//1440 1080 720 648 576; 432 40
 
-        Login login = new Login(width, height, percentage, buttonFont, currentWindow);
+        Login login = new Login(width, height, currentWindow);
         Scene rootScene = new Scene(login.mainLoginPane());
         rootScene.getStylesheets().add("loginStyle.css");
         currentWindow.addListener((obs, oldState, newState) -> {
@@ -38,28 +38,26 @@ public class Main extends Application {
                     break;
                 case 1:
                     //Default user menu
-                    System.out.println("aqui fue: " +percentage);
                     ClientMenu client = new ClientMenu(percentage, buttonFont);
-                    Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height));
+                    Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height), width, height);
                     clientMenuScene.getStylesheets().add("styles.css");
                     window.setScene(clientMenuScene);
                     break;
                 case 2:
-                    //
+                    //ToDo manager
 
                     break;
                 case 3:
                     //Admin user menu
-                    System.out.println("aqui fue: " +percentage);
                     UserMenu user = new UserMenu(percentage, buttonFont);
-                    Scene userMenuScene = new Scene(user.renderUserEditMenu(width, height));
+                    Scene userMenuScene = new Scene(user.renderUserEditMenu(width, height), width, height);
                     userMenuScene.getStylesheets().add("styles.css");
                     window.setScene(userMenuScene);
                     break;
                 case 4:
                     //User Password Reset scene
                     UserPasswordChange userPasswordChange = new UserPasswordChange();
-                    Scene passwordChangeScene = new Scene(userPasswordChange.BackGroundPane(width, height));
+                    Scene passwordChangeScene = new Scene(userPasswordChange.BackGroundPane(width, height), width, height);
                     passwordChangeScene.getStylesheets().add("loginStyle.css");
                     window.setScene(passwordChangeScene);
                     break;
