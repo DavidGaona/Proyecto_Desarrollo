@@ -262,7 +262,6 @@ public class DbManager {
             AlertBox.display("Logrado", "La contraseña fue cambiada", "con éxito");
             ResultSet resultSet = statement.executeQuery(sql_select);
             resultSet.next();
-            Login.currentWindow.set(-1);
             Login.currentWindow.set(resultSet.getShort(1) + 1);
         } catch (Exception e){
             System.out.println(e.getMessage());

@@ -61,15 +61,6 @@ public class Main extends Application {
                     passwordChangeScene.getStylesheets().add("loginStyle.css");
                     window.setScene(passwordChangeScene);
                     break;
-                case 5:
-                    System.out.println("Friday");
-                    break;
-                case 6:
-                    System.out.println("Saturday");
-                    break;
-                case 7:
-                    System.out.println("Sunday");
-                    break;
             }
 
         });

@@ -153,6 +153,9 @@ public class UserMenu {
             } else {
                 editUser();
             }
+            clearFields();
+            ProjectUtilities.resetNodeBorderColor(userNameTextField, userLastNameTextField,
+                    userDocumentIdTextField, userDocumentTypeComboBox, userTypeComboBox);
         });
 
         hBox.setAlignment(Pos.CENTER);

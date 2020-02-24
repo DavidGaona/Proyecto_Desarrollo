@@ -119,19 +119,16 @@ public class Login {
         switch (loginSuccess) {
             case 0:
                 clear();
-                Login.currentWindow.set(-1);
                 Login.currentWindow.set(1);
                 break;
             case 1:
                 //ToDo manager
             case 2:
                 clear();
-                Login.currentWindow.set(-1);
                 Login.currentWindow.set(3);
                 break;
             case 3:
                 clear();
-                Login.currentWindow.set(-1);
                 Login.currentWindow.set(4);
                 break;
             default:
