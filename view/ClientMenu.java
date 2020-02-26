@@ -151,9 +151,6 @@ public class ClientMenu {
             } else {
                 editClient();
             }
-            clearTextFields();
-            ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                    clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
         });
 
         hBox.setAlignment(Pos.CENTER);
