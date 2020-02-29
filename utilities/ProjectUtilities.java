@@ -6,6 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
 public class ProjectUtilities {
 
     public static boolean isNumeric(String inputData) {
@@ -170,6 +172,44 @@ public class ProjectUtilities {
                         for (Node node : layout.getChildren()) {
                             if (textFieldId.substring(2).equals(node.getId().substring(1))) {
                                 ((Text) node).setFill(Color.web("#948FA3"));
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            });
+        }
+    }
+
+    public static void focusListener(GridPane layout, ArrayList<Node> nodes) {
+        // Install the same listener on all of them
+        for (Node outerNode : nodes) {
+            outerNode.focusedProperty().addListener((observableValue, oldValue, newValue) -> {
+
+                // Set the selectedTextField to null whenever focus is lost. This accounts for the
+                // TextField losing focus to another control that is NOT a TextField
+                selectedNode = null;
+
+                if (newValue) {
+                    // The new node is focused, so set the global reference
+                    lastSelectedNode = outerNode;
+                    selectedNode = outerNode;
+                    String currentNodeId = selectedNode.getId();
+                    selectedNode.setStyle(outerNode.getStyle() + "\n-fx-border-color: #C2B8E0;");
+                    for (Node innerNode : layout.getChildren()) {
+                        if (currentNodeId.equals(innerNode.getId())) {
+                            ((Text) innerNode).setFill(Color.web("#C2B8E0"));
+                            break;
+                        }
+                    }
+                } else {
+                    String currentNodeId = lastSelectedNode.getId();
+                    if (lastSelectedNode != null) {
+                        lastSelectedNode.setStyle(outerNode.getStyle() + "\n-fx-border-color: #3d3d3d;");
+                        for (Node innerNode : layout.getChildren()) {
+                            if (currentNodeId.equals(innerNode.getId())) {
+                                ((Text) innerNode).setFill(Color.web("#948FA3"));
                                 break;
                             }
                         }

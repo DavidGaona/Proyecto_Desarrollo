@@ -4,31 +4,24 @@ import controller.DaoUser;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
 
-    public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(-9999999);
+    public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(0);
     public static String currentUser = null;
 
     private DaoUser user;
-    private double percentage;
-    private double buttonFont;
-    private Scene loginScene;
     private double width;
     private double height;
 
-    public Login(double width, double height, double percentage, double buttonFont, SimpleIntegerProperty currentWindow2) {
+    public Login(double width, double height, SimpleIntegerProperty currentWindow2) {
         user = new DaoUser();
-        this.percentage = percentage;
-        this.buttonFont = buttonFont;
         this.width = width;
         this.height = height;
         currentWindow2.bind(currentWindow);
@@ -86,7 +79,6 @@ public class Login {
 
         hBox.getChildren().addAll(leftPane, stackPane, rightPane);
 
-
         Label loginLabel = new Label("INICIAR SESIÓN");
         loginLabel.getStyleClass().add("login-label");
         loginLabel.setStyle(loginLabel.getStyle() + "-fx-font-size: " + labelFont + "px;");
@@ -101,7 +93,7 @@ public class Login {
         passwordTextField.getStyleClass().add("text-field-login");
         passwordTextField.setStyle(passwordTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
         passwordTextField.setPromptText("Contraseña");
-        passwordTextField.setOnAction(e -> loginAction(width, height));
+        passwordTextField.setOnAction(e -> loginAction());
 
         ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField);
 
@@ -109,17 +101,43 @@ public class Login {
         loginButton.setPrefSize(width * 0.25, height * 0.05);
         loginButton.getStyleClass().add("login-button");
         loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
-        loginButton.setOnMouseClicked(e -> loginAction(width, height));
+        loginButton.setOnMouseClicked(e -> loginAction());
 
         vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
 
         return vBox;
     }
 
-    private VBox mainLoginPane(double width, double height) {
+    private void clear(){
+        userIdTextField.setText("");
+        passwordTextField.setText("");
+    }
 
-        // Solo para robar.
-       // user.saveNewUser("Alexander", "Gonzalez", "1234", (short) 0, (short) 2, true);
+    private void loginAction() {
+        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
+        currentUser = userIdTextField.getText();
+        switch (loginSuccess) {
+            case 0:
+                clear();
+                Login.currentWindow.set(1);
+                break;
+            case 1:
+                //ToDo manager
+            case 2:
+                clear();
+                Login.currentWindow.set(3);
+                break;
+            case 3:
+                clear();
+                Login.currentWindow.set(4);
+                break;
+            default:
+                currentUser = null;
+                break;
+        }
+    }
+
+    public VBox mainLoginPane() {
 
         VBox background = new VBox();
         background.setStyle("-fx-background-color: #171A1C");
@@ -129,41 +147,4 @@ public class Login {
         background.setAlignment(Pos.CENTER);
         return background;
     }
-
-    private void loginAction(double width, double height) {
-        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
-        currentUser = userIdTextField.getText();
-        System.out.println("En el login: " + percentage);
-        switch (loginSuccess) {
-            case 0:
-                ClientMenu client = new ClientMenu(percentage, buttonFont);
-                loginScene.setRoot(client.renderClientEditMenu(width, height));
-                loginScene.getStylesheets().add("styles.css");
-                break;
-            case 1:
-                //ToDo manager
-            case 2:
-                UserMenu user = new UserMenu(percentage, buttonFont);
-                loginScene.setRoot(user.renderUserEditMenu(width, height));
-                loginScene.getStylesheets().add("styles.css");
-                break;
-            case 3:
-                UserPasswordChange userPasswordChange = new UserPasswordChange();
-                loginScene.setRoot(userPasswordChange.BackGroundPane(width, height));
-                break;
-            default:
-                currentUser = null;
-                break;
-        }
-    }
-
-    public Scene renderLoginScene() {
-        System.out.println("En el main: " + width);
-        System.out.println("En el main: " + height);
-        loginScene = new Scene(mainLoginPane(width, height), width, height);
-        loginScene.getStylesheets().add("loginStyle.css");
-
-        return loginScene;
-    }
-
 }

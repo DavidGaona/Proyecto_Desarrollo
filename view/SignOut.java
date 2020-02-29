@@ -20,20 +20,20 @@ public class SignOut {
     public boolean isShowAble = true;
 
     private Rectangle separator(double width){
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(2);
-        marginRect1.setWidth(width * 0.1);
-        marginRect1.setFill(Color.web("#22282A"));
-        return marginRect1;
+        Rectangle separatorRect = new Rectangle();
+        separatorRect.setHeight(2);
+        separatorRect.setWidth(width * 0.1);
+        separatorRect.setFill(Color.web("#22282A"));
+        return separatorRect;
     }
 
     private Label labelGenerator(String message, double width, double height){
-        double fontLabel = 13 - (13 * percentage);
+        double labelFont = 13 - (13 * percentage);
         javafx.scene.control.Label label = new javafx.scene.control.Label();
         label.setText(message);
         label.setPrefWidth(width * 0.1);
         label.setPrefHeight(height * 0.035);
-        label.setStyle("-fx-font-size: " + fontLabel + "px;");
+        label.setStyle("-fx-font-size: " + labelFont + "px;");
 
         label.setOnMouseEntered( e -> label.setStyle(label.getStyle() + "-fx-background-color: #171A1C;"));
         label.setOnMouseExited( e -> label.setStyle(label.getStyle() + "-fx-background-color: #22282A;"));
@@ -66,20 +66,24 @@ public class SignOut {
         window.setWidth(width * 0.10); //408
         window.setHeight(height * 0.25); //340
 
-        Label label1 = labelGenerator("Cambiar Contraseña", width, height);
-        label1.setAlignment(Pos.CENTER);
-        Label label2 = labelGenerator("Cerrar Sesión",width, height);
-        label2.setAlignment(Pos.CENTER);
+        Label passwordChangeLabel = labelGenerator("Cambiar Contraseña", width, height);
+        passwordChangeLabel.setAlignment(Pos.CENTER);
+        Label signOutLabel = labelGenerator("Cerrar Sesión",width, height);
+        signOutLabel.setAlignment(Pos.CENTER);
 
-        label1.setOnMouseClicked(e -> {
-
+        passwordChangeLabel.setOnMouseClicked(e -> {
+            boolean answer = ConfirmBox.display("Cambiar Contraseña", "¿Desea Cambiar la Contraseña?", "Si", "No");
+            if(answer) {
+                Login.currentWindow.set(-1);
+                Login.currentWindow.set(4);
+            }
         });
 
-        label2.setOnMouseClicked( e ->{
-            boolean answer = ConfirmBox.display("Cerrar sesión", "¿ Quieres cerrar sesión?");
-            if(answer)
-            {
-                Login.currentWindow.set(Login.currentWindow.get() + 1);
+        signOutLabel.setOnMouseClicked( e ->{
+            boolean answer = ConfirmBox.display("Cerrar sesión", "¿Quieres cerrar sesión?", "Sí quiero cerrar", "No quiero cerrar");
+            if(answer) {
+                Login.currentWindow.set(-1);
+                Login.currentWindow.set(0);
             }
         });
 
@@ -91,7 +95,7 @@ public class SignOut {
         });
 
         VBox layout = new VBox();
-        layout.getChildren().addAll( label1, separator(width), label2);
+        layout.getChildren().addAll( passwordChangeLabel, separator(width), signOutLabel);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #22282A");
         layout.setPadding(new Insets(20, 0, 20, 0));

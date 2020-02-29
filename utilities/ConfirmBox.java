@@ -15,13 +15,12 @@ import java.awt.*;
 public class ConfirmBox {
 
     private static boolean answer;
-    private static double percentage;
 
-    public static boolean display(String title, String message) {
+    public static boolean display(String title, String message, String yesAnswerMessage, String noAnswerMessage) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double percentageWidth = (1360 - screenSize.getWidth()) / 1360;
         double percentageHeight = (768 - screenSize.getHeight()) / 768;
-        percentage = Math.max(percentageWidth, percentageHeight);
+        double percentage = Math.max(percentageWidth, percentageHeight);
 
         //Window
         Stage window = new Stage();
@@ -42,8 +41,8 @@ public class ConfirmBox {
         double fontButton = 16 - ( 16 * percentage);
         yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
         noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
-        yesButton.setText("Sí quiero cerrar");
-        noButton.setText("No quiero cerrar");
+        yesButton.setText(yesAnswerMessage);
+        noButton.setText(noAnswerMessage);
         yesButton.setStyle("-fx-font-size: "+fontButton+"px");
         noButton.setStyle("-fx-font-size: "+fontButton+"px");
 

@@ -4,7 +4,7 @@ import controller.DaoClient;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -18,7 +18,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.Client;
-import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class ClientMenu {
@@ -73,15 +72,15 @@ public class ClientMenu {
         marginRect4.setHeight(0);
         marginRect4.setWidth(width * 0.004);
 
-        Circle circleSO = new Circle((height * 0.045)/2);
-        circleSO.setCenterX((height * 0.045)/2);
-        circleSO.setCenterY((height * 0.045)/2);
-        circleSO.setFill(Color.web("#FFFFFF"));
-        circleSO.setStroke(Color.web("#3D3D3E"));
+        Circle logOut = new Circle((height * 0.045)/2);
+        logOut.setCenterX((height * 0.045)/2);
+        logOut.setCenterY((height * 0.045)/2);
+        logOut.setFill(Color.web("#FFFFFF"));
+        logOut.setStroke(Color.web("#3D3D3E"));
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(20);
-        circleSO.setEffect(shadow);
+        logOut.setEffect(shadow);
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar cliente por documento");
@@ -97,7 +96,7 @@ public class ClientMenu {
         clientDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
-            Client searchedClient = client.loadClient(searchTextField.getText(),clientDocumentTypeAbbComboBox.getValue());
+            Client searchedClient = client.loadClient(searchTextField.getText(), clientDocumentTypeAbbComboBox.getValue());
             if (!searchedClient.isBlank()) {
                 ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                         clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
@@ -127,7 +126,7 @@ public class ClientMenu {
             searchTextField.setText("");
         });
 
-        circleSO.setOnMouseClicked( e -> {
+        logOut.setOnMouseClicked( e -> {
             if (signOut.isShowAble){
                 signOut.display();
                 signOut.isShowAble = false;
@@ -137,27 +136,11 @@ public class ClientMenu {
         });
 
         hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2,
-                clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, circleSO);
+                clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
         return hBox;
     }
 
     private HBox botBar(HBox hBox, double width, double height) {
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.2035);
-
-        double rect2Reduction = 0.05;
-
-        Rectangle marginRect2 = new Rectangle();
-        marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.394 - rect2Reduction * 2));
-
-        Button clearButton = clientButtonTemplate(width * 0.15, height * 0.03,"Limpiar celdas");
-        clearButton.setOnMouseClicked(e -> {
-            clearTextFields();
-            ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                    clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
-        });
 
         saveChangesButton = clientButtonTemplate(width * 0.15, height * 0.03,"Agregar cliente");
         saveChangesButton.setOnMouseClicked(e -> {
@@ -166,9 +149,12 @@ public class ClientMenu {
             } else {
                 editClient();
             }
+
         });
 
-        hBox.getChildren().addAll(marginRect1, clearButton, marginRect2, saveChangesButton);
+        hBox.setAlignment(Pos.CENTER);
+
+        hBox.getChildren().addAll(saveChangesButton);
         return hBox;
     }
 

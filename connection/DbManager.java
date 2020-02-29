@@ -148,7 +148,7 @@ public class DbManager {
 
     }
 
-    public int saveNewUser(User user) {
+    public void saveNewUser(User user) {
         int numRows;
         String saveQuery;
         final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
@@ -159,11 +159,9 @@ public class DbManager {
             Statement statement = connection.createStatement();
             numRows = statement.executeUpdate(saveQuery);
             AlertBox.display("Operación exitosa", "Usuario creado", "");
-            return numRows;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return -1;
     }
 
     public void editUser(User user) {
@@ -172,6 +170,7 @@ public class DbManager {
                 " SET user_name = '" + user.getName() + "', user_last_name = '" + user.getLastName() +
                 "', user_document_number = '" + user.getDocumentIdNumber() + "', user_type = " + user.getType() +
                 ", user_document_type = " + user.getDocumentType() + ", user_state = " + user.getState() +
+                ", up_to_date_password = " + user.isPasswordReset() +
                 " WHERE user_document_number = '" + user.getDocumentIdNumber() + "'";
         try {
             Statement statement = connection.createStatement();
@@ -189,21 +188,22 @@ public class DbManager {
     public User loadUser(String documentNumber,short userDocumentType) {
 
         String sql_select = "SELECT user_name, user_last_name, user_document_number, user_document_type," +
-                " user_type, user_state " +
+                " user_type, user_state, up_to_date_password " +
                 "FROM public.user WHERE user_document_number = '" + documentNumber + "'"+" AND "+"user_document_type = "+userDocumentType;
         try {
 
             System.out.println("Consultando en la base de datos");
             Statement statement = connection.createStatement();
-            ResultSet tabla = statement.executeQuery(sql_select);
-            tabla.next();
+            ResultSet resultSet = statement.executeQuery(sql_select);
+            resultSet.next();
             User user = new User(
-                    tabla.getString(1),
-                    tabla.getString(2),
-                    tabla.getString(3),
-                    tabla.getShort(4),
-                    tabla.getShort(5),
-                    tabla.getBoolean(6)
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getShort(4),
+                    resultSet.getShort(5),
+                    resultSet.getBoolean(6),
+                    resultSet.getBoolean(7)
             );
             System.out.println(user.getName());
             AlertBox.display("Operación exitosa", "Usuario Encontrado", "");
@@ -215,7 +215,7 @@ public class DbManager {
             System.out.println(Arrays.toString(e.getStackTrace()));
             System.out.println("ERROR Fatal en la base de datos");
         }
-        return new User("", "", "", (short) -1, (short) -1, false);
+        return new User("", "", "", (short) -1, (short) -1, false, false);
     }
 
     public boolean checkPassword(String documentNumber, String password){
@@ -253,11 +253,16 @@ public class DbManager {
                         "SET user_password = '" + encryptedPassword + "', up_to_date_password = true " +
                         "WHERE user_document_number = '" + documentNumber + "';";
 
+        String sql_select =
+                "select user_type from public.user where user_document_number = '" + documentNumber + "';";
+
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql_update);
             AlertBox.display("Logrado", "La contraseña fue cambiada", "con éxito");
-            Login.currentWindow.set(Login.currentWindow.get() + 1);
+            ResultSet resultSet = statement.executeQuery(sql_select);
+            resultSet.next();
+            Login.currentWindow.set(resultSet.getShort(1) + 1);
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
