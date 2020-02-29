@@ -26,6 +26,7 @@ public class SwitchButton extends StackPane {
     private ParallelTransition animation = new ParallelTransition(translateAnimation, fillAnimation);
     private String onMessage;
     private String offMessage;
+    private boolean defaultValue;
 
     public BooleanProperty switchedOnProperty() {
         return switchedOn;
@@ -39,6 +40,10 @@ public class SwitchButton extends StackPane {
         switchedOn.set(state);
     }
 
+    public void setToDefault(){
+        switchedOn.set(defaultValue);
+    }
+
     public SwitchButton(double width, double height, boolean startState, String onMessage, String offMessage) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double percentageWidth = (1920 - screenSize.getWidth()) / 1920;
@@ -46,6 +51,7 @@ public class SwitchButton extends StackPane {
         double percentage = Math.max(percentageWidth, percentageHeight);
         this.onMessage = onMessage;
         this.offMessage = offMessage;
+        defaultValue = startState;
 
         setMinSize(width, height);
 

@@ -69,7 +69,16 @@ public class Main extends Application {
             e.consume();
             closeProgram(window);
         });
+        GraphicsDevice gdd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int widthh = gdd.getDisplayMode().getWidth();
+        int heightt = gdd.getDisplayMode().getHeight();
+        System.out.println(width + "  " + height);
+        Dimension scrnSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
+        int taskBarHeight = scrnSize.height - winSize.height;
+        System.out.println(taskBarHeight);
+        System.out.println(widthh + "  " + (heightt - taskBarHeight));
         window.setTitle("Mobile plans solution");
         window.setResizable(false);
         window.setScene(rootScene);

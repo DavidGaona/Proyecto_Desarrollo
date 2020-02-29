@@ -57,19 +57,33 @@ public class EditingMenu {
 
 
         for(GridPane gridPane: gridPanes){
-            vbox.getChildren().add(centerHboxTemplate(width, gridPane.getPrefHeight(), gridPane.getId(), gridPane));
+            vbox.getChildren().add(centerHBoxTemplate(width, gridPane.getPrefHeight(), gridPane.getId(), gridPane));
         }
 
         GridPane delete = new GridPane();
 
-        HBox centerHbox = centerHboxTemplate(width, height * 0.6, "Información Del Plan", delete);
-        HBox botHbox = centerHboxTemplate(width, height * 0.3, "Información Bancaria", delete);
+        HBox centerHbox = centerHBoxTemplate(width, height * 0.6, "Información Del Plan", delete);
+        HBox botHbox = centerHBoxTemplate(width, height * 0.3, "Información Bancaria", delete);
 
         vbox.getChildren().addAll(centerHbox, botHbox);
         return vbox;
     }
+    private VBox addToMidPane(double width, double height, HBox... hBoxes) {
+        VBox vbox = new VBox();
+        vbox.setPrefSize(width * 0.6, height * 0.9);
+        vbox.setAlignment(Pos.TOP_LEFT);
+        vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
 
-    private HBox centerHboxTemplate(double width, double height, String message, GridPane gridPane) {
+
+        for(HBox hBox: hBoxes){
+            //vbox.getChildren().add(centerHBoxTemplate(width, gridPane.getPrefHeight(), gridPane.getId(), gridPane));
+        }
+
+        return vbox;
+    }
+
+
+    private HBox centerHBoxTemplate(double width, double height, String message, GridPane gridPane) {
         //Vbox
         HBox hbox = new HBox();
         hbox.setPrefSize(width * 0.6, height);
