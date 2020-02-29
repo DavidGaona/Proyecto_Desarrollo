@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.Client;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class ClientMenu {
@@ -96,7 +98,7 @@ public class ClientMenu {
         clientDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
-            Client searchedClient = client.loadClient(searchTextField.getText(), clientDocumentTypeAbbComboBox.getValue());
+            Client searchedClient = client.loadClient(searchTextField.getText(),clientDocumentTypeAbbComboBox.getValue());
             if (!searchedClient.isBlank()) {
                 ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
                         clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
@@ -149,7 +151,6 @@ public class ClientMenu {
             } else {
                 editClient();
             }
-
         });
 
         hBox.setAlignment(Pos.CENTER);
