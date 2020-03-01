@@ -2,21 +2,16 @@ package view;
 
 import controller.DaoClient;
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import model.Client;
 import utilities.ProjectUtilities;
 
@@ -28,13 +23,8 @@ public class ClientMenu {
         this.buttonFont = buttonFont;
     }
 
-    private TextField clientNameTextField;
-    private TextField clientLastNameTextField;
-    private TextField clientDocumentIdTextField;
-    private TextField clientEmailTextField;
-    private TextField clientDirectionTextField;
-    private ComboBox<String> clientDocumentTypeComboBox;
-    private ComboBox<String> clientTypeComboBox;
+    EditingPanel personalInfo;
+
     private ComboBox<String> clientDocumentTypeAbbComboBox;
     private Button saveChangesButton;
 
@@ -92,22 +82,21 @@ public class ClientMenu {
         clientDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
         clientDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
         clientDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
-        clientDocumentTypeAbbComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
+        clientDocumentTypeAbbComboBox.setStyle(clientDocumentTypeAbbComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
         clientDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
 
         searchTextField.setOnAction(e -> {
             Client searchedClient = client.loadClient(searchTextField.getText(), clientDocumentTypeAbbComboBox.getValue());
             if (!searchedClient.isBlank()) {
-                ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                        clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
+                personalInfo.clear();
 
-                clientNameTextField.setText(searchedClient.getName());
-                clientLastNameTextField.setText(searchedClient.getLastName());
-                clientDocumentIdTextField.setText(searchedClient.getDocumentId());
-                clientEmailTextField.setText(searchedClient.getEmail());
-                clientDirectionTextField.setText(searchedClient.getDirection());
-                clientDocumentTypeComboBox.valueProperty().set(ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
-                clientTypeComboBox.valueProperty().set(ProjectUtilities.convertClientTypeString(searchedClient.getType()));
+                personalInfo.setTextField("clientName", searchedClient.getName());
+                personalInfo.setTextField("clientLastName", searchedClient.getLastName());
+                personalInfo.setTextField("clientDocumentNumber", searchedClient.getDocumentId());
+                personalInfo.setTextField("clientEmail", searchedClient.getEmail());
+                personalInfo.setTextField("clientAddress", searchedClient.getDirection());
+                personalInfo.setComboBox("clientDocumentType", ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
+                personalInfo.setComboBox("clientType", ProjectUtilities.convertDocumentTypeString(searchedClient.getType()));
 
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
@@ -118,9 +107,7 @@ public class ClientMenu {
 
         Button newClientButton = clientButtonTemplate(width * 0.15, height * 0.03, "Nuevo cliente");
         newClientButton.setOnMouseClicked(e -> {
-            clearTextFields();
-            ProjectUtilities.resetNodeBorderColor(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField, clientEmailTextField,
-                    clientDirectionTextField, clientDocumentTypeComboBox, clientTypeComboBox);
+            personalInfo.clear();
             saveChangesButton.setText("Agregar cliente");
             currentClientMode = true;
             searchTextField.setText("");
@@ -144,12 +131,10 @@ public class ClientMenu {
 
         saveChangesButton = clientButtonTemplate(width * 0.15, height * 0.03,"Agregar cliente");
         saveChangesButton.setOnMouseClicked(e -> {
-            if (currentClientMode) {
+            if (currentClientMode)
                 saveNewClient();
-            } else {
+            else
                 editClient();
-            }
-
         });
 
         hBox.setAlignment(Pos.CENTER);
@@ -159,234 +144,63 @@ public class ClientMenu {
     }
 
     private void saveNewClient() {
-        boolean cbCorrect = isComboBoxCorrect(clientTypeComboBox, clientDocumentTypeComboBox);
-        boolean tfCorrect = isTextFieldCorrect(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField,
-                clientEmailTextField, clientDirectionTextField);
-        if (cbCorrect && tfCorrect) {
+        if (!personalInfo.isEmpty()) {
             client.saveNewClient(
-                    ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
-                    ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
-                    ProjectUtilities.clearWhiteSpaces(clientDocumentIdTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
-                    ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
+                    ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
         }
     }
 
     private void editClient() {
-        boolean cbCorrect = isComboBoxCorrect(clientTypeComboBox, clientDocumentTypeComboBox);
-        boolean tfCorrect = isTextFieldCorrect(clientNameTextField, clientLastNameTextField, clientDocumentIdTextField,
-                clientEmailTextField, clientDirectionTextField);
-        if (cbCorrect && tfCorrect) {
+        if (!personalInfo.isEmpty()) {
             client.editClient(
-                    ProjectUtilities.clearWhiteSpaces(clientNameTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientLastNameTextField.getText()),
-                    ProjectUtilities.convertDocumentType(clientDocumentTypeComboBox.getValue()),
-                    ProjectUtilities.clearWhiteSpaces(clientDocumentIdTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientEmailTextField.getText()),
-                    ProjectUtilities.clearWhiteSpaces(clientDirectionTextField.getText()),
-                    ProjectUtilities.convertClientType(clientTypeComboBox.getValue()));
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
+                    ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
+                    ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
         }
     }
 
-    private boolean isTextFieldCorrect(TextField... textFields) {
-        boolean correct = true;
-        for (TextField textField : textFields) {
-            if (textField.getText().isBlank()) {
-                textField.setStyle(textField.getStyle() + "\n-fx-border-color: #ED1221;");
-                //textField.getStyleClass().add("client-text-field-template-wrong");
-                correct = false;
-            }
-        }
-        return correct;
+    private void personalInfo(double width){
+        personalInfo = new EditingPanel("Información Personal", percentage, width);
+
+        personalInfo.addTextField("clientName", "Nombres:");
+        personalInfo.addCharacterLimit(50, "clientName");
+
+        personalInfo.addTextField("clientLastName", "Apellido:");
+        personalInfo.addCharacterLimit(50, "clientLastName");
+
+        personalInfo.addTextField("clientDocumentNumber", "Número de documento:");
+        personalInfo.addCharacterLimit(20, "clientDocumentNumber");
+        personalInfo.makeFieldNumericOnly("clientDocumentNumber");
+
+        personalInfo.addTextField("clientEmail", "Email:");
+        personalInfo.addCharacterLimit(256, "clientEmail");
+
+        personalInfo.addTextField("clientAddress", "Dirección:");
+        personalInfo.addCharacterLimit(256, "clientAddress");
+
+        personalInfo.addComboBox("clientDocumentType", "Tipo de documento:", ProjectUtilities.documentTypes);
+
+        personalInfo.addComboBox("clientType", "Tipo de cliente:", ProjectUtilities.clientTypes);
+
     }
 
-    @SafeVarargs
-    private boolean isComboBoxCorrect(ComboBox<String>... comboBoxes) {
-        boolean correct = true;
-        for (ComboBox<String> comboBox : comboBoxes) {
-            if (comboBox.getValue() == null) {
-                comboBox.setStyle(comboBox.getStyle() + "\n-fx-border-color: #ED1221;");
-                //comboBox.getStyleClass().add("client-text-field-template-wrong");
-                correct = false;
-            }
-        }
-        return correct;
-    }
-
-    private void clearTextFields() {
-        clientNameTextField.setText("");
-        clientNameTextField.setText("");
-        clientLastNameTextField.setText("");
-        clientDocumentIdTextField.setText("");
-        clientEmailTextField.setText("");
-        clientDirectionTextField.setText("");
-        clientDocumentTypeComboBox.valueProperty().set(null);
-        clientTypeComboBox.valueProperty().set(null);
-    }
-
-    private TextField clientTextFieldTemplate() {
-        TextField clientTextField = new TextField();
-        clientTextField.getStyleClass().add("client-text-field-template");
-        clientTextField.setStyle(clientTextField.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
-        clientTextField.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
-        clientTextField.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
-        return clientTextField;
-    }
-
-    private Text clientTextTemplate(String tittle, String color) {
-        Text clientText = new Text(tittle);
-        clientText.setFont(new Font("Consolas", 20 - (20 * percentage)));
-        clientText.setFill(Color.web(color));
-        return clientText;
-    }
-
-    private GridPane personalInfoPane(double width) {
-
-        GridPane gridPane = new GridPane();
-        //gridPane.setPrefSize(width * 0.4, height); // 0.4 ,,
-        gridPane.setPrefWidth(width * 0.4);
-        gridPane.setPadding(new Insets(25, 10, 25, 10));
-        gridPane.setVgap(25);
-        gridPane.setHgap(10); // 10
-        gridPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
-                "-fx-border-color: #28272F;\n-fx-border-width: 0;");
-
-
-        String textColor = "#948FA3";
-
-        //Image checkImage = new Image(new FileInputStream("C:\\Users\\david\\IdeaProjects\\panes\\src\\Check.png"));
-        //final ImageView currentImage = new ImageView();
-        //currentImage.setImage(checkImage);
-
-        //name text
-        Text clientNameText = clientTextTemplate("Nombres:", textColor);
-        clientNameText.setId("T1");
-
-        //name text field actions
-        clientNameTextField = clientTextFieldTemplate();
-        clientNameTextField.setId("TF1");
-
-        //last name text
-        Text clientLastNameText = clientTextTemplate("Apellidos:", textColor);
-        clientLastNameText.setId("T2");
-
-
-        //name text field actions
-        clientLastNameTextField = clientTextFieldTemplate();
-        clientLastNameTextField.setId("TF2");
-
-        //document id text
-        Text clientDocumentIdText = clientTextTemplate("Número de documento:", textColor);
-        clientDocumentIdText.setId("T3");
-
-        //Document id text field actions
-        clientDocumentIdTextField = clientTextFieldTemplate();
-        clientDocumentIdTextField.setId("TF3");
-        ProjectUtilities.onlyNumericTextField(clientDocumentIdTextField);
-
-        //Email Text
-        Text clientEmailText = clientTextTemplate("Email:", textColor);
-        clientEmailText.setId("T4");
-
-        //Email TextField
-        clientEmailTextField = clientTextFieldTemplate();
-        clientEmailTextField.setId("TF4");
-
-        //Direction Text
-        Text clientDirectionText = clientTextTemplate("Dirección:", textColor);
-        clientDirectionText.setId("T5");
-
-        //Direction TextField
-        clientDirectionTextField = clientTextFieldTemplate();
-        clientDirectionTextField.setId("TF5");
-
-        //document type text
-        Text clientDocumentTypeText = clientTextTemplate("Tipo de documento:", textColor);
-        clientDocumentTypeText.setId("T6");
-
-        //document type combobox
-        clientDocumentTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypes));
-        clientDocumentTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
-        clientDocumentTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
-        clientDocumentTypeComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
-        clientDocumentTypeComboBox.setId("CB6");
-
-        //document type text
-        Text clientTypeText = clientTextTemplate("Tipo de cliente:", textColor);
-        clientTypeText.setId("T7");
-
-        //document type combobox
-        clientTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.clientTypes));
-        clientTypeComboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
-        clientTypeComboBox.setMinSize(350 - (350 * percentage), 40 - (40 * percentage));
-        clientTypeComboBox.setStyle(clientDocumentTypeComboBox.getStyle() + "-fx-font-size: "+ (20 - (20 * percentage)) + "px;");
-        clientTypeComboBox.setId("CB7");
-
-        //Install listener for color highlight
-        ProjectUtilities.focusListener(gridPane,
-                clientNameTextField, clientLastNameTextField,
-                clientDocumentIdTextField, clientEmailTextField,
-                clientDirectionTextField, clientDocumentTypeComboBox,
-                clientTypeComboBox);
-
-        //install listener for length limit
-        ProjectUtilities.addTextFieldCharacterLimit(50, clientNameTextField, clientLastNameTextField);
-        ProjectUtilities.addTextFieldCharacterLimit(20, clientDocumentIdTextField);
-        ProjectUtilities.addTextFieldCharacterLimit(256, clientDirectionTextField, clientEmailTextField);
-
-        int colText = 4;
-        int colTextField = 5;
-        int rowStart = 0;
-        //Constrains
-        GridPane.setConstraints(clientNameText, colText, rowStart);
-        GridPane.setHalignment(clientNameText, HPos.RIGHT);
-        GridPane.setConstraints(clientNameTextField, colTextField, rowStart);
-
-        GridPane.setConstraints(clientLastNameText, colText, rowStart + 1);
-        GridPane.setHalignment(clientLastNameText, HPos.RIGHT);
-        GridPane.setConstraints(clientLastNameTextField, colTextField, rowStart + 1);
-
-        GridPane.setConstraints(clientDocumentTypeText, colText, rowStart + 2);
-        GridPane.setHalignment(clientDocumentTypeText, HPos.RIGHT);
-        GridPane.setConstraints(clientDocumentTypeComboBox, colTextField, rowStart + 2);
-
-        GridPane.setConstraints(clientDocumentIdText, colText, rowStart + 3);
-        GridPane.setHalignment(clientDocumentIdText, HPos.RIGHT);
-        GridPane.setConstraints(clientDocumentIdTextField, colTextField, rowStart + 3);
-
-        GridPane.setConstraints(clientEmailText, colText, rowStart + 4);
-        GridPane.setHalignment(clientEmailText, HPos.RIGHT);
-        GridPane.setConstraints(clientEmailTextField, colTextField, rowStart + 4);
-
-        GridPane.setConstraints(clientDirectionText, colText, rowStart + 5);
-        GridPane.setHalignment(clientDirectionText, HPos.RIGHT);
-        GridPane.setConstraints(clientDirectionTextField, colTextField, rowStart + 5);
-
-        GridPane.setConstraints(clientTypeText, colText, rowStart + 6);
-        GridPane.setHalignment(clientTypeText, HPos.RIGHT);
-        GridPane.setConstraints(clientTypeComboBox, colTextField, rowStart + 6);
-
-        //Adding all nodes
-        gridPane.getChildren().addAll(
-                //currentImage,
-                clientNameText, clientNameTextField,
-                clientLastNameText, clientLastNameTextField,
-                clientDocumentTypeText, clientDocumentTypeComboBox,
-                clientDocumentIdText, clientDocumentIdTextField,
-                clientEmailText, clientEmailTextField,
-                clientDirectionText, clientDirectionTextField,
-                clientTypeText, clientTypeComboBox);
-
-        gridPane.setId("Información Personal");
-        return gridPane;
-    }
 
     public BorderPane renderClientEditMenu(double width, double height) {
-        EditingMenu menu = new EditingMenu();
+        personalInfo(width);
+        EditingMenu menu = new EditingMenu(width, height, percentage);
+        menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
         BorderPane clientMenu;
-        clientMenu = menu.renderMenuTemplate(width, height, percentage, personalInfoPane(width));
+        clientMenu = menu.renderMenuTemplate();
         clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));
         clientMenu.setBottom(botBar((HBox) clientMenu.getBottom(), width, height));
         clientMenu.setCenter(clientMenu.getCenter());
