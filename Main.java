@@ -69,7 +69,7 @@ public class Main extends Application {
             e.consume();
             closeProgram(window);
         });
-        window.setTitle("Mobile plans solution");
+        window.setTitle("Mobile solutions");
         window.setResizable(false);
         window.setScene(rootScene);
         window.show();

@@ -86,6 +86,7 @@ public class Login {
 
         userIdTextField = loginTextFieldTemplate(width * 0.25, height * 0.05);
         userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
+        ProjectUtilities.onlyNumericTextField(userIdTextField);
 
         passwordTextField = new PasswordField();
         passwordTextField.setMaxSize(width * 0.25, height * 0.05);

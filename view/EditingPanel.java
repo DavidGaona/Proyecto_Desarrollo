@@ -5,6 +5,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -27,6 +28,8 @@ public class EditingPanel {
     private ArrayList<SwitchButton> switchButtons = new ArrayList<>();
     private ArrayList<Text> texts = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
+    private Button addNewNode;
+    private Button deleteNewNode;
     private GridPane tagsPane = new GridPane();
     private double percentage;
 
@@ -280,6 +283,13 @@ public class EditingPanel {
             }
         }
         return checker;
+    }
+
+    public void enableEditionMode(String addMessage, String deleteMessage){
+        addNewNode = new Button(addMessage);
+        deleteNewNode = new Button(deleteMessage);
+
+        
     }
 
     //Restrictions
