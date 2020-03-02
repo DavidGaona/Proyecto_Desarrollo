@@ -22,9 +22,17 @@ import utilities.ProjectUtilities;
 public class EditingMenu {
 
     private double percentage;
+    private VBox midPane;
+    private double height;
+    private double width;
 
+    EditingMenu(double width, double height, double percentage){
+        this.height = height;
+        this.width = width;
+        this.percentage = percentage;
+    }
 
-    private HBox topBar(double height) {
+    private HBox topBar() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(0, 0, 0, 0));
         hbox.setPrefHeight(height * 0.05);
@@ -33,7 +41,7 @@ public class EditingMenu {
         return hbox;
     }
 
-    private HBox botBar(double height) {
+    private HBox botBar() {
         HBox hbox = new HBox();
         hbox.setPrefHeight(height * 0.05);
         hbox.getStyleClass().add("bot-bar-color");
@@ -41,7 +49,7 @@ public class EditingMenu {
         return hbox;
     }
 
-    private VBox addVBox(double width) {
+    private VBox addVBox() {
         VBox vbox = new VBox();
         vbox.setPrefWidth(width * 0.2);
         vbox.setSpacing(10);
@@ -49,94 +57,34 @@ public class EditingMenu {
         return vbox;
     }
 
-    private VBox midPane(double width, double height, GridPane... gridPanes) {
-        VBox vbox = new VBox();
-        vbox.setPrefSize(width * 0.6, height * 0.9);
-        vbox.setAlignment(Pos.TOP_LEFT);
-        vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
-
-
-        for(GridPane gridPane: gridPanes){
-            vbox.getChildren().add(centerHBoxTemplate(width, gridPane.getPrefHeight(), gridPane.getId(), gridPane));
-        }
-
-        GridPane delete = new GridPane();
-
-        HBox centerHbox = centerHBoxTemplate(width, height * 0.6, "Información Del Plan", delete);
-        HBox botHbox = centerHBoxTemplate(width, height * 0.3, "Información Bancaria", delete);
-
-        vbox.getChildren().addAll(centerHbox, botHbox);
-        return vbox;
-    }
-    private VBox addToMidPane(double width, double height, HBox... hBoxes) {
-        VBox vbox = new VBox();
-        vbox.setPrefSize(width * 0.6, height * 0.9);
-        vbox.setAlignment(Pos.TOP_LEFT);
-        vbox.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
-
+    public void addToMidPane(HBox... hBoxes) {
+        midPane = new VBox();
+        midPane.setPrefSize(width * 0.6, height * 0.9);
+        midPane.setAlignment(Pos.TOP_LEFT);
+        midPane.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
 
         for(HBox hBox: hBoxes){
-            //vbox.getChildren().add(centerHBoxTemplate(width, gridPane.getPrefHeight(), gridPane.getId(), gridPane));
+            midPane.getChildren().add(hBox);
         }
 
-        return vbox;
+        EditingPanel editingPanel1 = new EditingPanel("Información Del Plan", percentage, width);
+        EditingPanel editingPanel2 = new EditingPanel("Información Bancaria", percentage, width);
+
+        midPane.getChildren().addAll(
+                editingPanel1.sendPane(width, height * 0.6),
+                editingPanel2.sendPane(width, height * 0.3));
+
     }
 
-
-    private HBox centerHBoxTemplate(double width, double height, String message, GridPane gridPane) {
-        //Vbox
-        HBox hbox = new HBox();
-        hbox.setPrefSize(width * 0.6, height);
-        hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #24222A;");
-
-        //StackPane
-        StackPane stackPane = new StackPane();
-        stackPane.setAlignment(Pos.TOP_LEFT);
-        stackPane.setPrefSize(width * 0.2, height);
-
-        //Rectangle bg
-        Rectangle rect = new Rectangle();
-        rect.setHeight(Math.max(height, 280.0));
-        rect.setWidth(width * 0.2);
-        rect.setFill(Color.web("#24222A"));
-
-        //VBox to center the text
-        VBox centerText = new VBox();
-        centerText.setMaxWidth(width * 0.2);
-        centerText.setAlignment(Pos.TOP_CENTER);
-
-        //Text with message
-        Text text = new Text(message);
-        text.setFont(new Font("Consolas", 30 - (30 * percentage))); // 30
-        text.setFill(Color.web("#FFFFFF"));
-
-        //Margin for the text
-        Rectangle marginRect = new Rectangle();
-        marginRect.setHeight(30);
-        marginRect.setWidth(0);
-        marginRect.setFill(Color.web("#24222A"));
-
-        centerText.getChildren().addAll(marginRect, text);
-        stackPane.getChildren().addAll(rect, centerText);
-        hbox.getChildren().addAll(stackPane, gridPane);
-
-        //ReSize
-        hbox.maxHeightProperty().bind(gridPane.heightProperty());
-        //hbox.maxWidthProperty().bind(gridPane.widthProperty());
-
-        return hbox;
-    }
-
-    private ScrollPane centerScrollPane(double width, double height, GridPane... gridPanes) {
+    private ScrollPane centerScrollPane() {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
 
         BorderPane layout = new BorderPane();
-        VBox vBoxLeft = addVBox(width);
-        VBox vBoxRight = addVBox(width);
-        VBox vBoxCenter = midPane(width, height, gridPanes);
+        VBox vBoxLeft = addVBox();
+        VBox vBoxRight = addVBox();
+        VBox vBoxCenter = midPane;
         vBoxCenter.setId("a1");
 
         layout.setCenter(vBoxCenter);
@@ -153,13 +101,12 @@ public class EditingMenu {
         return scrollPane;
     }
 
-    public BorderPane renderMenuTemplate(double width, double height, double percentage, GridPane... gridPanes) {
+    public BorderPane renderMenuTemplate() {
         BorderPane mainLayout = new BorderPane();
-        this.percentage = percentage;
         mainLayout.setPadding(new Insets(0, 0, 0, 0));
-        HBox hBoxTop = topBar(height);
-        HBox hBoxBot = botBar(height);
-        ScrollPane spCenter = centerScrollPane(width, height, gridPanes);
+        HBox hBoxTop = topBar();
+        HBox hBoxBot = botBar();
+        ScrollPane spCenter = centerScrollPane();
         spCenter.getStyleClass().add("scroll-bar:vertical");
 
         mainLayout.setBottom(hBoxBot);
