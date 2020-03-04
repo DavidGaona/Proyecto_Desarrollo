@@ -113,15 +113,14 @@ public class ProjectUtilities {
     }
 
     public static void onlyNumericTextField(TextField searchTextField) {
-        searchTextField.setOnKeyTyped(e -> {
-            if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
+        searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!(ProjectUtilities.isNumeric(newValue))) {
                 String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
                 int prevPos = searchTextField.getCaretPosition();
                 searchTextField.setText(correctText);
                 searchTextField.positionCaret(prevPos - 1);
             }
         });
-
     }
 
     public static void resetNodeBorderColor(Node... nodes) {

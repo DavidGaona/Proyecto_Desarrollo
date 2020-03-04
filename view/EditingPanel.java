@@ -34,16 +34,16 @@ public class EditingPanel {
     private double percentage;
 
     private String color = "#948FA3";
-    private String tittle;
+    private String title;
 
-    EditingPanel(String tittle, double percentage, double width) {
+    EditingPanel(String title, double percentage, double width) {
         tagsPane.setPadding(new Insets(25, 10, 25, 10));
         tagsPane.setPrefWidth(width * 0.4);
         tagsPane.setVgap(25);
         tagsPane.setHgap(10);
         tagsPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
                 "-fx-border-color: #28272F;\n-fx-border-width: 0;");
-        this.tittle = tittle;
+        this.title = title;
         this.percentage = percentage;
     }
 
@@ -74,8 +74,8 @@ public class EditingPanel {
         return switchButton;
     }
 
-    private void addText(String id, String tittle, String color) {
-        Text text = new Text(tittle);
+    private void addText(String id, String title, String color) {
+        Text text = new Text(title);
         text.setFont(new Font("Consolas", 20 - (20 * percentage)));
         text.setFill(Color.web(color));
         text.setId(id);
@@ -326,7 +326,7 @@ public class EditingPanel {
         centerText.setAlignment(Pos.TOP_CENTER);
 
         //Text with message
-        Text text = new Text(tittle);
+        Text text = new Text(title);
         text.setFont(new Font("Consolas", 30)); // 30
         text.setFill(Color.web("#FFFFFF"));
 

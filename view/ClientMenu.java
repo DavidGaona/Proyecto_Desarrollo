@@ -194,7 +194,6 @@ public class ClientMenu {
 
     }
 
-
     public BorderPane renderClientEditMenu(double width, double height) {
         personalInfo(width);
         EditingMenu menu = new EditingMenu(width, height, percentage);
