@@ -8,22 +8,26 @@ public class DaoClient {
 
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public void saveNewClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
-        Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
+    public int saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+        int success = -1;
         if (!client.isBlank()) {
             dbManager.openDBConnection();
-            int status = dbManager.saveNewClient(client);
+            success = dbManager.saveNewClient(client);
             dbManager.closeDBConnection();
         }
+        return success;
     }
 
-    public void editClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
-        Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
+    public int editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+        int success = -1;
         if (!client.isBlank()) {
             dbManager.openDBConnection();
-            dbManager.editClient(client);
+            success = dbManager.editClient(client);
             dbManager.closeDBConnection();
         }
+        return success;
     }
 
     public Client loadClient(String documentNumber,String clientDocumentType) {

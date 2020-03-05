@@ -38,7 +38,7 @@ public class UserMenu {
     private boolean currentUserMode = true;
     private double buttonFont;
     private SignOut signOut = new SignOut();
-    private String currentUser = null;
+    private int currentSelectedUser;
 
     private Button userButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -96,6 +96,7 @@ public class UserMenu {
             if (searchedUser.isNotBlank()) {
                 personalInfo.clear();
 
+                currentSelectedUser = searchedUser.getId();
                 personalInfo.setTextField("userName", searchedUser.getName());
                 personalInfo.setTextField("userLastName", searchedUser.getLastName());
                 personalInfo.setTextField("userDocumentNumber", searchedUser.getDocumentIdNumber());
@@ -118,7 +119,7 @@ public class UserMenu {
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
             searchTextField.setText("");
-            currentUser = null;
+            currentSelectedUser = -1;
         });
 
         logOut.setOnMouseClicked(e -> {
@@ -151,27 +152,34 @@ public class UserMenu {
 
     private void saveNewUser() {
         if (!personalInfo.isEmpty()) {
-            user.saveNewUser(
+            if (user.saveNewUser(
+                    currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
-                    personalInfo.getSwitchButtonValue("userState"));
-
+                    personalInfo.getSwitchButtonValue("userState"))
+                    == 1){
+                personalInfo.clear();
+            }
         }
     }
 
     private void editUser() {
         if (!personalInfo.isEmpty()) {
-            user.editUser(
+            if (user.editUser(
+                    currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
-                    !personalInfo.getSwitchButtonValue("userPasswordReset"));
+                    !personalInfo.getSwitchButtonValue("userPasswordReset"))
+                    == 1){
+                personalInfo.clear();
+            }
         }
     }
 

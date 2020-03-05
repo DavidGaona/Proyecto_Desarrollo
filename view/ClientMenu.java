@@ -27,6 +27,7 @@ public class ClientMenu {
 
     private ComboBox<String> clientDocumentTypeAbbComboBox;
     private Button saveChangesButton;
+    private int currentClient = -1;
 
     private double percentage;
     private DaoClient client;
@@ -90,6 +91,7 @@ public class ClientMenu {
             if (!searchedClient.isBlank()) {
                 personalInfo.clear();
 
+                currentClient = searchedClient.getId();
                 personalInfo.setTextField("clientName", searchedClient.getName());
                 personalInfo.setTextField("clientLastName", searchedClient.getLastName());
                 personalInfo.setTextField("clientDocumentNumber", searchedClient.getDocumentId());
@@ -145,27 +147,33 @@ public class ClientMenu {
 
     private void saveNewClient() {
         if (!personalInfo.isEmpty()) {
-            client.saveNewClient(
+            if (client.saveNewClient(
+                    -1,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
-                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType"))) == 1){
+                personalInfo.clear();
+            }
         }
     }
 
     private void editClient() {
         if (!personalInfo.isEmpty()) {
-            client.editClient(
+            if (client.editClient(
+                    currentClient,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
-                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType"))) == 1){
+                personalInfo.clear();
+            }
         }
     }
 

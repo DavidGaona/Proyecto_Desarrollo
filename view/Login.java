@@ -14,11 +14,12 @@ import utilities.ProjectUtilities;
 public class Login {
 
     public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(0);
-    public static String currentUser = null;
+    public static int currentLoggedUser = -1;
 
     private DaoUser user;
     private double width;
     private double height;
+
 
     public Login(double width, double height, SimpleIntegerProperty currentWindow2) {
         user = new DaoUser();
@@ -116,7 +117,7 @@ public class Login {
 
     private void loginAction() {
         final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
-        currentUser = userIdTextField.getText();
+
         switch (loginSuccess) {
             case 0:
                 clear();
@@ -133,7 +134,7 @@ public class Login {
                 Login.currentWindow.set(4);
                 break;
             default:
-                currentUser = null;
+                currentLoggedUser = -1;
                 break;
         }
     }

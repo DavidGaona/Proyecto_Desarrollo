@@ -3,11 +3,9 @@ package view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
@@ -16,6 +14,7 @@ import utilities.ConfirmBox;
 import java.awt.*;
 
 public class SignOut {
+
     private double percentage;
     public boolean isShowAble = true;
 
@@ -74,7 +73,6 @@ public class SignOut {
         passwordChangeLabel.setOnMouseClicked(e -> {
             boolean answer = ConfirmBox.display("Cambiar Contraseña", "¿Desea Cambiar la Contraseña?", "Si", "No");
             if(answer) {
-                Login.currentWindow.set(-1);
                 Login.currentWindow.set(4);
             }
         });
@@ -82,8 +80,8 @@ public class SignOut {
         signOutLabel.setOnMouseClicked( e ->{
             boolean answer = ConfirmBox.display("Cerrar sesión", "¿Quieres cerrar sesión?", "Sí quiero cerrar", "No quiero cerrar");
             if(answer) {
-                Login.currentWindow.set(-1);
                 Login.currentWindow.set(0);
+                Login.currentLoggedUser = -1;
             }
         });
 
