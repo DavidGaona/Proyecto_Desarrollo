@@ -4,6 +4,7 @@ package connection;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import model.Client;
+import model.Plan;
 import model.User;
 import utilities.AlertBox;
 import view.Login;
@@ -302,6 +303,30 @@ public class DbManager {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+    }
+
+    public int saveNewPlan(Plan plan){
+
+        int numRows;
+        String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes,plan_data_cap,plan_text_message) "+
+                "VALUES('"+plan.getPlanName()+"',"+plan.getPlanCost()+","+plan.getPlanMinutes()+","+plan.getPlanData()+
+                ","+plan.getPlanTextMsn()+") "+"ON CONFLICT (plan_id) DO NOTHING";
+
+        try {
+            Statement statement = connection.createStatement();
+            numRows = statement.executeUpdate(saveQuery);
+            if(numRows>0){
+                AlertBox.display("Operación exitosa", "Plan creado", "");
+            }
+            return 1;
+        } catch (SQLException e) {
+            AlertBox.display("Error", " Error al crear plan", "");
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return -1;
 
     }
 
