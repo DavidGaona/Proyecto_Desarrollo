@@ -135,6 +135,7 @@ public class DbManager {
                 AlertBox.display("Error", "Contraseña y/o id incorrectos", "");
                 return -1;
             }
+
             hashedPasswordFromBD = resultSet.getString(1);
             user_type = resultSet.getShort(2);
             final BCrypt.Result resultCompare = BCrypt.verifyer().verify(password.toCharArray(), hashedPasswordFromBD);
@@ -148,6 +149,7 @@ public class DbManager {
                 AlertBox.display("Error", "No tiene permisos para ingresar", "contacte a un administrador");
                 return -1;
             }
+
             if (!resultSet.getBoolean(4))
                 return 3;
             Login.currentLoggedUser = resultSet.getInt(5);

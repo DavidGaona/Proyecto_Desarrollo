@@ -28,10 +28,9 @@ public class EditingPanel {
     private ArrayList<SwitchButton> switchButtons = new ArrayList<>();
     private ArrayList<Text> texts = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
-    private Button addNewNode;
-    private Button deleteNewNode;
     private GridPane tagsPane = new GridPane();
     private double percentage;
+    private int maxMsgLength = 0;
 
     private String color = "#948FA3";
     private String title;
@@ -90,6 +89,7 @@ public class EditingPanel {
         comboBoxes.add(null);
         switchButtons.add(null);
         int index = texts.size() - 1;
+        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
@@ -110,11 +110,18 @@ public class EditingPanel {
         textFields.add(null);
         switchButtons.add(null);
         int index = texts.size() - 1;
+        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
         GridPane.setConstraints(comboBoxes.get(index), 5, index);
         tagsPane.getChildren().addAll(texts.get(index), comboBoxes.get(index));
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    public void addComboBox(String name, String message, String[] elements, int index) {
+        addComboBox(name, message, elements);
+        getComboBox(name).getSelectionModel().select(index);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -125,6 +132,7 @@ public class EditingPanel {
         textFields.add(null);
         comboBoxes.add(null);
         int index = texts.size() - 1;
+        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
@@ -285,18 +293,13 @@ public class EditingPanel {
         return checker;
     }
 
-    public void enableEditionMode(String addMessage, String deleteMessage){
-        addNewNode = new Button(addMessage);
-        deleteNewNode = new Button(deleteMessage);
-
-        
-    }
-
     //Restrictions
 
     public void addCharacterLimit(int limit, String id) { ProjectUtilities.addTextFieldCharacterLimit(limit, getTextfield(id)); }
 
     public void makeFieldNumericOnly(String id) { ProjectUtilities.onlyNumericTextField(getTextfield(id)); }
+
+    public void makeFieldFloatOnly(String id) { ProjectUtilities.onlyFloatTextField(getTextfield(id)); }
 
     public void addRegexConstraint(String pattern) {
 
@@ -327,7 +330,7 @@ public class EditingPanel {
 
         //Text with message
         Text text = new Text(title);
-        text.setFont(new Font("Consolas", 30)); // 30
+        text.setFont(new Font("Consolas", 30));
         text.setFill(Color.web("#FFFFFF"));
 
         //Margin for the text

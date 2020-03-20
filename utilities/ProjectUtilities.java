@@ -11,7 +11,10 @@ import java.util.ArrayList;
 public class ProjectUtilities {
 
     public static boolean isNumeric(String inputData) {
-        return inputData.matches("\\d+(\\d+)?");
+        return inputData.matches("[0-9]*");
+    }
+    public static boolean isFloat(String inputData) {
+        return inputData.matches("([0-9]*[.])?[0-9]*");
     }
 
     public static final String[] documentTypes = {"Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
@@ -115,10 +118,19 @@ public class ProjectUtilities {
     public static void onlyNumericTextField(TextField searchTextField) {
         searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if (!(ProjectUtilities.isNumeric(newValue))) {
-                String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
                 int prevPos = searchTextField.getCaretPosition();
-                searchTextField.setText(correctText);
-                searchTextField.positionCaret(prevPos - 1);
+                searchTextField.setText(oldValue);
+                searchTextField.positionCaret(prevPos);
+            }
+        });
+    }
+
+    public static void onlyFloatTextField(TextField searchTextField){
+        searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!(ProjectUtilities.isFloat(newValue))) {
+                int prevPos = searchTextField.getCaretPosition();
+                searchTextField.setText(oldValue);
+                searchTextField.positionCaret(prevPos);
             }
         });
     }
