@@ -124,7 +124,9 @@ public class Login {
                 Login.currentWindow.set(1);
                 break;
             case 1:
-                //ToDo manager
+                clear();
+                Login.currentWindow.set(2);
+                break;
             case 2:
                 clear();
                 Login.currentWindow.set(3);

@@ -3,10 +3,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utilities.ConfirmBox;
-import view.ClientMenu;
-import view.Login;
-import view.UserMenu;
-import view.UserPasswordChange;
+import view.*;
 
 import java.awt.*;
 
@@ -44,8 +41,11 @@ public class Main extends Application {
                     window.setScene(clientMenuScene);
                     break;
                 case 2:
-                    //ToDo manager
-
+                    //Manager plan info menu
+                    ManagerMenu manager = new ManagerMenu(percentage, buttonFont);
+                    Scene managerMenuScene = new Scene(manager.renderPlanEditingMenu(width, height), width, height);
+                    managerMenuScene.getStylesheets().add("styles.css");
+                    window.setScene(managerMenuScene);
                     break;
                 case 3:
                     //Admin user menu
