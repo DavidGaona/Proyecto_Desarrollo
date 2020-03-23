@@ -46,6 +46,7 @@ public class Main extends Application {
                     Scene managerMenuScene = new Scene(manager.renderPlanEditingMenu(width, height), width, height);
                     managerMenuScene.getStylesheets().add("styles.css");
                     window.setScene(managerMenuScene);
+                    manager.align();
                     break;
                 case 3:
                     //Admin user menu
