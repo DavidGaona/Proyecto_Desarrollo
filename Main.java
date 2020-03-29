@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utilities.ConfirmBox;
@@ -79,6 +80,7 @@ public class Main extends Application {
     private void closeProgram(Stage window) {
         if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?", "Si quiero cerrar", "No quiero cerrar")) {
             window.close();
+            Platform.exit();
         }
     }
 
