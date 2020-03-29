@@ -117,15 +117,6 @@ public class ClientMenu {
             searchTextField.setText("");
         });
 
-        logOut.setOnMouseClicked( e -> {
-            if (signOut.isShowAble){
-                signOut.display();
-                signOut.isShowAble = false;
-            } else {
-                signOut.isShowAble = true;
-            }
-        });
-
         hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2,
                 clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
         return hBox;

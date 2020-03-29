@@ -38,7 +38,6 @@ public class UserMenu {
     private DaoUser user;
     private boolean currentUserMode = true;
     private double buttonFont;
-    private SignOut signOut = new SignOut();
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
     private int currentSelectedUser;
 
@@ -130,23 +129,7 @@ public class UserMenu {
             currentSelectedUser = -1;
         });
 
-        menuCircle.setOnMouseClicked( e -> {
-            if (menuListAdmin.isShowAble){
-                menuListAdmin.displayMenu();
-                menuListAdmin.isShowAble = false;
-            } else {
-                menuListAdmin.isShowAble = true;
-            }
-        });
-
-        logOut.setOnMouseClicked(e -> {
-            if (signOut.isShowAble) {
-                signOut.display();
-                signOut.isShowAble = false;
-            } else {
-                signOut.isShowAble = true;
-            }
-        });
+        menuCircle.setOnMouseClicked( e -> menuListAdmin.displayMenu());
 
         hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, marginRect2,
                 userDocumentTypeAbbComboBox, marginRect4, searchTextField);
