@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -38,8 +39,9 @@ public class ClientMenu {
     private Button clientButtonTemplate(double width, double height, String message){
         Button button = new Button(message);
         button.setPrefSize(width , height);
-        button.setStyle("-fx-font-size: " + buttonFont);
         button.getStyleClass().add("client-buttons-template");
+        button.setStyle("-fx-font-size: " + buttonFont);
+
         return button;
     }
 
@@ -202,7 +204,8 @@ public class ClientMenu {
 
     }
 
-    public BorderPane renderClientEditMenu(double width, double height) {
+    public StackPane renderClientEditMenu(double width, double height) {
+        StackPane stackPane = new StackPane();
         personalInfo(width);
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
@@ -211,6 +214,8 @@ public class ClientMenu {
         clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));
         clientMenu.setBottom(botBar((HBox) clientMenu.getBottom(), width, height));
         clientMenu.setCenter(clientMenu.getCenter());
-        return clientMenu;
+        stackPane.getChildren().addAll(clientMenu);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        return stackPane;
     }
 }

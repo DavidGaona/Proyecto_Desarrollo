@@ -30,7 +30,6 @@ public class EditingPanel {
     private ArrayList<String> names = new ArrayList<>();
     private GridPane tagsPane = new GridPane();
     private double percentage;
-    private int maxMsgLength = 0;
 
     private String color = "#948FA3";
     private String title;
@@ -89,7 +88,6 @@ public class EditingPanel {
         comboBoxes.add(null);
         switchButtons.add(null);
         int index = texts.size() - 1;
-        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
@@ -110,7 +108,6 @@ public class EditingPanel {
         textFields.add(null);
         switchButtons.add(null);
         int index = texts.size() - 1;
-        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
@@ -132,7 +129,6 @@ public class EditingPanel {
         textFields.add(null);
         comboBoxes.add(null);
         int index = texts.size() - 1;
-        maxMsgLength = Math.max(maxMsgLength, message.length());
 
         GridPane.setConstraints(texts.get(index), 4, index);
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
@@ -205,6 +201,25 @@ public class EditingPanel {
         return getSwitchButton(id).switchedOnProperty().get();
     }
 
+    public double getLongestText(){
+        int index = 0;
+        for (int i = 1; i < texts.size(); ++i){
+            if (texts.get(i).getBoundsInLocal().getWidth() > texts.get(0).getBoundsInLocal().getWidth())
+                index = i;
+        }
+        return texts.get(index).getBoundsInLocal().getWidth();
+    }
+
+    public void align(double size){
+        Rectangle rectangle = new Rectangle();
+        rectangle.setHeight(0);
+        rectangle.setWidth(size);
+        GridPane.setConstraints(rectangle, 4, texts.size() - 1);
+        GridPane.setHalignment(rectangle, HPos.RIGHT);
+        tagsPane.getChildren().add(rectangle);
+        rectangle.setVisible(false);
+    }
+
     public void swap(String name1, String name2) {
         int indexName1 = getIndex(name1);
         int indexName2 = getIndex(name2);
@@ -248,6 +263,7 @@ public class EditingPanel {
             if (textField != null)
                 textField.setText("");
         }
+
     }
 
     private void clearComboBoxes() {
@@ -319,7 +335,7 @@ public class EditingPanel {
 
         //Rectangle bg
         Rectangle rect = new Rectangle();
-        rect.setHeight(Math.max(height, 280.0));
+        rect.setHeight(height);
         rect.setWidth(width * 0.2);
         rect.setFill(Color.web("#24222A"));
 

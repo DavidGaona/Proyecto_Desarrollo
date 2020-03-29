@@ -152,9 +152,10 @@ public class DbManager {
                 return -1;
             }
 
+            Login.currentLoggedUser = resultSet.getInt(5);
             if (!resultSet.getBoolean(4))
                 return 3;
-            Login.currentLoggedUser = resultSet.getInt(5);
+            
             return user_type;
         } catch (SQLException e) {
             System.out.println(e.getMessage());

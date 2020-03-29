@@ -6,13 +6,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+
 public class ManagerMenu {
 
-    EditingPanel basicPlanInfo, planExtras, createExtra;
+    private EditingPanel basicPlanInfo, planExtras, createExtra;
+    private ArrayList<EditingPanel> aligner = new ArrayList<>();
     private double percentage;
     private DaoUser user;
     private double buttonFont;
-    private int maxMsgLength = 0;
 
     public ManagerMenu(double percentage, double buttonFont) {
         user = new DaoUser();
@@ -53,6 +55,8 @@ public class ManagerMenu {
         basicPlanInfo.addTextField("planTextMessage", "Número de mensajes:");
         basicPlanInfo.makeFieldNumericOnly("planTextMessage");
         basicPlanInfo.addCharacterLimit(10, "planTextMessage");
+
+        aligner.add(basicPlanInfo);
     }
 
     private void createExtra(double width){
@@ -69,6 +73,20 @@ public class ManagerMenu {
         createExtra.addCharacterLimit(15, "extraQuantity");
         createExtra.makeFieldFloatOnly("extraQuantity");
 
+        aligner.add(createExtra);
+    }
+
+    public void align(){
+        double longestTextSize = 0.0;
+        for (EditingPanel editingPanel : aligner) {
+            if (editingPanel.getLongestText() > longestTextSize){
+                longestTextSize = editingPanel.getLongestText();
+            }
+        }
+
+        for (EditingPanel editingPanel : aligner) {
+            editingPanel.align(longestTextSize);
+        }
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -78,7 +96,7 @@ public class ManagerMenu {
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(
                 basicPlanInfo.sendPane(width, height*0.1),
-                createExtra.sendPane(width, height*0.1)
+                createExtra.sendPane(width, height*0.0)
         );
         BorderPane planMenu;
         planMenu = menu.renderMenuTemplate();
