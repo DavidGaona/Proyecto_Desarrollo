@@ -6,6 +6,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import model.Client;
 import model.Plan;
 import model.User;
+import model.Voice;
 import utilities.AlertBox;
 import view.Login;
 
@@ -31,7 +32,7 @@ public class DbManager {
         saveQuery = "INSERT INTO public.client(client_name, client_last_name, client_document_number, client_email, client_address, client_type, client_document_type)" +
                 " VALUES ('" + client.getName() + "', '" + client.getLastName() + "', '" +
                 client.getDocumentId() + "', '" + client.getEmail() + "', '" + client.getDirection() + "'," +
-                client.getType() + ", " + client.getDocumentType() + ")" + " ON CONFLICT (client_id) DO NOTHING";
+                client.getType() + ", " + client.getDocumentType() + ")" + " ON CONFLICT (client_document_number) DO NOTHING";
 
         selectQuery = "SELECT client_id FROM public.client WHERE client_document_number = '" + client.getDocumentId() + "' AND client_document_type = " +
                 client.getDocumentType() + ";";
@@ -172,7 +173,7 @@ public class DbManager {
         final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
         saveQuery = "INSERT INTO public.user(user_name, user_last_name, user_document_number, user_type, user_state, user_password, user_document_type)" +
                 " VALUES('" + user.getName() + "','" + user.getLastName() + "','" + user.getDocumentIdNumber() + "'," + user.getType() +
-                "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (user_id) DO NOTHING";
+                "," + user.getState() + ",'" + hashWillBeStored + "', " + user.getDocumentType() + ")" + " ON CONFLICT (user_document_number) DO NOTHING";
 
         selectQuery = "SELECT user_id FROM public.\"user\" WHERE user_document_number = '" + user.getDocumentIdNumber() + "' AND user_document_type = " + user.getDocumentType() + ";";
 
@@ -311,7 +312,7 @@ public class DbManager {
         int numRows;
         String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes,plan_data_cap,plan_text_message) "+
                 "VALUES('"+plan.getPlanName()+"',"+plan.getPlanCost()+","+plan.getPlanMinutes()+","+plan.getPlanData()+
-                ","+plan.getPlanTextMsn()+") "+"ON CONFLICT (plan_id) DO NOTHING";
+                ","+plan.getPlanTextMsn()+") "+"ON CONFLICT (plan_name) DO NOTHING";
 
         try {
             Statement statement = connection.createStatement();
@@ -328,6 +329,27 @@ public class DbManager {
         }
         return -1;
 
+    }
+
+    public int saveNewVoiceMins(Voice voice){
+        int numRows;
+        String saveQuery = "INSERT INTO public.plan(voice_name, voice_minutes) "+
+                "VALUES('"+voice.getVoiceName()+"',"+voice.getVoiceMinutes()+")";
+
+        try {
+            Statement statement = connection.createStatement();
+            numRows = statement.executeUpdate(saveQuery);
+            if(numRows>0){
+                AlertBox.display("Operación exitosa", "Minutos de voz creado", "");
+                return 1;
+            }
+        } catch (SQLException e) {
+            AlertBox.display("Error", " Error al crear minutos de voz", "");
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return -1;
     }
 
     public void openDBConnection() {
