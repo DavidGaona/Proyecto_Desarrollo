@@ -198,6 +198,23 @@ public class DbManager {
 
     public int editUser(User user) {
         int numRows;
+        if(!user.isPasswordReset()){
+            final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
+            String sql_update = "UPDATE public.\"user\""+
+                    " SET user_password = '"+hashWillBeStored+"' WHERE user_id = "+user.getId();
+            try {
+                Statement statement = connection.createStatement();
+                System.out.println("user id: " + user.getId());
+                numRows = statement.executeUpdate(sql_update);
+                System.out.println("up " + numRows);
+            } catch (SQLException e) {
+                AlertBox.display("Error", " Error al editar contraseña usuario", "");
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println(Arrays.toString(e.getStackTrace()));
+            }
+        }
+
         String sql_update = "UPDATE public.\"user\"" +
                 " SET user_name = '" + user.getName() + "', user_last_name = '" + user.getLastName() +
                 "', user_document_number = '" + user.getDocumentIdNumber() + "', user_type = " + user.getType() +
