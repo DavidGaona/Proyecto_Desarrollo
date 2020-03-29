@@ -15,7 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import model.User;
 import utilities.ProjectUtilities;
-import utilities.projectEffects;
+import utilities.ProjectEffects;
 
 public class UserMenu {
 
@@ -128,7 +128,7 @@ public class UserMenu {
 
         menuCircle.setOnMouseClicked( e -> {
             menuListAdmin.displayMenu();
-            projectEffects.linearTransitionToRight(menuList,width,height,width,height);
+            ProjectEffects.linearTransitionToRight(menuList,width,height,width,height);
         });
 
         hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, marginRect2,
@@ -214,7 +214,7 @@ public class UserMenu {
         personalInfo(width);
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
-        menuList = menuListAdmin.display();
+        menuList = menuListAdmin.display(width, height, percentage);
         BorderPane userMenu;
         userMenu = menu.renderMenuTemplate();
         userMenu.setTop(topBar((HBox) userMenu.getTop(), width, height));

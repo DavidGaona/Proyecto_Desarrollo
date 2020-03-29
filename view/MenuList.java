@@ -7,12 +7,11 @@ import javafx.scene.paint.Color;
 
 public class MenuList {
 
-    protected double percentage;
     protected VBox layout = new VBox();
     protected double fontButton;
 
 
-    protected Rectangle separator(double width){
+    protected Rectangle separator(double width) {
         Rectangle separatorRect = new Rectangle();
         separatorRect.setHeight(width * 0.0036765);
         separatorRect.setWidth(width * 0.1);
@@ -20,7 +19,7 @@ public class MenuList {
         return separatorRect;
     }
 
-    protected Rectangle separator2(double width){
+    protected Rectangle separator2(double width) {
         Rectangle separatorRect = new Rectangle();
         separatorRect.setHeight(width * 0.01475);
         separatorRect.setWidth(width * 0.1);
@@ -28,24 +27,25 @@ public class MenuList {
         return separatorRect;
     }
 
-    protected Label labelGenerator(String message, double width, double height){
-        double labelFont = 16 - (16 * percentage);
+    protected Label labelGenerator(String message, double width, double height, double percentage) {
+        double labelFont = 22 - (22 * percentage);
         javafx.scene.control.Label label = new javafx.scene.control.Label();
         label.setText(message);
         label.setPrefWidth(width * 0.2058875);
         label.setPrefHeight(height * 0.05);
         label.setStyle("-fx-font-size: " + labelFont + "px;");
 
-        label.setOnMouseEntered( e -> label.setStyle(label.getStyle() + "-fx-background-color: #151919;"));
-        label.setOnMouseExited( e -> label.setStyle(label.getStyle() + "-fx-background-color: #212828;"));
+        label.setOnMouseEntered(e -> label.setStyle(label.getStyle() + "-fx-background-color: #151919;"));
+        label.setOnMouseExited(e -> label.setStyle(label.getStyle() + "-fx-background-color: #212828;"));
 
         return label;
     }
 
-    public void displayMenu()
-    {
+    public void displayMenu() {
         layout.setVisible(true);
-    };
+    }
+
+    ;
 
 }
 
