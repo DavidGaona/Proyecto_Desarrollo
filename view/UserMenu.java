@@ -2,24 +2,20 @@ package view;
 
 import controller.DaoUser;
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import model.User;
 import utilities.ProjectUtilities;
+import utilities.projectEffects;
 
 public class UserMenu {
 
@@ -39,6 +35,7 @@ public class UserMenu {
     private boolean currentUserMode = true;
     private double buttonFont;
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
+    private VBox menuList;
     private int currentSelectedUser;
 
     private Button userButtonTemplate(double width, double height, String message) {
@@ -129,7 +126,10 @@ public class UserMenu {
             currentSelectedUser = -1;
         });
 
-        menuCircle.setOnMouseClicked( e -> menuListAdmin.displayMenu());
+        menuCircle.setOnMouseClicked( e -> {
+            menuListAdmin.displayMenu();
+            projectEffects.linearTransitionToRight(menuList,width,height,width,height);
+        });
 
         hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, marginRect2,
                 userDocumentTypeAbbComboBox, marginRect4, searchTextField);
@@ -214,12 +214,13 @@ public class UserMenu {
         personalInfo(width);
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+        menuList = menuListAdmin.display();
         BorderPane userMenu;
         userMenu = menu.renderMenuTemplate();
         userMenu.setTop(topBar((HBox) userMenu.getTop(), width, height));
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());
-        stackPane.getChildren().addAll(userMenu, menuListAdmin.display() );
+        stackPane.getChildren().addAll(userMenu, menuList );
         stackPane.setAlignment(Pos.TOP_LEFT);
         return stackPane;
     }
