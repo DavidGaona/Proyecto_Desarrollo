@@ -10,10 +10,7 @@ import model.Voice;
 import utilities.AlertBox;
 import view.Login;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Arrays;
 
 
@@ -369,7 +366,47 @@ public class DbManager {
         }
         return -1;
     }
-
+    //**************************** METODOS DEL BANCO ********************
+    public String save_bank(String bank_name, String account_number){
+        int numRows;
+        String sql = "INSERT INTO public.bank(bank_name, account_number, state) VALUES(?,?,true)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,bank_name);
+            preparedStatement.setString(2,account_number);
+            numRows = preparedStatement.executeUpdate();
+            if(numRows>0){
+                return "Operación Realizada";
+            }
+            else{
+                return "No se pudo realizar la operación";
+            }
+        } catch (SQLException e) {
+            return  "Error: "+ e.toString();
+        } catch (Exception e) {
+            return "Error: "+ e.toString();
+        }
+    }
+    public String set_state_bank(boolean state, int bank_id){
+        int numRows;
+        String sql = "UPDATE bank SET state = ? WHERE bank_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1,state);
+            preparedStatement.setInt(2,bank_id);
+            numRows = preparedStatement.executeUpdate();
+            if(numRows>0){
+                return "Operación Realizada";
+            }
+            else{
+                return "No se pudo realizar la operación";
+            }
+        } catch (SQLException e) {
+            return  "Error: "+ e.toString();
+        } catch (Exception e) {
+            return "Error: "+ e.toString();
+        }
+    }
     public void openDBConnection() {
         connection = dBconnect.getConnection();
     }
