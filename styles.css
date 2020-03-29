@@ -97,6 +97,10 @@
     -fx-font-weight: bold;
 }
 
+.client-buttons-template:hover{
+    -fx-background-color: #4422AA;
+}
+
 .client-search-bar {
     -fx-background-color: #24222A;
     -fx-text-fill: #FFFFFF;

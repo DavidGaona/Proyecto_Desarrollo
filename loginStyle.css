@@ -27,3 +27,6 @@
     -fx-font-family: Consolas;
     -fx-font-size: 40px;
 }
+.login-button:hover {
+    -fx-background-color: #117AAA;
+}
