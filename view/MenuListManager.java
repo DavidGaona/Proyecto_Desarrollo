@@ -1,5 +1,6 @@
 package view;
 
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -7,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import utilities.ConfirmBox;
 
 import java.awt.*;
@@ -21,6 +23,22 @@ public class MenuListManager extends MenuList{
         double percentageWidth = (1360 - width) / 1360;
         double percentageHeight = (768 - height) / 768;
         percentage = Math.max(percentageWidth, percentageHeight);
+        fontButton = 60 - (60 * percentage);
+
+        Button closeMenu = new Button();
+        closeMenu.setText("\u21A9");
+        closeMenu.setPrefSize(width * 0.09 , height * 0.079); // 122.39, 60.672
+        closeMenu.setStyle( closeMenu.getStyle() + "-fx-font-size: " + fontButton + ";");
+        //effect closeMenu
+        FadeTransition ft = new FadeTransition();
+        ft.setNode(closeMenu);
+        ft.setDuration(new Duration(500));
+        ft.setFromValue(1.0);
+        ft.setToValue(0.1);
+        ft.setCycleCount(2);
+        ft.setAutoReverse(true);
+        closeMenu.setOnMouseMoved( e -> ft.play());
+        //
 
         Circle profile = new Circle((height * 0.2)/2);
         profile.setCenterX((height * 0.2)/2);
@@ -40,10 +58,16 @@ public class MenuListManager extends MenuList{
         changePassword.setAlignment(Pos.CENTER);
         logOut.setAlignment(Pos.CENTER);
 
-        Button closeMenu = new Button();
-        closeMenu.setText("Cerrar");
-        closeMenu.setPrefSize(width * 0.2058875 , height * 0.05);
-
+        layout.setPrefSize(width * 0.2035, height ); // height * 0.912
+        layout.setMaxSize(width * 0.2035, height ); // height * 0.912
+        layout.getChildren().addAll( profile, separator2(width), separator(width), planLabel,
+                separator(width), statsPlans, separator(width), statsClients, separator(width), changePassword,
+                separator(width), logOut, separator2(width), closeMenu);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-border-width: 0 10 0 0;" + "-fx-border-color: linear-gradient(to right, #212828, #24222A);" + "-fx-background-color: #212828");
+        layout.setPadding(new Insets(20, 0, 20, 0));
+        layout.setVisible(false);
+        layout.getStylesheets().add("menuListStyle.css");
 
         changePassword.setOnMouseClicked(e -> {
             boolean answer = ConfirmBox.display("Cambiar Contraseña", "¿Desea Cambiar la Contraseña?", "Si", "No");
@@ -59,17 +83,6 @@ public class MenuListManager extends MenuList{
                 Login.currentLoggedUser = -1;
             }
         });
-
-        layout.setPrefSize(width * 0.20588, height ); // height * 0.912
-        layout.setMaxSize(width * 0.20588, height ); // height * 0.912
-        layout.getChildren().addAll( profile, separator2(width), separator(width), planLabel,
-                separator(width), statsPlans, separator(width), statsClients, separator(width), changePassword,
-                separator(width), logOut, separator2(width), closeMenu);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-border-width: 0 10 0 0;" + "-fx-border-color: linear-gradient(to right, #212828, #24222A);" + "-fx-background-color: #212828");
-        layout.setPadding(new Insets(20, 0, 20, 0));
-        layout.setVisible(false);
-        layout.getStylesheets().add("menuListStyle.css");
 
         closeMenu.setOnMouseClicked( e ->{
             layout.setVisible(false);

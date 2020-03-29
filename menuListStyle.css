@@ -1,14 +1,14 @@
 .button {
-    -fx-background-color: #3AAAAA;
+    -fx-background-color: #212828;
     -fx-text-fill: #FFFFFF;
-    -fx-font-family: Consolas;
-}
-
-.button:hover{
-    -fx-background-color: #10A8A8;
+    -fx-font-family: "Lucida Sans Unicode";
 }
 
 .label {
     -fx-text-fill: #3AAAAA;
     -fx-font-family: Consolas;
+}
+
+.img{
+    -fx-border-radius: 10px;
 }

@@ -9,7 +9,9 @@ public class MenuList {
 
     protected double percentage;
     protected VBox layout = new VBox();
+    protected double fontButton;
     public boolean isShowAble = true;
+
 
     protected Rectangle separator(double width){
         Rectangle separatorRect = new Rectangle();
