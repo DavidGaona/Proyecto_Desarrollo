@@ -42,11 +42,6 @@ public class DaoUser {
         dbManager.openDBConnection();
         int role = dbManager.loginUser(DocumentNumber, password);
         dbManager.closeDBConnection();
-        if (role >= 0) {
-            System.out.println("Iniciada sesión correctamente");
-        } else {
-            //ToDo
-        }
         return role;
     }
 

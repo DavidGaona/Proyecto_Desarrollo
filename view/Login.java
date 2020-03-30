@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
@@ -134,6 +135,18 @@ public class Login {
             case 3:
                 clear();
                 Login.currentWindow.set(4);
+                break;
+            case -1:
+                AlertBox.display("Error","No se pudo encontrar el usuario","");
+                currentLoggedUser = -1;
+                break;
+            case -2:
+                AlertBox.display("Error","Contraseña invalida","");
+                currentLoggedUser = -1;
+                break;
+            case -3:
+                AlertBox.display("Error","Cuenta desactivada","");
+                currentLoggedUser = -1;
                 break;
             default:
                 currentLoggedUser = -1;

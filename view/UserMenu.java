@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import model.User;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 import utilities.ProjectEffects;
 
@@ -97,6 +98,9 @@ public class UserMenu {
 
         searchTextField.setOnAction(e -> {
             User searchedUser = user.loadUser(searchTextField.getText(), userDocumentTypeAbbComboBox.getValue());
+            if(searchedUser == null){
+                AlertBox.display("Error: ", "Ocurrio un error interno del sistema","");
+            }
             if (searchedUser.isNotBlank()) {
                 personalInfo.clear();
 
@@ -112,6 +116,8 @@ public class UserMenu {
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
                 //currentUser = userDocumentIdTextField.getText();
+            }else{
+                AlertBox.display("Error: ","Usuario no encontrado","");
             }
         });
 
@@ -151,8 +157,9 @@ public class UserMenu {
     }
 
     private void saveNewUser() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            user.saveNewUser(
+            message = user.saveNewUser(
                     currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
@@ -160,11 +167,16 @@ public class UserMenu {
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"));
-                personalInfo.clear();
-            }
+            AlertBox.display("Error ",message,"");
+            personalInfo.clear();
+        }else{
+            AlertBox.display("Error",message,"");
+        }
+
     }
 
     private void editUser() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
             user.editUser(
                     currentSelectedUser,
@@ -175,8 +187,11 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     !personalInfo.getSwitchButtonValue("userPasswordReset"));
-                personalInfo.clear();
-            }
+            AlertBox.display("Error ",message,"");
+            personalInfo.clear();
+        }else{
+            AlertBox.display("Error ",message,"");
+        }
     }
 
     private void personalInfo(double width) {

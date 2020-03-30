@@ -60,10 +60,10 @@ public class DbManager {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return "Error al crear cliente";
+            return "Este cliente ya se encuentra registrado";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return "Internal error";
+            return "Ocurrio un error interno del sistema";
         }
     }
 
@@ -90,7 +90,7 @@ public class DbManager {
             return "Error al momento de editar el cliente";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return "Internal error";
+            return "Ocurrio un error interno del sistema";
         }
     }
 
@@ -120,7 +120,7 @@ public class DbManager {
             System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            System.out.println("Internal error");
+            System.out.println("Ocurrio un error interno del sistema");
         }
 
         return client;
@@ -206,10 +206,10 @@ public class DbManager {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return "Error al momento de crear el usuario";
+            return "El usuario ya se encuentra creado";
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "Internal error";
+            return "Ocurrio un error interno del sistema";
         }
     }
 
@@ -231,7 +231,7 @@ public class DbManager {
                 return "Error al editar el usuario";
             } catch (Exception e) {
                 System.out.println(Arrays.toString(e.getStackTrace()));
-                return "Internal Error";
+                return "Ocurrio un error interno del sistema";
             }
         }
 
@@ -254,10 +254,10 @@ public class DbManager {
             return "Usuario editado con exito";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return "Error al crear usuario";
+            return "Error al editar el usuario";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return "Internal error";
+            return "Ocurrio un error interno del sistema";
         }
     }
 
@@ -288,6 +288,7 @@ public class DbManager {
             System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
+            return null;
         }
         return new User();
     }
@@ -367,7 +368,7 @@ public class DbManager {
             return "Error al crear plan";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return "Internal error";
+            return "Ocurrio un error interno del sistema";
         }
 
     }
@@ -389,7 +390,7 @@ public class DbManager {
             return "Error al intentar crear los minutos";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return  "Internal error";
+            return  "Ocurrio un error interno del sistema";
         }
     }
     //**************************** METODOS DEL BANCO ********************
