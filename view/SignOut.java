@@ -16,7 +16,6 @@ import java.awt.*;
 public class SignOut {
 
     private double percentage;
-    public boolean isShowAble = true;
 
     private Rectangle separator(double width){
         Rectangle separatorRect = new Rectangle();

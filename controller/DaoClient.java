@@ -6,7 +6,9 @@ import utilities.ProjectUtilities;
 
 public class DaoClient {
 
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+
 
     public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
