@@ -149,7 +149,7 @@ public class ClientMenu {
 
     private void saveNewClient() {
         if (!personalInfo.isEmpty()) {
-            if (client.saveNewClient(
+            client.saveNewClient(
                     -1,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
@@ -157,15 +157,14 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
-                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType"))) == 1){
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
                 personalInfo.clear();
             }
-        }
     }
 
     private void editClient() {
         if (!personalInfo.isEmpty()) {
-            if (client.editClient(
+            client.editClient(
                     currentClient,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
@@ -173,10 +172,9 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
-                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType"))) == 1){
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
                 personalInfo.clear();
             }
-        }
     }
 
     private void personalInfo(double width){

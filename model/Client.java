@@ -11,9 +11,7 @@ public class Client {
     private String direction;
     private short type;
 
-    public Client(){
-
-    }
+    public Client(){}
 
     public Client(int id, String name, String lastName, short documentType, String documentId, String email, String direction, short type) {
         this.id = id;
@@ -35,6 +33,10 @@ public class Client {
 
     public int getId(){
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public short getType() {

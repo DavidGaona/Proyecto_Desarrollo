@@ -6,7 +6,7 @@ import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class DaoBank {
-    private DbManager dbManager = new DbManager("postgres", "cristiano1994", "mobile_plan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
     public DaoBank() {
     }

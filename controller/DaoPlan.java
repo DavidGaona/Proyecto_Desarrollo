@@ -7,20 +7,20 @@ import utilities.ProjectUtilities;
 
 public class DaoPlan {
 
-    private DbManager dbManager = new DbManager("postgres", "cristiano1994", "mobile_plan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
-    public int saveNewPlan(String planName, double planCost, int planMinutes, int planData, int planTextMsn){
+    public String saveNewPlan(String planName, double planCost, int planMinutes, int planData, int planTextMsn){
         Plan plan = new Plan(planName,planCost,planMinutes, planData,planTextMsn);
-        int success = -1;
+        String response="";
         if (plan.isNotBlank()) {
             dbManager.openDBConnection();
-            success = dbManager.saveNewPlan(plan);
+            response = dbManager.saveNewPlan(plan);
             dbManager.closeDBConnection();
         }
-        return success;
+        return response;
     }
 
-    public int saveNewVoiceMins(String voiceName, int voiceMinutes, boolean unlimited){
+    public String saveNewVoiceMins(String voiceName, int voiceMinutes, boolean unlimited){
         Voice voice;
         if(unlimited){
             voice = new Voice(voiceName, Integer.MAX_VALUE);
@@ -28,7 +28,7 @@ public class DaoPlan {
         else{
             voice = new Voice(voiceName,voiceMinutes);
         }
-        int succes = -1;
+        String succes = "";
         if(voice.isNotBlank()){
             dbManager.openDBConnection();
             succes = dbManager.saveNewVoiceMins(voice);
