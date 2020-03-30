@@ -8,20 +8,21 @@ public class DaoUser {
 
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public int saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
+
+    public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
         User user = new User(userId, userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, true);
-        int success = -1;
+        String response="";
         if (user.isNotBlank()) {
             dbManager.openDBConnection();
-            success = dbManager.saveNewUser(user);
+            response = dbManager.saveNewUser(user);
             dbManager.closeDBConnection();
         }
-        return success;
+        return response;
     }
 
-    public int editUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, boolean userPasswordReset) {
+    public String editUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, boolean userPasswordReset) {
         User user = new User(userId, userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, userPasswordReset);
-        int success = -1;
+        String success = "";
         if (user.isNotBlank()) {
             dbManager.openDBConnection();
             success = dbManager.editUser(user);
@@ -44,7 +45,7 @@ public class DaoUser {
         if (role >= 0) {
             System.out.println("Iniciada sesión correctamente");
         } else {
-            System.out.println("No se pudo iniciar sesión");
+            //ToDo
         }
         return role;
     }
@@ -56,9 +57,11 @@ public class DaoUser {
         return success;
     }
 
-    public void changePassword(int id, String password){
+    public short changePassword(int id, String password){
+        short response;
         dbManager.openDBConnection();
-        dbManager.changePassword(id, password);
+        response = dbManager.changePassword(id, password);
         dbManager.closeDBConnection();
+        return response;
     }
 }

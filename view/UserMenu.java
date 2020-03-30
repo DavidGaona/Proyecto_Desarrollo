@@ -153,23 +153,21 @@ public class UserMenu {
 
     private void saveNewUser() {
         if (!personalInfo.isEmpty()) {
-            if (user.saveNewUser(
+            user.saveNewUser(
                     currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
-                    personalInfo.getSwitchButtonValue("userState"))
-                    == 1){
+                    personalInfo.getSwitchButtonValue("userState"));
                 personalInfo.clear();
             }
-        }
     }
 
     private void editUser() {
         if (!personalInfo.isEmpty()) {
-            if (user.editUser(
+            user.editUser(
                     currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
@@ -177,11 +175,9 @@ public class UserMenu {
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
-                    !personalInfo.getSwitchButtonValue("userPasswordReset"))
-                    == 1){
+                    !personalInfo.getSwitchButtonValue("userPasswordReset"));
                 personalInfo.clear();
             }
-        }
     }
 
     private void personalInfo(double width) {

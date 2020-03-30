@@ -6,28 +6,30 @@ import utilities.ProjectUtilities;
 
 public class DaoClient {
 
+
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public int saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+
+    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
-        int success = -1;
+        String response = "";
         if (!client.isBlank()) {
             dbManager.openDBConnection();
-            success = dbManager.saveNewClient(client);
+            response = dbManager.saveNewClient(client);
             dbManager.closeDBConnection();
         }
-        return success;
+        return response;
     }
 
-    public int editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+    public String editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
-        int success = -1;
+        String response = "";
         if (!client.isBlank()) {
             dbManager.openDBConnection();
-            success = dbManager.editClient(client);
+            response = dbManager.editClient(client);
             dbManager.closeDBConnection();
         }
-        return success;
+        return response;
     }
 
     public Client loadClient(String documentNumber,String clientDocumentType) {
@@ -36,9 +38,4 @@ public class DaoClient {
         dbManager.closeDBConnection();
         return client;
     }
-
-    public void changeClientPassword(String password) {
-        //ToDo
-    }
-
 }
