@@ -1,47 +1,96 @@
 package view.components;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import utilities.ProjectUtilities;
 
 public class SearchPane {
     private HBox frame;
     private TextField searchField = new TextField();
     private Button closeButton = new Button();
+    private ComboBox<String> documentType;
     private double width;
     private double height;
     private double percentage;
 
     public SearchPane(double width, double height, double percentage){
-        this.width = width;
+        this.width = width * 0.6;
         this.height = height;
         this.percentage = percentage;
 
         frame = new HBox();
-        frame.setMaxSize(width - (width * 0.4), 100);
-        frame.setPrefSize(width - (width * 0.4), 100);
-        frame.setMinSize(width - (width * 0.4), 100);
-        frame.setStyle("-fx-background-color: #FFFFFF");
-        frame.setPadding(new Insets(10, 10, 10 ,10));
-        frame.setAlignment(Pos.CENTER_LEFT);
-        frame.setSpacing(40);
+        frame.setMaxSize(this.width, 100);
+        frame.setPrefSize(this.width, 100);
+        frame.setMinSize(this.width, 100);
+        frame.setStyle("-fx-background-color: #3D3946;\n -fx-background-radius: 10px");
+        frame.setPadding(new Insets(10, 10, 10 , (this.width * 0.05)));
 
-        searchField.setMinSize(width - (width * 0.4) - (120), 80);
-        searchField.setMaxSize(width - (width * 0.4) - (120), 80);
+        searchField.setMinSize(this.width * 0.6, 60);
+        searchField.setMaxSize(this.width * 0.6, 60);
         searchField.setPromptText("Escriba el documento para buscar");
-        searchField.getStyleClass().add("client-search-bar");
+        searchField.getStyleClass().add("search-bar");
+        ProjectUtilities.onlyNumericTextField(searchField);
 
-        closeButton.setMinSize(60, 40);
-        closeButton.setMaxSize(60, 40);
+        closeButton.setMinSize(this.width * 0.1, 60);
+        closeButton.setMaxSize(this.width * 0.1, 60);
         closeButton.setText("Cerrar");
+        closeButton.getStyleClass().add("close-search-button");
+        closeButton.setOnAction(e -> {
+            searchField.setText("");
+        });
+        closeButton.setOnMouseEntered(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #4422AA;"));
+        closeButton.setOnMouseExited(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #5639AC;"));
 
-        frame.getChildren().addAll(searchField, closeButton);
+        documentType = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
+        documentType.setMaxSize(width * 0.05, 60);
+        documentType.setMinSize(width * 0.05, 60);
+        documentType.setStyle(documentType.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;\n" +
+                "-fx-border-color: #615C70;\n-fx-border-width: 4;");
+        documentType.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
+
+        searchField.focusedProperty().addListener(e -> {
+            if (searchField.focusedProperty().get() || documentType.focusedProperty().get())
+                frame.setVisible(true);
+            else
+                frame.setVisible(false);
+        });
+
+        documentType.focusedProperty().addListener(e -> {
+            if (searchField.focusedProperty().get() || documentType.focusedProperty().get())
+                frame.setVisible(true);
+            else
+                frame.setVisible(false);
+        });
+
+        frame.getChildren().addAll(searchField, documentType, closeButton);
+        frame.setAlignment(Pos.CENTER_LEFT);
+        HBox.setMargin(searchField, new Insets(0, this.width * 0.05, 0, 0));
+        HBox.setMargin(closeButton, new Insets(0, 0, 0, this.width * 0.05));
     }
 
+    public String getTextContent(){
+        return searchField.getText();
+    }
+
+    public TextField getSearchField(){
+        return searchField;
+    }
+
+    public String getDocumentType(){
+        return documentType.getValue();
+    }
+
+    public void setVisible(boolean value){
+        frame.setVisible(value);
+    }
 
     public HBox showFrame(){
+        frame.setVisible(false);
         return frame;
     }
 }

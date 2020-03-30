@@ -53,7 +53,7 @@ public class Main extends Application {
                     //Admin user menu
                     UserMenu user = new UserMenu(percentage, buttonFont);
                     Scene userMenuScene = new Scene(user.renderUserEditMenu(width, height), width, height);
-                    userMenuScene.getStylesheets().add("styles.css");
+                    userMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(userMenuScene);
                     break;
                 case 4:
@@ -78,7 +78,8 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?", "Si quiero cerrar", "No quiero cerrar")) {
+        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?",
+                "Si quiero cerrar", "No quiero cerrar")) {
             window.close();
             Platform.exit();
         }

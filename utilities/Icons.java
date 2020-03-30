@@ -4,9 +4,10 @@ import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 
 public class Icons {
+    private Button searchIcon;
 
-    public static Button searchIcon(double percentage) {
-        Button searchIcon = new Button();
+    public void searchIcon(double percentage) {
+        searchIcon = new Button();
         double radius = 12;
         searchIcon.setShape(new Circle(radius));
         searchIcon.setText("\uD83D\uDD0D");
@@ -18,6 +19,9 @@ public class Icons {
 
         searchIcon.setOnMouseEntered(e -> searchIcon.setStyle(searchIcon.getStyle() + "-fx-background-color: #4422AA;"));
         searchIcon.setOnMouseExited(e -> searchIcon.setStyle(searchIcon.getStyle() + "-fx-background-color: #2E293D;"));
+    }
+
+    public Button getSearchIcon(){
         return searchIcon;
     }
 }

@@ -29,8 +29,8 @@ public class UserMenu {
 
     EditingPanel personalInfo;
 
-    private ComboBox<String> userDocumentTypeAbbComboBox;
     private Button saveChangesButton;
+    private SearchPane searchPane;
 
     private double percentage;
     private DaoUser user;
@@ -51,11 +51,11 @@ public class UserMenu {
     private HBox topBar(HBox hBox, double width, double height) {
 
         double reduction;
-        double circleRadius = (height * 0.045)/2;
+        double circleRadius = (height * 0.045) / 2;
 
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.10 - circleRadius); //0.1475
+        marginRect1.setWidth(width * 0.10 - circleRadius);
 
         Circle menuCircle = new Circle(circleRadius);
         menuCircle.setCenterX(circleRadius);
@@ -77,28 +77,19 @@ public class UserMenu {
         marginRect3.setHeight(0);
         marginRect3.setWidth(width * 0.3 - reduction);
 
+        Icons icons = new Icons();
+        icons.searchIcon(percentage);
+        icons.getSearchIcon().setOnAction(e -> {
+            searchPane.setVisible(true);
+            searchPane.getSearchField().requestFocus();
+        });
+
         Rectangle marginRect4 = new Rectangle();
         marginRect4.setHeight(0);
         marginRect4.setWidth(width * 0.004);
 
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(20);
-
-        TextField searchTextField = new TextField();
-        searchTextField.setPromptText("Buscar usuario por documento");
-        searchTextField.setPrefSize(width * 0.24, height * 0.03);
-        searchTextField.getStyleClass().add("client-search-bar");
-        searchTextField.setId("STF1");
-        ProjectUtilities.onlyNumericTextField(searchTextField);
-
-        userDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
-        userDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setStyle(userDocumentTypeAbbComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
-        userDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
-
-        searchTextField.setOnAction(e -> {
-            User searchedUser = user.loadUser(searchTextField.getText(), userDocumentTypeAbbComboBox.getValue());
+        searchPane.getSearchField().setOnAction(e -> {
+            User searchedUser = user.loadUser(searchPane.getTextContent(), searchPane.getDocumentType());
             if (searchedUser.isNotBlank()) {
                 personalInfo.clear();
 
@@ -113,27 +104,24 @@ public class UserMenu {
 
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
-                //currentUser = userDocumentIdTextField.getText();
+                searchPane.getSearchField().setText("");
             }
         });
-
-        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
 
         newUserButton.setOnMouseClicked(e -> {
             personalInfo.clear();
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
-            searchTextField.setText("");
             currentSelectedUser = -1;
         });
 
-        menuCircle.setOnMouseClicked( e -> {
+        menuCircle.setOnMouseClicked(e -> {
             menuListAdmin.displayMenu();
-            ProjectEffects.linearTransitionToRight(menuList,width,height,width,height);
+            ProjectEffects.linearTransitionToRight(menuList, width, height, width, height);
         });
 
-        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newUserButton, Icons.searchIcon(percentage), marginRect3,
-                userDocumentTypeAbbComboBox, marginRect4, searchTextField);
+        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newUserButton, icons.getSearchIcon(), marginRect3,
+                marginRect4);
         return hBox;
     }
 
@@ -161,8 +149,8 @@ public class UserMenu {
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"));
-                personalInfo.clear();
-            }
+            personalInfo.clear();
+        }
     }
 
     private void editUser() {
@@ -176,8 +164,12 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     !personalInfo.getSwitchButtonValue("userPasswordReset"));
-                personalInfo.clear();
-            }
+            personalInfo.clear();
+        }
+    }
+
+    private void focuss(){
+
     }
 
     private void personalInfo(double width) {
@@ -211,11 +203,11 @@ public class UserMenu {
         personalInfo(width);
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
-        menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+        menu.addToMidPane(personalInfo.sendPane(width, height * 0.1));
 
         menuList = menuListAdmin.display(width, height, percentage);
 
-        SearchPane searchPane = new SearchPane(width, height, percentage);
+        searchPane = new SearchPane(width, height, percentage);
         HBox sp = searchPane.showFrame();
 
         BorderPane userMenu;
