@@ -14,7 +14,7 @@ public class ProjectEffects {
     private static FadeTransition ft = new FadeTransition();
 
     public static void linearTransitionToRight(Node node, double initialWidth, double initialHeight, double toWidth, double toHeight){
-        double constant = 0.102;
+        double constant = 0.1;
         Path path = new Path();
         path.getElements().add(new MoveTo(-initialWidth * constant,initialHeight/2));
         path.getElements().add(new CubicCurveTo(toWidth * constant, toHeight/2, toWidth * constant, toHeight/2,
