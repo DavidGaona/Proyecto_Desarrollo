@@ -85,7 +85,7 @@ public class UserPasswordChange {
             DaoUser user = new DaoUser();
             if (user.checkPassword(Login.currentLoggedUser, currentPasswordTextField.getText())) {
                 if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
-                    user.changePassword(Login.currentLoggedUser, confirmPasswordTextField.getText());
+                    Login.currentWindow.set(user.changePassword(Login.currentLoggedUser, confirmPasswordTextField.getText())+1);
                 } else {
                     AlertBox.display("Error", "Las contraseñas no coinciden", "");
                     confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #FF0000;");

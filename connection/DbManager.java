@@ -329,16 +329,17 @@ public class DbManager {
                         "WHERE user_id = ?";
 
         String sql_select =
-                "select user_type from public.user where user_id = "+userId;
+                "select user_type from public.user where user_id = ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(sql_update);
             statement.setString(1,encryptedPassword);
             statement.setInt(2,userId);
             statement.executeUpdate();
-            ResultSet resultSet = statement.executeQuery(sql_select);
+            statement = connection.prepareStatement(sql_select);
+            statement.setInt(1,userId);
+            ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            //Login.currentWindow.set(resultSet.getShort(1) + 1);
             return resultSet.getShort(1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
