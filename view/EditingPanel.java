@@ -5,7 +5,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -17,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utilities.ProjectUtilities;
+import view.components.SwitchButton;
 
 import java.util.Collections;
 import java.util.ArrayList;
@@ -326,7 +326,7 @@ public class EditingPanel {
         HBox hbox = new HBox();
         hbox.setPrefSize(width * 0.6, height);
         hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #24222A;");
+        hbox.setStyle("-fx-border-width: 4 0 4 0;-fx-border-color: #17161B;-fx-background-color: #24222A;");
 
         //StackPane
         StackPane stackPane = new StackPane();
