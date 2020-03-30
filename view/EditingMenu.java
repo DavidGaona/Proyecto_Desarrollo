@@ -61,7 +61,7 @@ public class EditingMenu {
         midPane = new VBox();
         midPane.setPrefSize(width * 0.6, height * 0.9);
         midPane.setAlignment(Pos.TOP_LEFT);
-        midPane.setStyle("-fx-border-width: 4;\n-fx-border-color: #17161B");
+        midPane.setStyle("-fx-border-width: 4 0 4 0;\n-fx-border-color: #17161B");
 
         for(HBox hBox: hBoxes){
             midPane.getChildren().add(hBox);

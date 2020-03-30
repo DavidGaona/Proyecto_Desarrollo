@@ -10,7 +10,6 @@ public class MenuList {
     protected VBox layout = new VBox();
     protected double fontButton;
 
-
     protected Rectangle separator(double width) {
         Rectangle separatorRect = new Rectangle();
         separatorRect.setHeight(width * 0.0036765);
@@ -29,7 +28,7 @@ public class MenuList {
 
     protected Label labelGenerator(String message, double width, double height, double percentage) {
         double labelFont = 22 - (22 * percentage);
-        javafx.scene.control.Label label = new javafx.scene.control.Label();
+        Label label = new Label();
         label.setText(message);
         label.setPrefWidth(width * 0.2058875);
         label.setPrefHeight(height * 0.05);

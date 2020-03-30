@@ -40,8 +40,8 @@ public class MenuListAdmin extends MenuList {
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
 
-        layout.setPrefSize(width * 0.2035, height); // height * 0.912
-        layout.setMaxSize(width * 0.2035, height); // height * 0.912
+        layout.setPrefSize(width * 0.2 + 2, height); // height * 0.912
+        layout.setMaxSize(width * 0.2 + 2, height); // height * 0.912
         layout.getChildren().addAll(profile, separator2(width), controlLabel, separator(width), listUsersLabel,
                 separator(width), userLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu);

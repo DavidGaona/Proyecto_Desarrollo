@@ -14,9 +14,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import model.User;
-import utilities.AlertBox;
+import utilities.Icons;
 import utilities.ProjectUtilities;
 import utilities.ProjectEffects;
+import utilities.AlertBox;
+import view.components.SearchPane;
 
 public class UserMenu {
 
@@ -49,43 +51,43 @@ public class UserMenu {
 
     private HBox topBar(HBox hBox, double width, double height) {
 
-        Circle menuCircle = new Circle((height * 0.045)/2);
-        menuCircle.setCenterX((height * 0.045)/2);
-        menuCircle.setCenterY((height * 0.045)/2);
-        menuCircle.setFill(Color.web("#FFFFFF"));
-        menuCircle.setStroke(Color.web("#3D3D3E"));
+        double reduction;
+        double circleRadius = (height * 0.045)/2;
 
         Rectangle marginRect1 = new Rectangle();
         marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+        marginRect1.setWidth(width * 0.10 - circleRadius); //0.1475
 
-        double rect2Reduction = 0.05;
+        Circle menuCircle = new Circle(circleRadius);
+        menuCircle.setCenterX(circleRadius);
+        menuCircle.setCenterY(circleRadius);
+        menuCircle.setFill(Color.web("#FFFFFF"));
+        menuCircle.setStroke(Color.web("#3D3D3E"));
+
+        reduction = circleRadius;
 
         Rectangle marginRect2 = new Rectangle();
         marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
+        marginRect2.setWidth((width * 0.10) - reduction);
+
+        Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
+
+        reduction += (width * 0.15);
 
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.2035 - width * 0.10125 - (height * 0.045)/2);
+        marginRect3.setWidth(width * 0.3 - reduction);
 
         Rectangle marginRect4 = new Rectangle();
         marginRect4.setHeight(0);
         marginRect4.setWidth(width * 0.004);
 
-        Circle logOut = new Circle((height * 0.045) / 2);
-        logOut.setCenterX((height * 0.045) / 2);
-        logOut.setCenterY((height * 0.045) / 2);
-        logOut.setFill(Color.web("#FFFFFF"));
-        logOut.setStroke(Color.web("#3D3D3E"));
-
         DropShadow shadow = new DropShadow();
         shadow.setRadius(20);
-        logOut.setEffect(shadow);
 
         TextField searchTextField = new TextField();
         searchTextField.setPromptText("Buscar usuario por documento");
-        searchTextField.setPrefSize(width * 0.24, height * 0.03); // 0.24 , 0.03
+        searchTextField.setPrefSize(width * 0.24, height * 0.03);
         searchTextField.getStyleClass().add("client-search-bar");
         searchTextField.setId("STF1");
         ProjectUtilities.onlyNumericTextField(searchTextField);
@@ -123,7 +125,6 @@ public class UserMenu {
 
         ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
 
-        Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
         newUserButton.setOnMouseClicked(e -> {
             personalInfo.clear();
             saveChangesButton.setText("Agregar usuario");
@@ -137,7 +138,7 @@ public class UserMenu {
             ProjectEffects.linearTransitionToRight(menuList,width,height,width,height);
         });
 
-        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, marginRect2,
+        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newUserButton, Icons.searchIcon(percentage), marginRect3,
                 userDocumentTypeAbbComboBox, marginRect4, searchTextField);
         return hBox;
     }
@@ -223,16 +224,24 @@ public class UserMenu {
     public StackPane renderUserEditMenu(double width, double height) {
         StackPane stackPane = new StackPane();
         personalInfo(width);
+
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+
         menuList = menuListAdmin.display(width, height, percentage);
+
+        SearchPane searchPane = new SearchPane(width, height, percentage);
+        HBox sp = searchPane.showFrame();
+
         BorderPane userMenu;
         userMenu = menu.renderMenuTemplate();
         userMenu.setTop(topBar((HBox) userMenu.getTop(), width, height));
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());
-        stackPane.getChildren().addAll(userMenu, menuList );
+
+        stackPane.getChildren().addAll(userMenu, menuList, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);
+        StackPane.setAlignment(sp, Pos.CENTER);
         return stackPane;
     }
 

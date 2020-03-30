@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import model.Client;
 import utilities.AlertBox;
 import utilities.ProjectUtilities;
+import view.components.SignOut;
 
 public class ClientMenu {
 

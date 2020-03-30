@@ -36,8 +36,8 @@ public class MenuListManager extends MenuList {
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
 
-        layout.setPrefSize(width * 0.2035, height); // height * 0.912
-        layout.setMaxSize(width * 0.2035, height); // height * 0.912
+        layout.setPrefSize(width * 0.2 + 2, height); // height * 0.912
+        layout.setMaxSize(width * 0.2 + 2, height); // height * 0.912
         layout.getChildren().addAll(profile, separator2(width), separator(width), planLabel,
                 separator(width), statsPlansLabel, separator(width), statsClientsLabel, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu);

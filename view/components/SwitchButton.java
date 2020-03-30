@@ -1,4 +1,4 @@
-package view;
+package view.components;
 
 import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
