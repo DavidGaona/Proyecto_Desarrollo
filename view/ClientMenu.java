@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import model.Client;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 import view.components.SignOut;
 
@@ -140,8 +141,9 @@ public class ClientMenu {
     }
 
     private void saveNewClient() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            client.saveNewClient(
+            message = client.saveNewClient(
                     -1,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
@@ -151,12 +153,17 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
                     ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
                 personalInfo.clear();
-            }
+            AlertBox.display("Error",message,"");
+        }else{
+            AlertBox.display("Error",message,"");
+        }
+
     }
 
     private void editClient() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            client.editClient(
+            message = client.editClient(
                     currentClient,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
@@ -166,7 +173,9 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
                     ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
                 personalInfo.clear();
-            }
+            }else{
+            AlertBox.display("Error",message,"");
+        }
     }
 
     private void personalInfo(double width){
