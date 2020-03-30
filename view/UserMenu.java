@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import model.User;
+import utilities.Icons;
 import utilities.ProjectUtilities;
 import utilities.ProjectEffects;
 
@@ -131,7 +132,7 @@ public class UserMenu {
             ProjectEffects.linearTransitionToRight(menuList,width,height,width,height);
         });
 
-        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, marginRect2,
+        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect3,newUserButton, Icons.searchIcon(percentage), marginRect2,
                 userDocumentTypeAbbComboBox, marginRect4, searchTextField);
         return hBox;
     }
