@@ -100,26 +100,30 @@ public class BankMenu {
         });
 
         searchComboBox.setOnAction(e -> {
-            Bank searchedBank = bank.loadBank(searchComboBox.getValue());
-            if (searchedBank == null) {
-                AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
-            }
-            if (searchedBank.isNotBlank()) {
-                bankInfo.clear();
-                currentBankMode = false;
+            if( searchComboBox.getValue() != null)
+            {
+                Bank searchedBank = bank.loadBank(searchComboBox.getValue());
+                if (searchedBank == null) {
+                    AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
+                }
+                if (searchedBank.isNotBlank()) {
+                    bankInfo.clear();
+                    currentBankMode = false;
 
-                bankInfo.setTextField("bankNIT", "" + searchedBank.getNIT());
-                bankInfo.setTextField("bankName", searchedBank.getName());
-                bankInfo.setTextField("bankAccountNumber", searchedBank.getAccountNumber());
-                bankInfo.setSwitchButton("bankState", searchedBank.getState());
+                    bankInfo.setTextField("bankNIT", "" + searchedBank.getNIT());
+                    bankInfo.setTextField("bankName", searchedBank.getName());
+                    bankInfo.setTextField("bankAccountNumber", searchedBank.getAccountNumber());
+                    bankInfo.setSwitchButton("bankState", searchedBank.getState());
 
-                saveChangesButton.setText("Modificar banco");
-                bankInfo.disableTextField("bankNIT");
-                bankInfo.disableTextField("bankName");
-                bankInfo.disableTextField("bankAccountNumber");
-            } else {
-                AlertBox.display("Error: ", "Banco no encontrado", "");
+                    saveChangesButton.setText("Modificar banco");
+                    bankInfo.disableTextField("bankNIT");
+                    bankInfo.disableTextField("bankName");
+                    bankInfo.disableTextField("bankAccountNumber");
+                } else {
+                    AlertBox.display("Error: ", "Banco no encontrado", "");
+                }
             }
+
         });
 
         ProjectUtilities.focusListener("24222A", "C2B8E0", searchComboBox);
