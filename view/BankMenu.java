@@ -106,6 +106,7 @@ public class BankMenu {
             }
             if (searchedBank.isNotBlank()) {
                 bankInfo.clear();
+                currentBankMode = false;
 
                 bankInfo.setTextField("bankNIT", "" + searchedBank.getNIT());
                 bankInfo.setTextField("bankName", searchedBank.getName());
@@ -128,6 +129,7 @@ public class BankMenu {
             saveChangesButton.setText("Agregar banco");
             searchTextField.setText("");
             bankInfo.enableTextField("bankNIT");
+            currentBankMode = true;
             bankInfo.enableTextField("bankName");
             bankInfo.enableTextField("bankAccountNumber");
         });
