@@ -31,6 +31,11 @@ public class EditingMenu {
         this.height = height;
         this.width = width;
         this.percentage = percentage;
+
+        midPane = new VBox();
+        midPane.setMinSize(width * 0.6, height * 0.9);
+        midPane.setAlignment(Pos.TOP_LEFT);
+        midPane.setStyle("-fx-border-width: 4 0 4 0;\n-fx-border-color: #17161B;\n-fx-background-color: #24222A;");
     }
 
     private HBox topBar() {
@@ -59,28 +64,31 @@ public class EditingMenu {
     }
 
     public void addToMidPane(HBox... hBoxes) {
-        midPane = new VBox();
-        midPane.setPrefSize(width * 0.6, height * 0.9);
-        midPane.setAlignment(Pos.TOP_LEFT);
-        midPane.setStyle("-fx-border-width: 4 0 4 0;\n-fx-border-color: #17161B");
 
         for(HBox hBox: hBoxes){
             midPane.getChildren().add(hBox);
         }
 
-        EditingPanel editingPanel1 = new EditingPanel("Información Del Plan", percentage, width);
-        EditingPanel editingPanel2 = new EditingPanel("Información Bancaria", percentage, width);
+        //EditingPanel editingPanel1 = new EditingPanel("Información Del Plan", percentage, width);
+        //EditingPanel editingPanel2 = new EditingPanel("Información Bancaria", percentage, width);
 
-        midPane.getChildren().addAll(
-                editingPanel1.sendPane(width, height * 0.6),
-                editingPanel2.sendPane(width, height * 0.3));
+        //midPane.getChildren().addAll(
+        //        editingPanel1.sendPane(width, height * 0.6),
+        //        editingPanel2.sendPane(width, height * 0.3)
+        //);
 
+    }
+
+    public void centerPane(){
+        midPane.setAlignment(Pos.CENTER);
+        midPane.setStyle(midPane.getStyle() + "-fx-background-color: #18171C;");
     }
 
     private ScrollPane centerScrollPane() {
         scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
+        scrollPane.setMinSize(width * 0.6, height * 0.9);
 
         BorderPane layout = new BorderPane();
         VBox vBoxLeft = addVBox();
@@ -99,6 +107,7 @@ public class EditingMenu {
             double value = scrollPane.getVvalue();
             scrollPane.setVvalue(value + -deltaY / widthSpeed);
         });
+        //scrollPane.setA
         return scrollPane;
     }
 

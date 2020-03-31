@@ -38,9 +38,9 @@ public class ClientMenu {
     private double buttonFont;
     private SignOut signOut = new SignOut();
 
-    private Button clientButtonTemplate(double width, double height, String message){
+    private Button clientButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
-        button.setPrefSize(width , height);
+        button.setPrefSize(width, height);
         button.getStyleClass().add("client-buttons-template");
         button.setStyle("-fx-font-size: " + buttonFont);
 
@@ -61,15 +61,15 @@ public class ClientMenu {
 
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.10125 - (height * 0.045)/2); //0.1475
+        marginRect3.setWidth(width * 0.10125 - (height * 0.045) / 2); //0.1475
 
         Rectangle marginRect4 = new Rectangle();
         marginRect4.setHeight(0);
         marginRect4.setWidth(width * 0.004);
 
-        Circle logOut = new Circle((height * 0.045)/2);
-        logOut.setCenterX((height * 0.045)/2);
-        logOut.setCenterY((height * 0.045)/2);
+        Circle logOut = new Circle((height * 0.045) / 2);
+        logOut.setCenterX((height * 0.045) / 2);
+        logOut.setCenterY((height * 0.045) / 2);
         logOut.setFill(Color.web("#FFFFFF"));
         logOut.setStroke(Color.web("#3D3D3E"));
 
@@ -119,7 +119,7 @@ public class ClientMenu {
             searchTextField.setText("");
         });
 
-        logOut.setOnMouseClicked( e -> signOut.display());
+        logOut.setOnMouseClicked(e -> signOut.display());
 
         hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2,
                 clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
@@ -127,8 +127,7 @@ public class ClientMenu {
     }
 
     private HBox botBar(HBox hBox, double width, double height) {
-
-        saveChangesButton = clientButtonTemplate(width * 0.15, height * 0.03,"Agregar cliente");
+        saveChangesButton = clientButtonTemplate(width * 0.15, height * 0.03, "Agregar cliente");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentClientMode)
                 saveNewClient();
@@ -154,12 +153,9 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
                     ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
-                personalInfo.clear();
-            AlertBox.display("Error",message,"");
-        }else{
-            AlertBox.display("Error",message,"");
+            personalInfo.clear();
         }
-
+        AlertBox.display("Error", message, "");
     }
 
     private void editClient() {
@@ -174,13 +170,12 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
                     ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
-                personalInfo.clear();
-            }else{
-            AlertBox.display("Error",message,"");
+            personalInfo.clear();
         }
+        AlertBox.display("Error", message, "");
     }
 
-    private void personalInfo(double width){
+    private void personalInfo(double width) {
         personalInfo = new EditingPanel("Información Personal", percentage, width);
 
         personalInfo.addTextField("clientName", "Nombres:");
@@ -209,7 +204,7 @@ public class ClientMenu {
         StackPane stackPane = new StackPane();
         personalInfo(width);
         EditingMenu menu = new EditingMenu(width, height, percentage);
-        menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+        menu.addToMidPane(personalInfo.sendPane(width, height * 0.1));
         BorderPane clientMenu;
         clientMenu = menu.renderMenuTemplate();
         clientMenu.setTop(topBar((HBox) clientMenu.getTop(), width, height));

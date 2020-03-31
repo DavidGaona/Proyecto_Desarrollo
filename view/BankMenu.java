@@ -206,6 +206,7 @@ public class BankMenu {
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(bankInfo.sendPane(width, height * 0.1));
+        menu.centerPane();
 
         menuList = menuListAdmin.display(width, height, percentage);
 
