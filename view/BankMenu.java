@@ -90,10 +90,13 @@ public class BankMenu {
 
         saveChangesButton = bankButtonTemplate(width, height, "Agregar banco");
         saveChangesButton.setOnMouseClicked(e -> {
-            if (currentBankMode)
+            if(currentBankMode)
+            {
                 saveNewBank();
-            else
+            }else{
                 editBank();
+            }
+            searchComboBox.valueProperty().set(null);
         });
 
         searchComboBox.setOnAction(e -> {
@@ -128,6 +131,7 @@ public class BankMenu {
             currentBankMode = true;
             bankInfo.enableTextField("bankName");
             bankInfo.enableTextField("bankAccountNumber");
+            searchComboBox.valueProperty().set(null);
         });
 
         menuCircle.setOnMouseClicked(e -> {
