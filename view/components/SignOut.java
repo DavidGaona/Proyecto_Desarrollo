@@ -102,7 +102,7 @@ public class SignOut {
         scene.getStylesheets().add("Popup.css");
 
         window.setScene(scene);
-        window.setX(width - width * 0.15);
+        window.setX( width * 0.05);
         window.setY(height * 0.097);
         window.setResizable(false);
         ownerStage.show();

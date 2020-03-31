@@ -4,6 +4,7 @@ import controller.DaoBank;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
@@ -38,6 +39,7 @@ public class BankMenu {
     private double buttonFont;
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
     private VBox menuList;
+    ComboBox<String> searchComboBox = new ComboBox();
 
     private Button bankButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -84,12 +86,7 @@ public class BankMenu {
         DropShadow shadow = new DropShadow();
         shadow.setRadius(20);
 
-        TextField searchTextField = new TextField();
-        searchTextField.setPromptText("Buscar banco por nombre");
-        searchTextField.setPrefSize(width * 0.24, height * 0.03);
-        searchTextField.getStyleClass().add("bank-search-bar");
-        searchTextField.setId("STF1");
-        ProjectUtilities.onlyNumericTextField(searchTextField);
+        searchComboBox.setId("STF2");
 
         saveChangesButton = bankButtonTemplate(width, height, "Agregar banco");
         saveChangesButton.setOnMouseClicked(e -> {
@@ -99,8 +96,8 @@ public class BankMenu {
                 editBank();
         });
 
-        searchTextField.setOnAction(e -> {
-            Bank searchedBank = bank.loadBank(searchTextField.getText());
+        searchComboBox.setOnAction(e -> {
+            Bank searchedBank = bank.loadBank(searchComboBox.getValue());
             if (searchedBank == null) {
                 AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
             }
@@ -122,12 +119,11 @@ public class BankMenu {
             }
         });
 
-        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
+        ProjectUtilities.focusListener("24222A", "C2B8E0", searchComboBox);
 
         newBankButton.setOnAction(e -> {
             bankInfo.clear();
             saveChangesButton.setText("Agregar banco");
-            searchTextField.setText("");
             bankInfo.enableTextField("bankNIT");
             currentBankMode = true;
             bankInfo.enableTextField("bankName");
@@ -140,7 +136,7 @@ public class BankMenu {
         });
 
         hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newBankButton, marginRect3,
-                marginRect4, searchTextField, saveChangesButton);
+                marginRect4, searchComboBox, saveChangesButton);
         return hBox;
     }
 
@@ -158,6 +154,7 @@ public class BankMenu {
                     ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankAccountNumber")),
                     ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankNIT"))
             );
+            searchComboBox.getItems().add(bankInfo.getContent("bankName"));
             AlertBox.display("Error ", message, "");
             bankInfo.clear();
         } else {
@@ -218,6 +215,8 @@ public class BankMenu {
         bankMenu.setTop(topBar((HBox) bankMenu.getTop(), width, height));
         bankMenu.setBottom(botBar((HBox) bankMenu.getBottom(), width, height));
         bankMenu.setCenter(bankMenu.getCenter());
+
+        ProjectUtilities.loadComboBox(searchComboBox,bank.loadAllBanks());
 
         stackPane.getChildren().addAll(bankMenu, menuList, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);

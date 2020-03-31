@@ -1,6 +1,7 @@
 package utilities;
 
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -22,6 +23,7 @@ public class ProjectUtilities {
     public static final String[] userTypes = {"Operador", "Gerente", "Administrador"};
     public static final String[] documentTypesAbb = {"TI", "CC", "PA", "CE"};
 
+
     public static short convertDocumentType(String documentType) {
         if (documentTypes[0].equals(documentType) || documentTypesAbb[1].equals(documentType)) {
             return (short) 0;
@@ -33,6 +35,14 @@ public class ProjectUtilities {
             return (short) 3;
         }
         return (short) -1;
+    }
+
+    public static void loadComboBox(ComboBox<String> comboBox, String[] items)
+    {
+        for(int i = 0; i < items.length ; i++)
+        {
+            comboBox.getItems().add(items[i]);
+        }
     }
 
 
