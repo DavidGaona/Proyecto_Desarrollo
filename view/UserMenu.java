@@ -120,7 +120,6 @@ public class UserMenu {
     }
 
     private HBox botBar(HBox hBox, double width, double height) {
-
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }

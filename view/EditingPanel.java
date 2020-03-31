@@ -301,7 +301,7 @@ public class EditingPanel {
             } else if (comboBoxes.get(i) != null) {
                 if (comboBoxes.get(i).getValue() == null) {
                     comboBoxes.get(i).setStyle(comboBoxes.get(i).getStyle() + "\n-fx-border-color: #ED1221;");
-                    checker = false;
+                    checker = true;
                 }
 
             }
