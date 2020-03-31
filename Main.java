@@ -63,6 +63,13 @@ public class Main extends Application {
                     passwordChangeScene.getStylesheets().add("loginStyle.css");
                     window.setScene(passwordChangeScene);
                     break;
+                case 5:
+                    //Admin bank menu
+                    BankMenu bank = new BankMenu(percentage, buttonFont);
+                    Scene bankMenuScene = new Scene(bank.renderBankEditMenu(width, height), width, height);
+                    bankMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(bankMenuScene);
+                    break;
             }
 
         });

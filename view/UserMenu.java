@@ -101,7 +101,7 @@ public class UserMenu {
 
         menuCircle.setOnMouseClicked(e -> {
             menuListAdmin.displayMenu();
-            ProjectEffects.linearTransitionToRight(menuList, width, height, width, height);
+            ProjectEffects.linearTransitionToRight(menuList, 250, width, height, width, height);
         });
 
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");

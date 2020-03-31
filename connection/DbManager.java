@@ -3,11 +3,7 @@ package connection;
 //import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import model.Client;
-import model.Plan;
-import model.User;
-import model.Voice;
-import utilities.AlertBox;
+import model.*;
 import view.Login;
 
 import java.sql.*;
@@ -392,19 +388,21 @@ public class DbManager {
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
 
-            return  "Ocurrio un error interno del sistema";
+            return "Ocurrio un error interno del sistema";
 
         }
     }
 
     //**************************** METODOS DEL BANCO ********************
-    public String save_bank(String bank_name, String account_number) {
+    public String save_bank(int bankNIT, String bank_name, String account_number) {
         int numRows;
-        String sql = "INSERT INTO public.bank(bank_name, account_number, state) VALUES(?,?,true)";
+        String sql = "INSERT INTO public.bank(bank_id,bank_name, account_number, state, bank_nit) VALUES(?,?,?,true,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, bank_name);
-            preparedStatement.setString(2, account_number);
+            preparedStatement.setInt(1, bankNIT);
+            preparedStatement.setString(2, bank_name);
+            preparedStatement.setString(3, account_number);
+            preparedStatement.setInt(4, bankNIT);
             numRows = preparedStatement.executeUpdate();
             if (numRows > 0) {
                 return "Operación Realizada";
@@ -418,13 +416,39 @@ public class DbManager {
         }
     }
 
-    public String set_state_bank(boolean state, int bank_id) {
+    public Bank loadBank(int bankNIT) {
+
+        String sql_select = "SELECT bank_id, bank_name, account_number, state, bank_nit" +
+                "FROM public.bank WHERE bank_nit = ?";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setInt(5, bankNIT);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            Bank bank = new Bank(
+                    resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getBoolean(4)
+            );
+            return bank;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return null;
+        }
+        return new Bank();
+    }
+
+    public String set_state_bank(boolean state, int bankNIT) {
         int numRows;
-        String sql = "UPDATE bank SET state = ? WHERE bank_id = ?";
+        String sql = "UPDATE bank SET state = ? WHERE bank_nit = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setBoolean(1, state);
-            preparedStatement.setInt(2, bank_id);
+            preparedStatement.setInt(2, bankNIT);
             numRows = preparedStatement.executeUpdate();
             if (numRows > 0) {
                 return "Operación Realizada";
@@ -437,6 +461,7 @@ public class DbManager {
             return "Error: " + e.toString();
         }
     }
+
 
     public void openDBConnection() {
         connection = dBconnect.getConnection();

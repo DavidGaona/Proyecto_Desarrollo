@@ -48,7 +48,7 @@ public class MenuListManager extends MenuList {
         layout.getStylesheets().add("menuListStyle.css");
 
         //effect closeMenu
-        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu));
+        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
         changePasswordLabel.setOnMouseClicked(e -> {
@@ -66,7 +66,7 @@ public class MenuListManager extends MenuList {
             }
         });
 
-        closeMenu.setOnMouseClicked(e -> ProjectEffects.linearTransitionToRight(layout, -width, height, -width, height));
+        closeMenu.setOnMouseClicked(e -> ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height));
 
         return layout;
 

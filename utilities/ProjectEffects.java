@@ -13,14 +13,14 @@ public class ProjectEffects {
 
     private static FadeTransition ft = new FadeTransition();
 
-    public static void linearTransitionToRight(Node node, double initialWidth, double initialHeight, double toWidth, double toHeight){
+    public static void linearTransitionToRight(Node node, int duration, double initialWidth, double initialHeight, double toWidth, double toHeight){
         double constant = 0.1;
         Path path = new Path();
         path.getElements().add(new MoveTo(-initialWidth * constant,initialHeight/2));
         path.getElements().add(new CubicCurveTo(toWidth * constant, toHeight/2, toWidth * constant, toHeight/2,
                                                 toWidth * constant, toHeight/2));
         PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(250));
+        pathTransition.setDuration(Duration.millis(duration));
         pathTransition.setPath(path);
         pathTransition.setNode(node);
         pathTransition.setCycleCount(1);
@@ -28,9 +28,9 @@ public class ProjectEffects {
         pathTransition.play();
     }
 
-    public static void fadeTransition(Node node){
+    public static void fadeTransition(Node node, int duration){
         ft.setNode(node);
-        ft.setDuration(new Duration(700));
+        ft.setDuration(new Duration(duration));
         ft.setFromValue(1.0);
         ft.setToValue(0.1);
         ft.setAutoReverse(true);

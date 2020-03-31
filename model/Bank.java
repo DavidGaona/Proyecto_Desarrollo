@@ -7,6 +7,18 @@ public class Bank {
     private String account_number;
     private boolean state;
 
+    public boolean isNotBlank() {
+        if (bank_name == null || account_number == null)
+            return false;
+        else
+            return !bank_name.isBlank() && !account_number.isBlank();
+    }
+
+    public Bank()
+    {
+
+    }
+
     public Bank(int bank_id, String bank_name, String account_number, boolean state) {
         this.bank_id = bank_id;
         this.bank_name = bank_name;
@@ -14,15 +26,15 @@ public class Bank {
         this.state = state;
     }
 
-    public int getBank_id() {
+    public int getNIT() {
         return bank_id;
     }
 
-    public void setBank_id(int bank_id) {
+    public void setNIT(int bank_id) {
         this.bank_id = bank_id;
     }
 
-    public String getBank_name() {
+    public String getName() {
         return bank_name;
     }
 
@@ -30,7 +42,7 @@ public class Bank {
         this.bank_name = bank_name;
     }
 
-    public String getAccount_number() {
+    public String getAccountNumber() {
         return account_number;
     }
 
@@ -38,7 +50,8 @@ public class Bank {
         this.account_number = account_number;
     }
 
-    public boolean isState() {
+
+    public boolean getState() {
         return state;
     }
 
