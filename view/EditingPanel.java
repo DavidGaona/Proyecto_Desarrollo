@@ -317,6 +317,10 @@ public class EditingPanel {
 
     public void makeFieldFloatOnly(String id) { ProjectUtilities.onlyFloatTextField(getTextfield(id)); }
 
+    public void disableTextField(String id) { getTextfield(id).setEditable(false); }
+
+    public void enableTextField(String id) { getTextfield(id).setEditable(true); }
+
     public void addRegexConstraint(String pattern) {
 
     }

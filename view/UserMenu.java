@@ -1,15 +1,11 @@
 package view;
 
 import controller.DaoUser;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -146,7 +142,7 @@ public class UserMenu {
     private void editUser() {
         String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            user.editUser(
+            message = user.editUser(
                     currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),

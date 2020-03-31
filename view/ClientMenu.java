@@ -119,6 +119,8 @@ public class ClientMenu {
             searchTextField.setText("");
         });
 
+        logOut.setOnMouseClicked( e -> signOut.display());
+
         hBox.getChildren().addAll(marginRect1, newClientButton, marginRect2,
                 clientDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
         return hBox;

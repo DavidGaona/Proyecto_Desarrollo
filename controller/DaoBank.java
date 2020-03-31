@@ -9,20 +9,20 @@ public class DaoBank {
     public DaoBank() {
     }
 
-    public String saveNewBank(int bank_id, String bank_name, String account_number){
+    public String saveNewBank(String bank_name, String account_number, String bankNIT){
         dbManager.openDBConnection();
-        String response = dbManager.save_bank(bank_id, bank_name, account_number);
+        String response = dbManager.saveBank(bank_name, account_number, bankNIT);
         dbManager.closeDBConnection();
         return  response;
     }
-    public String editBank(boolean state, int bankNIT){
+    public String editBank(boolean state, String bankNIT){
         dbManager.openDBConnection();
         String response = dbManager.set_state_bank(state, bankNIT);
         dbManager.closeDBConnection();
         return  response;
     }
 
-    public Bank loadBank(int bankNIT) {
+    public Bank loadBank(String bankNIT) {
         dbManager.openDBConnection();
         Bank bank = dbManager.loadBank(bankNIT);
         dbManager.closeDBConnection();

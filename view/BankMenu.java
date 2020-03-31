@@ -38,8 +38,6 @@ public class BankMenu {
     private double buttonFont;
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
     private VBox menuList;
-    private int currentSelectedBank;
-    private SearchPane searchPane;
 
     private Button bankButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -102,21 +100,22 @@ public class BankMenu {
         });
 
         searchTextField.setOnAction(e -> {
-            Bank searchedBank = bank.loadBank(Integer.parseInt(searchTextField.getText()));
+            Bank searchedBank = bank.loadBank(searchTextField.getText());
             if (searchedBank == null) {
                 AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
             }
             if (searchedBank.isNotBlank()) {
                 bankInfo.clear();
 
-                currentSelectedBank = searchedBank.getNIT();
                 bankInfo.setTextField("bankNIT", "" + searchedBank.getNIT());
                 bankInfo.setTextField("bankName", searchedBank.getName());
                 bankInfo.setTextField("bankAccountNumber", searchedBank.getAccountNumber());
                 bankInfo.setSwitchButton("bankState", searchedBank.getState());
 
                 saveChangesButton.setText("Modificar banco");
-                currentBankMode = false;
+                bankInfo.disableTextField("bankNIT");
+                bankInfo.disableTextField("bankName");
+                bankInfo.disableTextField("bankAccountNumber");
             } else {
                 AlertBox.display("Error: ", "Banco no encontrado", "");
             }
@@ -124,12 +123,13 @@ public class BankMenu {
 
         ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
 
-        newBankButton.setOnMouseClicked(e -> {
+        newBankButton.setOnAction(e -> {
             bankInfo.clear();
             saveChangesButton.setText("Agregar banco");
-            currentBankMode = true;
             searchTextField.setText("");
-            currentSelectedBank = -1;
+            bankInfo.enableTextField("bankNIT");
+            bankInfo.enableTextField("bankName");
+            bankInfo.enableTextField("bankAccountNumber");
         });
 
         menuCircle.setOnMouseClicked(e -> {
@@ -152,9 +152,10 @@ public class BankMenu {
         String message = "No se pueden dejar campos vacios";
         if (!bankInfo.isEmpty()) {
             message = bank.saveNewBank(
-                    currentSelectedBank,
                     ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankName")),
-                    ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankAccountNumber")));
+                    ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankAccountNumber")),
+                    ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankNIT"))
+            );
             AlertBox.display("Error ", message, "");
             bankInfo.clear();
         } else {
@@ -166,9 +167,10 @@ public class BankMenu {
     private void editBank() {
         String message = "No se pueden dejar campos vacios";
         if (!bankInfo.isEmpty()) {
-            bank.editBank(
+            message = bank.editBank(
                     bankInfo.getSwitchButtonValue("bankState"),
-                    currentSelectedBank);
+                    bankInfo.getContent("bankNIT")
+                    );
             AlertBox.display("Error ", message, "");
             bankInfo.clear();
         } else {

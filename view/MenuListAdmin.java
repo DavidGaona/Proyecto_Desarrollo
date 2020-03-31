@@ -48,9 +48,11 @@ public class MenuListAdmin extends MenuList {
 
         layout.setPrefSize(width * 0.2 + 2, height); // height * 0.912
         layout.setMaxSize(width * 0.2 + 2, height); // height * 0.912
-        layout.getChildren().addAll(profile, separator2(width), controlLabel, separator(width), listUsersLabel,
-                separator(width), userLabel, separator(width), bankLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
-                separator(width), logOutLabel, separator2(width), closeMenu);
+        layout.getChildren().addAll(
+                profile, separator2(width), controlLabel, separator(width), listUsersLabel,
+                separator(width), bankLabel, separator(width), userLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
+                separator(width), logOutLabel, separator2(width), closeMenu
+        );
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-border-width: 0 10 0 0;" + "-fx-border-color: linear-gradient(to right, #212828, #24222A);" + "-fx-background-color: #212828");
         layout.setPadding(new Insets(20, 0, 20, 0));

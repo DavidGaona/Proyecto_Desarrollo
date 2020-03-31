@@ -11,10 +11,10 @@ public class test_bank extends TestCase {
     }
     public void testSave_bank(){
         scenario();
-        assertTrue(bank.saveNewBank(154896,"Caja Social","458451454").equals("Operación Realizada"));
+        assertTrue(bank.saveNewBank("Caja Social","154896","458451454").equals("Operación Realizada"));
     }
     public void testSet_state_bank(){
         scenario();
-        assertTrue(bank.editBank(false,2).equals("Operación Realizada"));
+        assertTrue(bank.editBank(false,"2").equals("Operación Realizada"));
     }
 }

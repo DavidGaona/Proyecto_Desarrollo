@@ -2,7 +2,7 @@ package model;
 
 public class Bank {
 
-    private int bank_id;
+    private String bank_id;
     private String bank_name;
     private String account_number;
     private boolean state;
@@ -19,18 +19,18 @@ public class Bank {
 
     }
 
-    public Bank(int bank_id, String bank_name, String account_number, boolean state) {
-        this.bank_id = bank_id;
+    public Bank(String bank_name, String account_number, boolean state, String bankNIT) {
+        this.bank_id = bankNIT;
         this.bank_name = bank_name;
         this.account_number = account_number;
         this.state = state;
     }
 
-    public int getNIT() {
+    public String getNIT() {
         return bank_id;
     }
 
-    public void setNIT(int bank_id) {
+    public void setNIT(String bank_id) {
         this.bank_id = bank_id;
     }
 
