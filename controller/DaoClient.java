@@ -13,7 +13,7 @@ public class DaoClient {
     public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
         String response = "";
-        if (!client.isBlank()) {
+        if (client.isNotBlank()) {
             dbManager.openDBConnection();
             response = dbManager.saveNewClient(client);
             dbManager.closeDBConnection();
@@ -24,7 +24,7 @@ public class DaoClient {
     public String editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
         String response = "";
-        if (!client.isBlank()) {
+        if (client.isNotBlank()) {
             dbManager.openDBConnection();
             response = dbManager.editClient(client);
             dbManager.closeDBConnection();
@@ -32,9 +32,10 @@ public class DaoClient {
         return response;
     }
 
-    public Client loadClient(String documentNumber,String clientDocumentType) {
+    public Client loadClient(String documentNumber, String clientDocumentType) {
         dbManager.openDBConnection();
-        Client client = dbManager.loadClient(documentNumber, ProjectUtilities.convertDocumentType(clientDocumentType));
+        Client client = dbManager.loadClient(documentNumber, clientDocumentType.equals("NIT") ? (short) 4 :
+                ProjectUtilities.convertDocumentType(clientDocumentType));
         dbManager.closeDBConnection();
         return client;
     }

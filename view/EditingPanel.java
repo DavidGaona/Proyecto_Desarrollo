@@ -172,6 +172,15 @@ public class EditingPanel {
         getSwitchButton(id).setSwitchedButton(value);
     }
 
+    public void addElements(String id, String... elements) {
+        for (String element : elements)
+            getComboBox(id).getItems().add(element);
+    }
+
+    public void changeTextMessage(String id, String message){
+        texts.get(getIndex(id)).setText(message);
+    }
+
     private Text getText(String id) {
         for (int i = 0; i < names.size(); ++i) {
             if (names.get(i).equals(id))
@@ -201,16 +210,16 @@ public class EditingPanel {
         return getSwitchButton(id).switchedOnProperty().get();
     }
 
-    public double getLongestText(){
+    public double getLongestText() {
         int index = 0;
-        for (int i = 1; i < texts.size(); ++i){
+        for (int i = 1; i < texts.size(); ++i) {
             if (texts.get(i).getBoundsInLocal().getWidth() > texts.get(0).getBoundsInLocal().getWidth())
                 index = i;
         }
         return texts.get(index).getBoundsInLocal().getWidth();
     }
 
-    public void align(double size){
+    public void align(double size) {
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(0);
         rectangle.setWidth(size);
@@ -311,15 +320,25 @@ public class EditingPanel {
 
     //Restrictions
 
-    public void addCharacterLimit(int limit, String id) { ProjectUtilities.addTextFieldCharacterLimit(limit, getTextfield(id)); }
+    public void addCharacterLimit(int limit, String id) {
+        ProjectUtilities.addTextFieldCharacterLimit(limit, getTextfield(id));
+    }
 
-    public void makeFieldNumericOnly(String id) { ProjectUtilities.onlyNumericTextField(getTextfield(id)); }
+    public void makeFieldNumericOnly(String id) {
+        ProjectUtilities.onlyNumericTextField(getTextfield(id));
+    }
 
-    public void makeFieldFloatOnly(String id) { ProjectUtilities.onlyFloatTextField(getTextfield(id)); }
+    public void makeFieldFloatOnly(String id) {
+        ProjectUtilities.onlyFloatTextField(getTextfield(id));
+    }
 
-    public void disableTextField(String id) { getTextfield(id).setEditable(false); }
+    public void disableTextField(String id) {
+        getTextfield(id).setEditable(false);
+    }
 
-    public void enableTextField(String id) { getTextfield(id).setEditable(true); }
+    public void enableTextField(String id) {
+        getTextfield(id).setEditable(true);
+    }
 
     public void addRegexConstraint(String pattern) {
 

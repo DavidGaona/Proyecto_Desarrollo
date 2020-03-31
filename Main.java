@@ -38,14 +38,14 @@ public class Main extends Application {
                     //Default user menu
                     ClientMenu client = new ClientMenu(percentage, buttonFont);
                     Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height), width, height);
-                    clientMenuScene.getStylesheets().add("styles.css");
+                    clientMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(clientMenuScene);
                     break;
                 case 2:
                     //Manager plan info menu
                     ManagerMenu manager = new ManagerMenu(percentage, buttonFont);
                     Scene managerMenuScene = new Scene(manager.renderPlanEditingMenu(width, height), width, height);
-                    managerMenuScene.getStylesheets().add("styles.css");
+                    managerMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(managerMenuScene);
                     manager.align();
                     break;
