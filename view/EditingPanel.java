@@ -350,7 +350,7 @@ public class EditingPanel {
 
         //Text with message
         Text text = new Text(title);
-        text.setFont(new Font("Consolas", 30));
+        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
         text.setFill(Color.web("#FFFFFF"));
 
         //Margin for the text

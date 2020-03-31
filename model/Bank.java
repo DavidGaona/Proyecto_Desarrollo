@@ -2,16 +2,16 @@ package model;
 
 public class Bank {
 
-    private String bank_id;
-    private String bank_name;
-    private String account_number;
+    private String bankNIT;
+    private String bankName;
+    private String accountNumber;
     private boolean state;
 
     public boolean isNotBlank() {
-        if (bank_name == null || account_number == null)
+        if (bankName == null || accountNumber == null)
             return false;
         else
-            return !bank_name.isBlank() && !account_number.isBlank();
+            return !bankName.isBlank() && !accountNumber.isBlank();
     }
 
     public Bank()
@@ -19,35 +19,35 @@ public class Bank {
 
     }
 
-    public Bank(String bank_name, String account_number, boolean state, String bankNIT) {
-        this.bank_id = bankNIT;
-        this.bank_name = bank_name;
-        this.account_number = account_number;
+    public Bank(String bankName, String accountNumber, boolean state, String bankNIT) {
+        this.bankNIT = bankNIT;
+        this.bankName = bankName;
+        this.accountNumber = accountNumber;
         this.state = state;
     }
 
     public String getNIT() {
-        return bank_id;
+        return bankNIT;
     }
 
-    public void setNIT(String bank_id) {
-        this.bank_id = bank_id;
+    public void setNIT(String bankNIT) {
+        this.bankNIT = bankNIT;
     }
 
     public String getName() {
-        return bank_name;
+        return bankName;
     }
 
-    public void setBank_name(String bank_name) {
-        this.bank_name = bank_name;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public String getAccountNumber() {
-        return account_number;
+        return accountNumber;
     }
 
-    public void setAccount_number(String account_number) {
-        this.account_number = account_number;
+    public void setaccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
 
@@ -62,9 +62,9 @@ public class Bank {
     @Override
     public String toString() {
         return "Bank{" +
-                "bank_id=" + bank_id +
-                ", bank_name='" + bank_name + '\'' +
-                ", account_number='" + account_number + '\'' +
+                "bank_id=" + bankNIT +
+                ", bank_name='" + bankName + '\'' +
+                ", account_number='" + accountNumber + '\'' +
                 ", state=" + state +
                 '}';
     }

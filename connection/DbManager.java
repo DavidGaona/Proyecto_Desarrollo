@@ -394,13 +394,13 @@ public class DbManager {
     }
 
     //**************************** METODOS DEL BANCO ********************
-    public String saveBank(String bank_name, String account_number, String bankNIT) {
+    public String saveBank(String bankName, String accountNumber, String bankNIT) {
         int numRows;
         String sql = "INSERT INTO public.bank(bank_name, account_number, state, bank_nit) VALUES(?,?,true,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, bank_name);
-            preparedStatement.setString(2, account_number);
+            preparedStatement.setString(1, bankName);
+            preparedStatement.setString(2, accountNumber);
             preparedStatement.setString(3, bankNIT);
             numRows = preparedStatement.executeUpdate();
             if (numRows > 0) {
@@ -440,7 +440,7 @@ public class DbManager {
         return new Bank();
     }
 
-    public String set_state_bank(boolean state, String bankNIT) {
+    public String setStateBank(boolean state, String bankNIT) {
         int numRows;
         String sql = "UPDATE bank SET state = ? WHERE bank_nit = ?";
         try {

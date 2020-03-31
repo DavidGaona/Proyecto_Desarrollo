@@ -9,15 +9,15 @@ public class DaoBank {
     public DaoBank() {
     }
 
-    public String saveNewBank(String bank_name, String account_number, String bankNIT){
+    public String saveNewBank(String bankName, String accountNumber, String bankNIT){
         dbManager.openDBConnection();
-        String response = dbManager.saveBank(bank_name, account_number, bankNIT);
+        String response = dbManager.saveBank(bankName, accountNumber, bankNIT);
         dbManager.closeDBConnection();
         return  response;
     }
     public String editBank(boolean state, String bankNIT){
         dbManager.openDBConnection();
-        String response = dbManager.set_state_bank(state, bankNIT);
+        String response = dbManager.setStateBank(state, bankNIT);
         dbManager.closeDBConnection();
         return  response;
     }
