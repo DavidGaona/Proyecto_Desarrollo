@@ -24,11 +24,11 @@ public class Client {
         this.type = type;
     }
 
-    public boolean isBlank() {
+    public boolean isNotBlank() {
         if (name == null || lastName == null || documentId == null || email == null || direction == null)
             return false;
         else
-            return name.isBlank() || lastName.isBlank() || documentId.isBlank() || email.isBlank() || direction.isBlank();
+            return !name.isBlank() && !lastName.isBlank() && !documentId.isBlank() && !email.isBlank() && !direction.isBlank();
     }
 
     public int getId(){

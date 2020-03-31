@@ -71,6 +71,8 @@ public class ProjectUtilities {
             return documentTypes[2];
         } else if (documentType == (short) 3) {
             return documentTypes[3];
+        } else if (documentType == (short) 4){
+            return "NIT";
         }
         return documentTypes[0];
     }

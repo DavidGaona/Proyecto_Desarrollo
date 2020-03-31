@@ -92,8 +92,8 @@ public class DbManager {
     }
 
     public Client loadClient(String documentNumber, short clientDocumentType) {
-
-        String sql_select = "SELECT client_id, client_name, client_last_name, client_document_type," +
+        System.out.println(documentNumber + " " + clientDocumentType);
+        String sql_select = "SELECT client_id, client_name, client_last_name," +
                 " client_email, client_address, client_type " +
                 "FROM public.client WHERE client_document_number = ? AND client_document_type = ?";
         Client client = new Client();
@@ -103,15 +103,17 @@ public class DbManager {
             statement.setString(1, documentNumber);
             statement.setShort(2, clientDocumentType);
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("All good");
             resultSet.next();
+            System.out.println("All good 1");
             client.setId(resultSet.getInt(1));
             client.setName(resultSet.getString(2));
             client.setLastName(resultSet.getString(3));
-            client.setDocumentType(resultSet.getShort(4));
+            client.setDocumentType(clientDocumentType);
             client.setDocumentId(documentNumber);
-            client.setEmail(resultSet.getString(5));
-            client.setDirection(resultSet.getString(6));
-            client.setType(resultSet.getShort(7));
+            client.setEmail(resultSet.getString(4));
+            client.setDirection(resultSet.getString(5));
+            client.setType(resultSet.getShort(6));
             return client;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -120,7 +122,7 @@ public class DbManager {
             System.out.println("Ocurrio un error interno del sistema");
         }
 
-        return client;
+        return new Client();
     }
 
     //**************************** METODOS DEL USUARIO ********************
@@ -272,7 +274,7 @@ public class DbManager {
             statement.setShort(2, userDocumentType);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            User user = new User(
+            return new User(
                     resultSet.getInt(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -282,7 +284,6 @@ public class DbManager {
                     resultSet.getBoolean(7),
                     resultSet.getBoolean(8)
             );
-            return user;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {

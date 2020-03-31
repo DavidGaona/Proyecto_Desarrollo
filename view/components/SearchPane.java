@@ -94,6 +94,10 @@ public class SearchPane {
         documentType.requestFocus();
     }
 
+    public void addElement(String element){
+        documentType.getItems().add(element);
+    }
+
     public BooleanProperty getIsVisible() {
         return isVisible;
     }

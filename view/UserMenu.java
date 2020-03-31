@@ -47,7 +47,6 @@ public class UserMenu {
 
     private HBox topBar(HBox hBox, double width, double height) {
 
-        double reduction;
         double circleRadius = (height * 0.045) / 2;
         hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
@@ -204,21 +203,21 @@ public class UserMenu {
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());
 
-        Rectangle r1 = new Rectangle(0, 0, width, height * 0.9);
-        r1.setOnMouseClicked(e -> searchPane.setVisible(false));
-        r1.setOnTouchPressed(e -> searchPane.setVisible(false));
-        r1.setOnScroll(e -> {
+        Rectangle screenFilter = new Rectangle(0, 0, width, height * 0.9);
+        screenFilter.setOnMouseClicked(e -> searchPane.setVisible(false));
+        screenFilter.setOnTouchPressed(e -> searchPane.setVisible(false));
+        screenFilter.setOnScroll(e -> {
             double deltaY = e.getDeltaY() * 3;
             double widthSpeed = menu.getScrollPane().getContent().getBoundsInLocal().getWidth();
             double value = menu.getScrollPane().getVvalue();
             menu.getScrollPane().setVvalue(value + -deltaY / widthSpeed);
         });
-        r1.setFill(Color.rgb(0, 0, 0, 0.25));
-        r1.visibleProperty().bind(searchPane.getIsVisible());
+        screenFilter.setFill(Color.rgb(0, 0, 0, 0.25));
+        screenFilter.visibleProperty().bind(searchPane.getIsVisible());
 
-        stackPane.getChildren().addAll(userMenu, menuList, r1, sp);
+        stackPane.getChildren().addAll(userMenu, menuList, screenFilter, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);
-        StackPane.setAlignment(r1, Pos.CENTER_LEFT);
+        StackPane.setAlignment(screenFilter, Pos.CENTER_LEFT);
         StackPane.setAlignment(sp, Pos.CENTER);
         return stackPane;
     }
