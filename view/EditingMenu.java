@@ -25,6 +25,7 @@ public class EditingMenu {
     private VBox midPane;
     private double height;
     private double width;
+    private ScrollPane scrollPane;
 
     EditingMenu(double width, double height, double percentage){
         this.height = height;
@@ -77,7 +78,7 @@ public class EditingMenu {
     }
 
     private ScrollPane centerScrollPane() {
-        ScrollPane scrollPane = new ScrollPane();
+        scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #141318;\n-fx-border-color: #17161B;\n-fx-border-width: 0");
 
@@ -98,6 +99,10 @@ public class EditingMenu {
             double value = scrollPane.getVvalue();
             scrollPane.setVvalue(value + -deltaY / widthSpeed);
         });
+        return scrollPane;
+    }
+
+    public ScrollPane getScrollPane() {
         return scrollPane;
     }
 

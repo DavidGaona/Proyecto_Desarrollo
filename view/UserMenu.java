@@ -2,6 +2,7 @@ package view;
 
 import controller.DaoUser;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.geometry.Pos;
@@ -28,9 +29,8 @@ public class UserMenu {
         this.buttonFont = buttonFont;
     }
 
-    EditingPanel personalInfo;
-
-    private ComboBox<String> userDocumentTypeAbbComboBox;
+    private EditingPanel personalInfo;
+    private SearchPane searchPane;
     private Button saveChangesButton;
 
     private double percentage;
@@ -52,11 +52,8 @@ public class UserMenu {
     private HBox topBar(HBox hBox, double width, double height) {
 
         double reduction;
-        double circleRadius = (height * 0.045)/2;
-
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.10 - circleRadius); //0.1475
+        double circleRadius = (height * 0.045) / 2;
+        hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
         Circle menuCircle = new Circle(circleRadius);
         menuCircle.setCenterX(circleRadius);
@@ -64,45 +61,17 @@ public class UserMenu {
         menuCircle.setFill(Color.web("#FFFFFF"));
         menuCircle.setStroke(Color.web("#3D3D3E"));
 
-        reduction = circleRadius;
-
-        Rectangle marginRect2 = new Rectangle();
-        marginRect2.setHeight(0);
-        marginRect2.setWidth((width * 0.10) - reduction);
-
         Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
 
-        reduction += (width * 0.15);
+        Icons icons = new Icons();
+        icons.searchIcon(percentage);
+        icons.getSearchIcon().setOnAction(e -> {
+            searchPane.setVisible(true);
+            searchPane.giveFocus();
+        });
 
-        Rectangle marginRect3 = new Rectangle();
-        marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.3 - reduction);
-
-        Rectangle marginRect4 = new Rectangle();
-        marginRect4.setHeight(0);
-        marginRect4.setWidth(width * 0.004);
-
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(20);
-
-        TextField searchTextField = new TextField();
-        searchTextField.setPromptText("Buscar usuario por documento");
-        searchTextField.setPrefSize(width * 0.24, height * 0.03);
-        searchTextField.getStyleClass().add("client-search-bar");
-        searchTextField.setId("STF1");
-        ProjectUtilities.onlyNumericTextField(searchTextField);
-
-        userDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
-        userDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setStyle(userDocumentTypeAbbComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
-        userDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
-
-        searchTextField.setOnAction(e -> {
-            User searchedUser = user.loadUser(searchTextField.getText(), userDocumentTypeAbbComboBox.getValue());
-            if(searchedUser == null){
-                AlertBox.display("Error: ", "Ocurrio un error interno del sistema","");
-            }
+        searchPane.getSearchField().setOnAction(e -> {
+            User searchedUser = user.loadUser(searchPane.getTextContent(), searchPane.getDocumentType());
             if (searchedUser.isNotBlank()) {
                 personalInfo.clear();
 
@@ -117,33 +86,24 @@ public class UserMenu {
 
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
-                //currentUser = userDocumentIdTextField.getText();
-            }else{
-                AlertBox.display("Error: ","Usuario no encontrado","");
-            }
+                searchPane.getSearchField().setText("");
+                searchPane.setVisible(false);
+            } else
+                AlertBox.display("Error: ", "Usuario no encontrado", "");
         });
-
-        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
 
         newUserButton.setOnMouseClicked(e -> {
             personalInfo.clear();
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
-            searchTextField.setText("");
             currentSelectedUser = -1;
         });
 
-        menuCircle.setOnMouseClicked( e -> {
+        menuCircle.setOnMouseClicked(e -> {
             menuListAdmin.displayMenu();
-            ProjectEffects.linearTransitionToRight(menuList,width,height,width,height);
+            ProjectEffects.linearTransitionToRight(menuList, width, height, width, height);
         });
 
-        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newUserButton, Icons.searchIcon(percentage), marginRect3,
-                userDocumentTypeAbbComboBox, marginRect4, searchTextField);
-        return hBox;
-    }
-
-    private HBox botBar(HBox hBox, double width, double height) {
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentUserMode)
@@ -152,8 +112,16 @@ public class UserMenu {
                 editUser();
         });
 
+        hBox.getChildren().addAll(menuCircle, newUserButton, icons.getSearchIcon(), saveChangesButton);
+        HBox.setMargin(menuCircle, new Insets(0, ((width * 0.10) - circleRadius), 0, 0));
+        HBox.setMargin(icons.getSearchIcon(), new Insets(0, (width * 0.1355), 0, (width * 0.135)));
+
+        return hBox;
+    }
+
+    private HBox botBar(HBox hBox, double width, double height) {
+
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(saveChangesButton);
         return hBox;
     }
 
@@ -168,10 +136,10 @@ public class UserMenu {
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"));
-            AlertBox.display("Error ",message,"");
+            AlertBox.display("Error ", message, "");
             personalInfo.clear();
-        }else{
-            AlertBox.display("Error",message,"");
+        } else {
+            AlertBox.display("Error", message, "");
         }
 
     }
@@ -188,10 +156,10 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     !personalInfo.getSwitchButtonValue("userPasswordReset"));
-            AlertBox.display("Error ",message,"");
+            AlertBox.display("Error ", message, "");
             personalInfo.clear();
-        }else{
-            AlertBox.display("Error ",message,"");
+        } else {
+            AlertBox.display("Error ", message, "");
         }
     }
 
@@ -226,11 +194,11 @@ public class UserMenu {
         personalInfo(width);
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
-        menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+        menu.addToMidPane(personalInfo.sendPane(width, height * 0.1));
 
         menuList = menuListAdmin.display(width, height, percentage);
 
-        SearchPane searchPane = new SearchPane(width, height, percentage);
+        searchPane = new SearchPane(width, height, percentage);
         HBox sp = searchPane.showFrame();
 
         BorderPane userMenu;
@@ -239,8 +207,21 @@ public class UserMenu {
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());
 
-        stackPane.getChildren().addAll(userMenu, menuList, sp);
+        Rectangle r1 = new Rectangle(0, 0, width, height * 0.9);
+        r1.setOnMouseClicked(e -> searchPane.setVisible(false));
+        r1.setOnTouchPressed(e -> searchPane.setVisible(false));
+        r1.setOnScroll(e -> {
+            double deltaY = e.getDeltaY() * 3;
+            double widthSpeed = menu.getScrollPane().getContent().getBoundsInLocal().getWidth();
+            double value = menu.getScrollPane().getVvalue();
+            menu.getScrollPane().setVvalue(value + -deltaY / widthSpeed);
+        });
+        r1.setFill(Color.rgb(0, 0, 0, 0.25));
+        r1.visibleProperty().bind(searchPane.getIsVisible());
+
+        stackPane.getChildren().addAll(userMenu, menuList, r1, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);
+        StackPane.setAlignment(r1, Pos.CENTER_LEFT);
         StackPane.setAlignment(sp, Pos.CENTER);
         return stackPane;
     }

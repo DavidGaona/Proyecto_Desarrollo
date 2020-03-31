@@ -1,5 +1,7 @@
 package view.components;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,13 +17,10 @@ public class SearchPane {
     private Button closeButton = new Button();
     private ComboBox<String> documentType;
     private double width;
-    private double height;
-    private double percentage;
+    private BooleanProperty isVisible = new SimpleBooleanProperty();
 
     public SearchPane(double width, double height, double percentage){
         this.width = width * 0.6;
-        this.height = height;
-        this.percentage = percentage;
 
         frame = new HBox();
         frame.setMaxSize(this.width, 100);
@@ -40,9 +39,7 @@ public class SearchPane {
         closeButton.setMaxSize(this.width * 0.1, 60);
         closeButton.setText("Cerrar");
         closeButton.getStyleClass().add("close-search-button");
-        closeButton.setOnAction(e -> {
-            searchField.setText("");
-        });
+        closeButton.setOnAction(e -> searchField.setText(""));
         closeButton.setOnMouseEntered(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #4422AA;"));
         closeButton.setOnMouseExited(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #5639AC;"));
 
@@ -71,6 +68,7 @@ public class SearchPane {
         frame.setAlignment(Pos.CENTER_LEFT);
         HBox.setMargin(searchField, new Insets(0, this.width * 0.05, 0, 0));
         HBox.setMargin(closeButton, new Insets(0, 0, 0, this.width * 0.05));
+        isVisible.bind(frame.visibleProperty());
     }
 
     public String getTextContent(){
@@ -87,6 +85,14 @@ public class SearchPane {
 
     public void setVisible(boolean value){
         frame.setVisible(value);
+    }
+
+    public void giveFocus(){
+        documentType.requestFocus();
+    }
+
+    public BooleanProperty getIsVisible(){
+        return isVisible;
     }
 
     public HBox showFrame(){
