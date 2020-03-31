@@ -10,12 +10,12 @@ public class DaoClient {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
-    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type, int currentLoginUser) {
         Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
         String response = "";
         if (client.isNotBlank()) {
             dbManager.openDBConnection();
-            response = dbManager.saveNewClient(client);
+            response = dbManager.saveNewClient(client, currentLoginUser);
             dbManager.closeDBConnection();
         }
         return response;

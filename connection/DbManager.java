@@ -20,7 +20,8 @@ public class DbManager {
         connection = null;
     }
 
-    public String saveNewClient(Client client) {
+    //**************************** METODOS DEL CLIENTE ********************
+    public String saveNewClient(Client client, int currentLoginUser) {
         String saveQuery, selectQuery, logQuery;
         int numRows, id = -1;
         saveQuery = "INSERT INTO public.client(client_name, client_last_name, client_document_number, client_email, client_address, client_type, client_document_type)" +
@@ -50,7 +51,7 @@ public class DbManager {
             logQuery = "INSERT INTO public.client_date(client_id, user_id, join_date) VALUES(?, ?, current_timestamp(0))";
             statement = connection.prepareStatement(logQuery);
             statement.setInt(1, id);
-            statement.setInt(2, Login.currentLoggedUser);
+            statement.setInt(2, currentLoginUser);
             numRows = statement.executeUpdate();
             System.out.println(numRows);
             return "Cliente creado con exito";
@@ -125,6 +126,7 @@ public class DbManager {
         return new Client();
     }
 
+    //**************************** METODOS DEL USUARIO ********************
     public int loginUser(String documento_id_usuario, String password) {
         String sql_select = "SELECT user_password, user_type, user_state, up_to_date_password, user_id" +
                 " FROM public.user WHERE user_document_number = ?";
@@ -169,7 +171,7 @@ public class DbManager {
         return -4;
     }
 
-    public String saveNewUser(User user) {
+    public String saveNewUser(User user, int currentLoginUser) {
         int numRows, id;
         String saveQuery, selectQuery, logQuery;
         final String hashWillBeStored = BCrypt.withDefaults().hashToString(12, user.getDocumentIdNumber().toCharArray());
@@ -191,6 +193,7 @@ public class DbManager {
             System.out.println(numRows);
             statement = connection.prepareStatement(selectQuery);
             statement.setString(1, user.getDocumentIdNumber());
+            statement.setShort(2, user.getDocumentType());
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             id = resultSet.getInt(1);
@@ -198,7 +201,7 @@ public class DbManager {
                     " VALUES (?, ?, current_timestamp(0))";
             statement = connection.prepareStatement(logQuery);
             statement.setInt(1, id);
-            statement.setInt(2, Login.currentLoggedUser);
+            statement.setInt(2, currentLoginUser);
             numRows = statement.executeUpdate();
             System.out.println(numRows);
             return "Operacion exitosa";

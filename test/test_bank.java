@@ -1,6 +1,5 @@
 package test;
-
-import controller.DaoBank;
+    import controller.DaoBank;
 import junit.framework.TestCase;
 
 public class test_bank extends TestCase {
@@ -9,10 +8,10 @@ public class test_bank extends TestCase {
     public void scenario(){
         bank = new DaoBank();
     }
-    public void testSave_bank(){
+  /*  public void testSave_bank(){
         scenario();
-        assertTrue(bank.saveNewBank("Caja Social","154896","458451454").equals("Operación Realizada"));
-    }
+        assertEquals("Operación Realizada",(bank.saveNewBank("Caja Social","157486","458451454")));
+    } */
     public void testSet_state_bank(){
         scenario();
         assertTrue(bank.editBank(false,"2").equals("Operación Realizada"));

@@ -9,12 +9,12 @@ public class DaoUser {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
-    public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
+    public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, int currentLoginUser) {
         User user = new User(userId, userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, true);
         String response="";
         if (user.isNotBlank()) {
             dbManager.openDBConnection();
-            response = dbManager.saveNewUser(user);
+            response = dbManager.saveNewUser(user, currentLoginUser);
             dbManager.closeDBConnection();
         }
         return response;
@@ -59,4 +59,5 @@ public class DaoUser {
         dbManager.closeDBConnection();
         return response;
     }
+
 }
