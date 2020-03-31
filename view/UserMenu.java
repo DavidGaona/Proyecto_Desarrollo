@@ -130,7 +130,8 @@ public class UserMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
-                    personalInfo.getSwitchButtonValue("userState"));
+                    personalInfo.getSwitchButtonValue("userState"),
+                    Login.currentLoggedUser);
             AlertBox.display("Error ", message, "");
             personalInfo.clear();
         } else {

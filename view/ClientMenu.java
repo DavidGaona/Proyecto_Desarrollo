@@ -152,7 +152,8 @@ public class ClientMenu {
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientAddress")),
-                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
+                    ProjectUtilities.convertClientType(personalInfo.getContent("clientType")),
+                    Login.currentLoggedUser);
             personalInfo.clear();
         }
         AlertBox.display("Error", message, "");
