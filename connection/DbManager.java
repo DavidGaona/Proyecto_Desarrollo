@@ -7,6 +7,7 @@ import model.*;
 import view.Login;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -416,14 +417,14 @@ public class DbManager {
         }
     }
 
-    public Bank loadBank(String bankNIT) {
+    public Bank loadBank(String bankName) {
 
         String sql_select = "SELECT bank_name, account_number, state, bank_nit " +
-                "FROM public.bank WHERE bank_nit = ?";
+                "FROM public.bank WHERE bank_name = ?";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
-            statement.setString(1, bankNIT);
+            statement.setString(1, bankName);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return new Bank(
@@ -439,6 +440,32 @@ public class DbManager {
             return null;
         }
         return new Bank();
+    }
+
+    public String[] loadAllBank() {
+
+        ArrayList<String> banks = new ArrayList<>();
+
+        String sql_select = "SELECT bank_name " +
+                "FROM public.bank";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next())
+            {
+                 banks.add(resultSet.getString(1));
+            }
+            return banks.toArray(new String[banks.size()]);
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return null;
+        }
+        return new String[]{};
     }
 
     public String setStateBank(boolean state, String bankNIT) {

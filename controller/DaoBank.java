@@ -22,10 +22,17 @@ public class DaoBank {
         return  response;
     }
 
-    public Bank loadBank(String bankNIT) {
+    public Bank loadBank(String bankName) {
         dbManager.openDBConnection();
-        Bank bank = dbManager.loadBank(bankNIT);
+        Bank bank = dbManager.loadBank(bankName);
         dbManager.closeDBConnection();
         return bank;
+    }
+
+    public String[] loadAllBanks(){
+        dbManager.openDBConnection();
+        String[] banks = dbManager.loadAllBank();
+        dbManager.closeDBConnection();
+        return banks;
     }
 }
