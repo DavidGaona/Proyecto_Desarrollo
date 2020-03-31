@@ -11,7 +11,7 @@ public class TestDaoUser extends TestCase {
     //**************************** testsaveNewUser********************
     public void testsaveNewUser(){ //caso exitoso
         scenario();
-        assertEquals("Operacion exitosa",(user.saveNewUser(166,"pipe","malo","439",(short)0,(short)0,true,35)));
+        assertEquals("Operacion exitosa",(user.saveNewUser(168,"pipe","malo","451",(short)0,(short)0,true,35)));
     }
 
     public void testsaveNewUserCreado(){
