@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -30,6 +31,8 @@ public class ManagerMenu {
     private double buttonFont;
     private ComboBox<String> searchComboBox = new ComboBox();
     private Button saveChangesButton;
+    private MenuListManager menuListManager = new MenuListManager();
+    private VBox menuList;
 
     public ManagerMenu(double percentage, double buttonFont) {
         plan = new DaoPlan();
@@ -87,6 +90,11 @@ public class ManagerMenu {
         newBankButton.setOnAction(e -> {
             basicPlanInfo.clear();
             createExtra.clear();
+        });
+
+        menuCircle.setOnMouseClicked(e -> {
+            menuListManager.displayMenu();
+            ProjectEffects.linearTransitionToRight(menuList, 250, width, height, width, height);
         });
 
 
@@ -197,14 +205,7 @@ public class ManagerMenu {
 
     private void createExistingExtra(double width, double height) {
         planExtras = new EditingPanel("Poner Extras", percentage, width);
-
-        ObservableList<PlanTable> test = FXCollections.observableArrayList();
-        test.add(new PlanTable("Minutos Estados Unidos", 100, true, 1));
-        test.add(new PlanTable("Minutos Colombia", 10, false, 1));
-        test.add(new PlanTable("Megas Discord", 5000, true, 1));
-        test.add(new PlanTable("Megas WhatsApp", 500000, false, 1));
-
-        planExtras.createTables(width, height, test);
+        planExtras.createTables(width, height, plan.listExtras());
     }
 
     public void align() {
@@ -221,7 +222,9 @@ public class ManagerMenu {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public BorderPane renderPlanEditingMenu(double width, double height) {
+    public StackPane renderPlanEditingMenu(double width, double height) {
+        StackPane stackPane = new StackPane();
+        menuList = menuListManager.display(width, height, percentage);
         basicPlanInfo(width);
         createExtra(width);
         createExistingExtra(width, height);
@@ -237,6 +240,9 @@ public class ManagerMenu {
         planMenu.setTop(topBar((HBox) planMenu.getTop(), width, height));
         planMenu.setBottom(botBar((HBox) planMenu.getBottom(), width, height));
         planMenu.setCenter(planMenu.getCenter());
-        return planMenu;
+
+        stackPane.getChildren().addAll(planMenu, menuList);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        return stackPane;
     }
 }
