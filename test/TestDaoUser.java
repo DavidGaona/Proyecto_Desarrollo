@@ -45,13 +45,22 @@ public class TestDaoUser extends TestCase {
         assertFalse(3 == user.loginUser("436", "432346"));
     }
 
+    //****************************checkPassword********************
     public void testCheckPassword(){ //check correcto
         scenario();
         assertEquals(true , user.checkPassword(169,"436"));
     }
 
+    public void testCheckPasswordIncorrecto(){ //check incorrecto
+        scenario();
+        assertFalse(true == user.checkPassword(169,"46"));
+    }
 
-
+    //****************************changePassword********************
+    public void testChangePassword(){ //password correcto
+        scenario();
+        assertEquals(0,user.changePassword(169,"436"));
+    }
 
 
 }
