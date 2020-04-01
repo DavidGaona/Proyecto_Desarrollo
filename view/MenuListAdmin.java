@@ -60,7 +60,7 @@ public class MenuListAdmin extends MenuList {
         layout.getStylesheets().add("menuListStyle.css");
 
         //effect closeMenu
-        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700));
+        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700,1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
         userLabel.setOnMouseClicked(e -> {
