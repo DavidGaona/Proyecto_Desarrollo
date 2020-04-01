@@ -4,12 +4,19 @@ import controller.DaoPlan;
 import controller.DaoUser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import model.Bank;
 import model.PlanTable;
 import utilities.AlertBox;
+import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
 
 import java.util.ArrayList;
@@ -21,6 +28,8 @@ public class ManagerMenu {
     private double percentage;
     private DaoPlan plan;
     private double buttonFont;
+    private ComboBox<String> searchComboBox = new ComboBox();
+    private Button saveChangesButton;
 
     public ManagerMenu(double percentage, double buttonFont) {
         plan = new DaoPlan();
@@ -28,9 +37,62 @@ public class ManagerMenu {
         this.buttonFont = buttonFont;
     }
 
-    private HBox topBar(HBox hBox, double width, double height) {
+    private Button ManagerMenuButtonTemplate(double width, double height, String message) {
+        Button button = new Button(message);
+        button.setPrefSize(width * 0.15, height * 0.03);
+        button.setStyle("-fx-font-size: " + buttonFont);
+        button.getStyleClass().add("client-buttons-template");
+        return button;
+    }
 
-        hBox.setAlignment(Pos.CENTER);
+    private HBox topBar(HBox hBox, double width, double height) {
+        double circleRadius = (height * 0.045) / 2;
+        hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
+
+        Circle menuCircle = new Circle(circleRadius);
+        menuCircle.setCenterX(circleRadius);
+        menuCircle.setCenterY(circleRadius);
+        menuCircle.setFill(Color.web("#FFFFFF"));
+        menuCircle.setStroke(Color.web("#3D3D3E"));
+
+        Button newBankButton = ManagerMenuButtonTemplate(width, height, "Nuevo Plan");
+
+        searchComboBox.setId("STF2");
+        searchComboBox.setMinSize(width * 0.2, height * 0.05);
+        searchComboBox.setMinSize(width * 0.2, height * 0.05);
+        searchComboBox.setStyle(searchComboBox.getStyle() + "-fx-font-size: " + buttonFont + ";");
+
+        saveChangesButton = ManagerMenuButtonTemplate(width, height, "Agregar Plan");
+        saveChangesButton.setOnAction(e -> {
+            String message = "No se pueden dejar campos vacios";
+            if (!basicPlanInfo.isEmpty()) {
+                message = plan.saveNewPlan(
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planMinutes")),
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planDataCap")),
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")));
+                if (message.equals("Operación realizada con exito")) {
+                    basicPlanInfo.clear();
+                }
+                AlertBox.display("Éxito", message, "");
+            } else {
+                AlertBox.display("Error", message, "");
+            }
+            searchComboBox.valueProperty().set(null);
+        });
+
+        ProjectUtilities.focusListener("24222A", "C2B8E0", searchComboBox);
+
+        newBankButton.setOnAction(e -> {
+            basicPlanInfo.clear();
+            createExtra.clear();
+        });
+
+
+        hBox.getChildren().addAll(menuCircle, newBankButton, searchComboBox, saveChangesButton);
+        HBox.setMargin(menuCircle, new Insets(0, ((width * 0.10) - circleRadius), 0, 0));
+        HBox.setMargin(searchComboBox, new Insets(0, (width * 0.05), 0, (width * 0.05)));
         return hBox;
     }
 
@@ -106,7 +168,7 @@ public class ManagerMenu {
                     createExtra.clear();
                 }
 
-                AlertBox.display("Error ", message, "");
+                AlertBox.display("Éxito ", message, "");
 
             } else if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("App")){
                 message = plan.saveApp(
@@ -124,7 +186,7 @@ public class ManagerMenu {
                     planExtras.loadTable(planTable);
                     createExtra.clear();
                 }
-                AlertBox.display("Exito ", message, "");
+                AlertBox.display("Éxito ", message, "");
 
             }
             else {

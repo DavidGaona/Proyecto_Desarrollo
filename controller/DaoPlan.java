@@ -13,8 +13,9 @@ public class DaoPlan {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
-    public String saveNewPlan(String planName, double planCost, int planMinutes, int planData, int planTextMsn) {
-        Plan plan = new Plan(planName, planCost, planMinutes, planData, planTextMsn);
+    public String saveNewPlan(String planName, String planCost, String planMinutes, String planData, String planTextMsn) {
+        Plan plan = new Plan(planName, Double.parseDouble(planCost),
+                Integer.parseInt(planMinutes), Integer.parseInt(planData), Integer.parseInt(planTextMsn));
         String response = "";
         if (plan.isNotBlank()) {
             dbManager.openDBConnection();
