@@ -83,10 +83,10 @@ public class ManagerMenu {
         planExtras = new EditingPanel("Poner Extras", percentage, width);
 
         ObservableList<PlanTable> test = FXCollections.observableArrayList();
-        test.add(new PlanTable("Minutos Estados Unidos", 100, true));
-        test.add(new PlanTable("Minutos Colombia", 10, false));
-        test.add(new PlanTable("Megas Discord", 5000, true));
-        test.add(new PlanTable("Megas WhatsApp", 500000, false));
+        test.add(new PlanTable("Minutos Estados Unidos", 100, true, 1));
+        test.add(new PlanTable("Minutos Colombia", 10, false, 1));
+        test.add(new PlanTable("Megas Discord", 5000, true, 1));
+        test.add(new PlanTable("Megas WhatsApp", 500000, false, 1));
 
         planExtras.createTables(width, height, test);
     }

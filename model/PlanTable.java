@@ -5,18 +5,20 @@ import javafx.scene.control.Button;
 
 public class PlanTable {
     private String planName;
-    private double quantity;
+    private int quantity;
     private Button selectPerson;
     private boolean isUsed;
+    private int type;
 
     public PlanTable(){
         planName = "";
         quantity = 0;
         selectPerson = new Button();
         isUsed = false;
+        type = -1;
     }
 
-    public PlanTable(String planName, double quantity, boolean isUsed){
+    public PlanTable(String planName, int quantity, boolean isUsed, int type){
         this.planName = planName;
         this.quantity = quantity;
         this.isUsed = isUsed;
@@ -24,6 +26,7 @@ public class PlanTable {
             selectPerson = new Button("Quitar");
         else
             selectPerson = new Button("Agregar");
+        this.type = type;
     }
 
     public String getPlanName() {
@@ -38,7 +41,7 @@ public class PlanTable {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
