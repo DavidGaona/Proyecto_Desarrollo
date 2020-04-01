@@ -6,7 +6,7 @@ import utilities.ProjectUtilities;
 
 public class DaoUser {
 
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
     public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, int currentLoginUser) {

@@ -1,10 +1,13 @@
 package view;
 
 import controller.DaoUser;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.PlanTable;
 
 import java.util.ArrayList;
 
@@ -34,8 +37,8 @@ public class ManagerMenu {
         return hBox;
     }
 
-    private void basicPlanInfo(double width){
-        basicPlanInfo = new EditingPanel("Información Básica del Plan", percentage, width);
+    private void basicPlanInfo(double width) {
+        basicPlanInfo = new EditingPanel("Información del Plan", percentage, width);
 
         basicPlanInfo.addTextField("planName", "Nombre del plan:");
         basicPlanInfo.addCharacterLimit(100, "planName");
@@ -59,7 +62,7 @@ public class ManagerMenu {
         aligner.add(basicPlanInfo);
     }
 
-    private void createExtra(double width){
+    private void createExtra(double width) {
         createExtra = new EditingPanel("Añadir Extra", percentage, width);
 
         String[] extraTypes = {"Voz", "App"};
@@ -76,10 +79,22 @@ public class ManagerMenu {
         aligner.add(createExtra);
     }
 
-    public void align(){
+    private void createExistingExtra(double width, double height) {
+        planExtras = new EditingPanel("Poner Extras", percentage, width);
+
+        ObservableList<PlanTable> test = FXCollections.observableArrayList();
+        test.add(new PlanTable("Minutos Estados Unidos", 100, true));
+        test.add(new PlanTable("Minutos Colombia", 10, false));
+        test.add(new PlanTable("Megas Discord", 5000, true));
+        test.add(new PlanTable("Megas WhatsApp", 500000, false));
+
+        planExtras.createTables(width, height, test);
+    }
+
+    public void align() {
         double longestTextSize = 0.0;
         for (EditingPanel editingPanel : aligner) {
-            if (editingPanel.getLongestText() > longestTextSize){
+            if (editingPanel.getLongestText() > longestTextSize) {
                 longestTextSize = editingPanel.getLongestText();
             }
         }
@@ -93,10 +108,13 @@ public class ManagerMenu {
     public BorderPane renderPlanEditingMenu(double width, double height) {
         basicPlanInfo(width);
         createExtra(width);
+        createExistingExtra(width, height);
+
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(
-                basicPlanInfo.sendPane(width, height*0.1),
-                createExtra.sendPane(width, height*0.0)
+                basicPlanInfo.sendPane(width, height * 0.1),
+                createExtra.sendPane(width, height * 0.0),
+                planExtras.sendTable(width, height * 0.0)
         );
         BorderPane planMenu;
         planMenu = menu.renderMenuTemplate();

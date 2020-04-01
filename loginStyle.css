@@ -31,7 +31,7 @@
 .combo-box {
     -fx-background: #2E3538;
     -fx-background-color: #2E3538;
-    -fx-text-fill: #8F9C9F;
+    -fx-text-fill: #FFFFFF;
     -fx-border-radius: 3;
     -fx-border-width: 3;
     -fx-border-color: #3C4448;
@@ -40,7 +40,7 @@
 .combo-box > .cell
 {
     -fx-font-family: Consolas;
-    -fx-text-fill: #8F9C9F;
+    -fx-text-fill: #FFFFFF;
     -fx-cell-size: 1.66667em;
     -fx-background-color: #2E3538;
 
@@ -49,7 +49,7 @@
 .combo-box-popup .cell
 {
     -fx-background-color: #283135;
-    -fx-text-fill: #8F9C9F;
+    -fx-text-fill: #FFFFFF;
 
 }
 
@@ -61,5 +61,5 @@
 {
     -fx-background: -fx-accent;
     -fx-background-color: #3985AB;
-    -fx-text-fill: #8F9C9F;
+    -fx-text-fill: #FFFFFF;
 }

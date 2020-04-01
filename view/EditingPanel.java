@@ -1,12 +1,13 @@
 package view;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -15,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.PlanTable;
 import utilities.ProjectUtilities;
 import view.components.SwitchButton;
 
@@ -28,7 +30,13 @@ public class EditingPanel {
     private ArrayList<SwitchButton> switchButtons = new ArrayList<>();
     private ArrayList<Text> texts = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
+
     private GridPane tagsPane = new GridPane();
+    private HBox tablePane = new HBox();
+
+    private TableView<PlanTable> optionTable = new TableView<>();
+    private TableView<PlanTable> pickedTable = new TableView<>();
+
     private double percentage;
 
     private String color = "#948FA3";
@@ -41,6 +49,13 @@ public class EditingPanel {
         tagsPane.setHgap(10);
         tagsPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
                 "-fx-border-color: #28272F;\n-fx-border-width: 0;");
+
+        tablePane.setPadding(new Insets(5, 5, 5, 5));
+        tablePane.setPrefWidth(width * 0.4);
+        tablePane.setSpacing(30);
+        tablePane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
+                "-fx-border-color: #28272F;\n-fx-border-width: 0;");
+
         this.title = title;
         this.percentage = percentage;
     }
@@ -177,7 +192,7 @@ public class EditingPanel {
             getComboBox(id).getItems().add(element);
     }
 
-    public void changeTextMessage(String id, String message){
+    public void changeTextMessage(String id, String message) {
         texts.get(getIndex(id)).setText(message);
     }
 
@@ -342,6 +357,95 @@ public class EditingPanel {
 
     public void addRegexConstraint(String pattern) {
 
+    }
+
+    //----------------------------------Table----------------------------------
+    public void createTables(double width, double height, ObservableList<PlanTable> data) {
+        double tableWidth = ((width * 0.6) * 0.8) * 0.5;
+        optionTable.setMinSize(tableWidth, height * 0.5);
+        pickedTable.setMinSize(tableWidth, height * 0.5);
+
+        TableColumn<PlanTable, String> nameColumnOption = new TableColumn<>("Nombre plan");
+        nameColumnOption.setMinWidth(tableWidth * 0.5);
+        nameColumnOption.setCellValueFactory(new PropertyValueFactory<>("planName"));
+
+        TableColumn<PlanTable, String> nameColumnPick = new TableColumn<>("Nombre plan");
+        nameColumnPick.setMinWidth(tableWidth * 0.5);
+        nameColumnPick.setCellValueFactory(new PropertyValueFactory<>("planName"));
+
+        TableColumn<PlanTable, Double> quantityColumnOption = new TableColumn<>("Cantidad");
+        quantityColumnOption.setMinWidth(tableWidth * 0.25);
+        quantityColumnOption.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        TableColumn<PlanTable, Double> quantityColumnPick = new TableColumn<>("Cantidad");
+        quantityColumnPick.setMinWidth(tableWidth * 0.25);
+        quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+
+        TableColumn<PlanTable, Button> pickColumnOption = new TableColumn<>("Escoger");
+        pickColumnOption.setMinWidth(tableWidth * 0.25);
+        pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
+
+        TableColumn<PlanTable, Button> pickColumnPick = new TableColumn<>("Escoger");
+        pickColumnPick.setMinWidth(tableWidth * 0.25);
+        pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
+
+        loadTable(data);
+
+        optionTable.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
+        pickedTable.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
+
+        tablePane.getChildren().addAll(optionTable, pickedTable);
+    }
+
+    private void loadTable(ObservableList<PlanTable> data) {
+        for (PlanTable datum : data) {
+            if (datum.isUsed())
+                pickedTable.getItems().add(datum);
+            else
+                optionTable.getItems().add(datum);
+        }
+    }
+
+    public HBox sendTable(double width, double height) {
+        //Hbox
+        HBox hbox = new HBox();
+        hbox.setPrefSize(width * 0.6, height);
+        hbox.setAlignment(Pos.TOP_LEFT);
+        hbox.setStyle("-fx-border-width: 4 0 4 0;-fx-border-color: #17161B;-fx-background-color: #24222A;");
+
+        //StackPane
+        StackPane stackPane = new StackPane();
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        stackPane.setPrefSize(width * 0.2, height);
+
+        //Rectangle bg
+        Rectangle rect = new Rectangle();
+        rect.setHeight(height);
+        rect.setWidth(width * 0.2);
+        rect.setFill(Color.web("#24222A"));
+
+        //VBox to center the text
+        VBox centerText = new VBox();
+        centerText.setMaxWidth(width * 0.2);
+        centerText.setAlignment(Pos.TOP_CENTER);
+
+        //Text with message
+        Text text = new Text(title);
+        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
+        text.setFill(Color.web("#FFFFFF"));
+
+        //Margin for the text
+        Rectangle marginRect = new Rectangle();
+        marginRect.setHeight(30);
+        marginRect.setWidth(0);
+        marginRect.setFill(Color.web("#24222A"));
+
+        centerText.getChildren().addAll(marginRect, text);
+        stackPane.getChildren().addAll(rect, centerText);
+        hbox.getChildren().addAll(stackPane, tablePane);
+
+        return hbox;
     }
 
     public HBox sendPane(double width, double height) {
