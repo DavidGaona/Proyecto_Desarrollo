@@ -8,7 +8,6 @@
     -fx-border-radius: 3;
     -fx-border-width: 3;
     -fx-font-family: Consolas;
-    -fx-font-size: 30px;
     -fx-prompt-text-fill: #8F9C9F;
     -fx-border-color: #3C4448;
 }
@@ -17,7 +16,6 @@
     -fx-text-fill: #3986AC;
     -fx-font-family: Consolas;
     -fx-font-weight: bold;
-    -fx-font-size: 60px;
 }
 
 .login-button {
@@ -25,8 +23,43 @@
     -fx-text-fill: #FFFFFF;
     -fx-border-radius: 2;
     -fx-font-family: Consolas;
-    -fx-font-size: 40px;
 }
 .login-button:hover {
     -fx-background-color: #117AAA;
+}
+
+.combo-box {
+    -fx-background: #2E3538;
+    -fx-background-color: #2E3538;
+    -fx-text-fill: #8F9C9F;
+    -fx-border-radius: 3;
+    -fx-border-width: 3;
+    -fx-border-color: #3C4448;
+}
+
+.combo-box > .cell
+{
+    -fx-font-family: Consolas;
+    -fx-text-fill: #8F9C9F;
+    -fx-cell-size: 1.66667em;
+    -fx-background-color: #2E3538;
+
+}
+
+.combo-box-popup .cell
+{
+    -fx-background-color: #283135;
+    -fx-text-fill: #8F9C9F;
+
+}
+
+.combo-box-popup .cell:hover{
+    -fx-background-color: #3985AB;
+}
+
+.combo-box-popup .list-cell:filled:selected
+{
+    -fx-background: -fx-accent;
+    -fx-background-color: #3985AB;
+    -fx-text-fill: #8F9C9F;
 }

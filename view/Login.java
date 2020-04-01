@@ -90,6 +90,11 @@ public class Login {
 
         ProjectUtilities.loadComboBox(documentType, ProjectUtilities.documentTypes);
         documentType.valueProperty().set(ProjectUtilities.documentTypes[0]);
+        documentType.setMinSize(width * 0.25,height * 0.05);
+        documentType.setMaxSize(width * 0.25, height * 0.05);
+        documentType.getStylesheets().add("loginStyle.css");
+        documentType.setStyle(documentType.getStyle() + " -fx-font-size: " + textFFont + "px; ");
+
 
         passwordTextField = new PasswordField();
         passwordTextField.setMaxSize(width * 0.25, height * 0.05);
@@ -99,7 +104,7 @@ public class Login {
         passwordTextField.setPromptText("Contraseña");
         passwordTextField.setOnAction(e -> loginAction());
 
-        ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField);
+        ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField, documentType);
 
         Button loginButton = new Button("Iniciar sesión");
         loginButton.setPrefSize(width * 0.25, height * 0.05);

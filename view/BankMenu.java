@@ -71,7 +71,7 @@ public class BankMenu {
 
         Button newBankButton = bankButtonTemplate(width, height, "Nuevo banco");
 
-        reduction += (width * 0.15);
+        reduction += (width * 0.19);
 
         Rectangle marginRect3 = new Rectangle();
         marginRect3.setHeight(0);
@@ -85,6 +85,9 @@ public class BankMenu {
         shadow.setRadius(20);
 
         searchComboBox.setId("STF2");
+        searchComboBox.setMinSize(width * 0.2, height * 0.05);
+        searchComboBox.setMinSize(width * 0.2, height * 0.05);
+        searchComboBox.setStyle(searchComboBox.getStyle() + "-fx-font-size: " + buttonFont +";");
 
         saveChangesButton = bankButtonTemplate(width, height, "Agregar banco");
         saveChangesButton.setOnMouseClicked(e -> {
@@ -142,7 +145,7 @@ public class BankMenu {
         });
 
         hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newBankButton, marginRect3,
-                marginRect4, searchComboBox, saveChangesButton);
+                 searchComboBox, marginRect4, saveChangesButton);
         return hBox;
     }
 
