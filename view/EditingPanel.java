@@ -36,6 +36,7 @@ public class EditingPanel {
 
     private TableView<PlanTable> optionTable = new TableView<>();
     private TableView<PlanTable> pickedTable = new TableView<>();
+    private ObservableList<PlanTable> tableData = FXCollections.observableArrayList();
 
     private double percentage;
 
@@ -359,11 +360,17 @@ public class EditingPanel {
 
     }
 
-    //----------------------------------Table----------------------------------
+    //----------------------------------Table----------------------------------\\
     public void createTables(double width, double height, ObservableList<PlanTable> data) {
-        double tableWidth = ((width * 0.6) * 0.8) * 0.5;
+        double tableWidth = ((width * 0.6) * 0.8) * 0.39;
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
+
+        TableColumn<PlanTable, String> tittleColumnOption = new TableColumn<>("Nombre plan");
+        tittleColumnOption.setMinWidth(tableWidth);
+
+        TableColumn<PlanTable, String> tittleColumnPick = new TableColumn<>("Nombre plan");
+        tittleColumnPick.setMinWidth(tableWidth);
 
         TableColumn<PlanTable, String> nameColumnOption = new TableColumn<>("Nombre plan");
         nameColumnOption.setMinWidth(tableWidth * 0.5);
@@ -384,22 +391,30 @@ public class EditingPanel {
 
         TableColumn<PlanTable, Button> pickColumnOption = new TableColumn<>("Escoger");
         pickColumnOption.setMinWidth(tableWidth * 0.25);
+        pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
         TableColumn<PlanTable, Button> pickColumnPick = new TableColumn<>("Escoger");
         pickColumnPick.setMinWidth(tableWidth * 0.25);
+        pickColumnPick.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
         loadTable(data);
 
-        optionTable.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
-        pickedTable.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
+        tittleColumnOption.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
+        tittleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
+
+        optionTable.getColumns().addAll(tittleColumnOption);
+        pickedTable.getColumns().addAll(tittleColumnPick);
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
     private void loadTable(ObservableList<PlanTable> data) {
         for (PlanTable datum : data) {
+            datum.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
+            datum.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+            datum.getSelectPerson().getStyleClass().add("client-buttons-template");
             if (datum.isUsed())
                 pickedTable.getItems().add(datum);
             else
