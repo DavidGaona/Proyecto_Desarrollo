@@ -2,7 +2,7 @@ package test;
     import controller.DaoBank;
 import junit.framework.TestCase;
 
-public class test_bank extends TestCase {
+public class testDaoBank extends TestCase {
     private DaoBank bank;
 
     public void scenario(){
