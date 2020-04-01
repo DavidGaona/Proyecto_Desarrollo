@@ -6,7 +6,7 @@ import utilities.ProjectUtilities;
 
 public class DaoUser {
 
-    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
 
     public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, int currentLoginUser) {
@@ -38,9 +38,9 @@ public class DaoUser {
         return user;
     }
 
-    public int loginUser(String DocumentNumber, String password) {
+    public int loginUser(String DocumentNumber, short documentType, String password) {
         dbManager.openDBConnection();
-        int role = dbManager.loginUser(DocumentNumber, password);
+        int role = dbManager.loginUser(DocumentNumber, documentType, password);
         dbManager.closeDBConnection();
         return role;
     }

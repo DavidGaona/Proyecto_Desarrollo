@@ -127,14 +127,15 @@ public class DbManager {
     }
 
     //**************************** METODOS DEL USUARIO ********************
-    public int loginUser(String documento_id_usuario, String password) {
+    public int loginUser(String documento_id_usuario, short documentType,String password) {
         String sql_select = "SELECT user_password, user_type, user_state, up_to_date_password, user_id" +
-                " FROM public.user WHERE user_document_number = ?";
+                " FROM public.user WHERE user_document_number = ? AND user_document_type = ?";
 
         try {
             System.out.println("consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setString(1, documento_id_usuario);
+            statement.setShort(2, documentType);
             ResultSet resultSet = statement.executeQuery();
             String hashedPasswordFromBD;
             short user_type;

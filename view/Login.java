@@ -4,10 +4,7 @@ import controller.DaoUser;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import utilities.AlertBox;
 import utilities.ProjectUtilities;
@@ -20,6 +17,7 @@ public class Login {
     private DaoUser user;
     private double width;
     private double height;
+    ComboBox<String> documentType = new ComboBox();
 
 
     public Login(double width, double height, SimpleIntegerProperty currentWindow2) {
@@ -90,6 +88,9 @@ public class Login {
         userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
         ProjectUtilities.onlyNumericTextField(userIdTextField);
 
+        ProjectUtilities.loadComboBox(documentType, ProjectUtilities.documentTypes);
+        documentType.valueProperty().set(ProjectUtilities.documentTypes[0]);
+
         passwordTextField = new PasswordField();
         passwordTextField.setMaxSize(width * 0.25, height * 0.05);
         passwordTextField.setPrefSize(width * 0.25, height * 0.05);
@@ -104,20 +105,24 @@ public class Login {
         loginButton.setPrefSize(width * 0.25, height * 0.05);
         loginButton.getStyleClass().add("login-button");
         loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
-        loginButton.setOnMouseClicked(e -> loginAction());
+        loginButton.setOnMouseClicked(e -> {
+            loginAction();
+        });
 
-        vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
+        vBox.getChildren().addAll(hBox, userIdTextField, documentType, passwordTextField, loginButton);
 
         return vBox;
     }
 
-    private void clear(){
+    private void clear() {
         userIdTextField.setText("");
         passwordTextField.setText("");
     }
 
     private void loginAction() {
-        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
+        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()),
+                ProjectUtilities.convertDocumentType(documentType.getValue()),
+                passwordTextField.getText());
 
         switch (loginSuccess) {
             case 0:
@@ -137,15 +142,15 @@ public class Login {
                 Login.currentWindow.set(4);
                 break;
             case -1:
-                AlertBox.display("Error","No se pudo encontrar el usuario","");
+                AlertBox.display("Error", "No se pudo encontrar el usuario", "");
                 currentLoggedUser = -1;
                 break;
             case -2:
-                AlertBox.display("Error","Contraseña invalida","");
+                AlertBox.display("Error", "Contraseña invalida", "");
                 currentLoggedUser = -1;
                 break;
             case -3:
-                AlertBox.display("Error","Cuenta desactivada","");
+                AlertBox.display("Error", "Cuenta desactivada", "");
                 currentLoggedUser = -1;
                 break;
             default:
