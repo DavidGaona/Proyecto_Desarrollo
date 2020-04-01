@@ -3,6 +3,8 @@ package connection;
 //import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.*;
 import view.Login;
 
@@ -393,11 +395,57 @@ public class DbManager {
             return "Error al intentar crear los minutos";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-
             return "Ocurrio un error interno del sistema";
-
         }
     }
+
+    public String saveApp(App app) {
+        int numRows;
+        String saveQuery = "INSERT INTO public.apps(app_name, app_mb_cap) " +
+                "VALUES(?, ?)";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(saveQuery);
+            statement.setString(1, app.getAppName());
+            statement.setInt(2, app.getAppMb());
+            numRows = statement.executeUpdate();
+            System.out.println(numRows);
+            return "Operación realizada con exito";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return "Error al intentar crear los minutos";
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return "Ocurrio un error interno del sistema";
+        }
+    }
+
+    public ObservableList<PlanTable> listExtras(){
+        String sql_select1 = "SELECT voice_name, voice_minutes" +
+                " FROM public.voice";
+        String sql_select2 = "SELECT app_name, app_mb_cap " +
+                " FROM public.voice";
+
+        ObservableList<PlanTable> result = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet table = statement.executeQuery(sql_select1);
+            while (table.next()){
+                result.add(new PlanTable(table.getString(1),table.getInt(2),false,0));
+            }
+            table = statement.executeQuery(sql_select2);
+            while (table.next()){
+                result.add(new PlanTable(table.getString(1),table.getInt(2),false,1));
+            }
+            return result;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return result;
+    }
+
 
     //**************************** METODOS DEL BANCO ********************
     public String saveBank(String bankName, String accountNumber, String bankNIT) {

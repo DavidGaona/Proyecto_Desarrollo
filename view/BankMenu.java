@@ -2,6 +2,7 @@ package view;
 
 import controller.DaoBank;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -48,13 +49,9 @@ public class BankMenu {
     }
 
     private HBox topBar(HBox hBox, double width, double height) {
-
-        double reduction;
+        
         double circleRadius = (height * 0.045) / 2;
-
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.10 - circleRadius); //0.1475
+        hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
         Circle menuCircle = new Circle(circleRadius);
         menuCircle.setCenterX(circleRadius);
@@ -62,47 +59,25 @@ public class BankMenu {
         menuCircle.setFill(Color.web("#FFFFFF"));
         menuCircle.setStroke(Color.web("#3D3D3E"));
 
-
-        reduction = circleRadius;
-
-        Rectangle marginRect2 = new Rectangle();
-        marginRect2.setHeight(0);
-        marginRect2.setWidth((width * 0.10) - reduction);
-
         Button newBankButton = bankButtonTemplate(width, height, "Nuevo banco");
-
-        reduction += (width * 0.19);
-
-        Rectangle marginRect3 = new Rectangle();
-        marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.3 - reduction);
-
-        Rectangle marginRect4 = new Rectangle();
-        marginRect4.setHeight(0);
-        marginRect4.setWidth(width * 0.004);
-
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(20);
 
         searchComboBox.setId("STF2");
         searchComboBox.setMinSize(width * 0.2, height * 0.05);
         searchComboBox.setMinSize(width * 0.2, height * 0.05);
-        searchComboBox.setStyle(searchComboBox.getStyle() + "-fx-font-size: " + buttonFont +";");
+        searchComboBox.setStyle(searchComboBox.getStyle() + "-fx-font-size: " + buttonFont + ";");
 
         saveChangesButton = bankButtonTemplate(width, height, "Agregar banco");
         saveChangesButton.setOnMouseClicked(e -> {
-            if(currentBankMode)
-            {
+            if (currentBankMode) {
                 saveNewBank();
-            }else{
+            } else {
                 editBank();
             }
             searchComboBox.valueProperty().set(null);
         });
 
         searchComboBox.setOnAction(e -> {
-            if( searchComboBox.getValue() != null)
-            {
+            if (searchComboBox.getValue() != null) {
                 Bank searchedBank = bank.loadBank(searchComboBox.getValue());
                 if (searchedBank == null) {
                     AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
@@ -144,8 +119,9 @@ public class BankMenu {
             ProjectEffects.linearTransitionToRight(menuList, 250, width, height, width, height);
         });
 
-        hBox.getChildren().addAll(marginRect1, menuCircle, marginRect2, newBankButton, marginRect3,
-                 searchComboBox, marginRect4, saveChangesButton);
+        hBox.getChildren().addAll(menuCircle, newBankButton, searchComboBox, saveChangesButton);
+        HBox.setMargin(menuCircle, new Insets(0, ((width * 0.10) - circleRadius), 0, 0));
+        HBox.setMargin(searchComboBox, new Insets(0, (width * 0.05), 0, (width * 0.05)));
         return hBox;
     }
 
@@ -178,7 +154,7 @@ public class BankMenu {
             message = bank.editBank(
                     bankInfo.getSwitchButtonValue("bankState"),
                     bankInfo.getContent("bankNIT")
-                    );
+            );
             AlertBox.display("Error ", message, "");
             bankInfo.clear();
         } else {
@@ -225,7 +201,7 @@ public class BankMenu {
         bankMenu.setBottom(botBar((HBox) bankMenu.getBottom(), width, height));
         bankMenu.setCenter(bankMenu.getCenter());
 
-        ProjectUtilities.loadComboBox(searchComboBox,bank.loadAllBanks());
+        ProjectUtilities.loadComboBox(searchComboBox, bank.loadAllBanks());
 
         stackPane.getChildren().addAll(bankMenu, menuList, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);

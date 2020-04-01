@@ -18,10 +18,10 @@ public class Voice {
     }
 
     public boolean isNotBlank() {
-        if (voiceName == null || voiceMinutes>=0)
+        if (voiceName == null || voiceMinutes<=0)
             return false;
         else
-            return voiceName.isBlank();
+            return !voiceName.isBlank();
     }
 
 }

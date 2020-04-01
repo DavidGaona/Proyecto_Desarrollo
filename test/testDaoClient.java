@@ -11,6 +11,7 @@ public class testDaoClient extends TestCase {
     }
 
     /**
+     //****************************saveNewClient********************
     @Test
     public void testSaveNewClient(){ //caso exitoso
         scenario();
@@ -19,9 +20,23 @@ public class testDaoClient extends TestCase {
     **/
 
     @Test
-    public void testSaveNewClient(){ //cliente existente
+    public void testSaveNewClientExistente(){ //cliente existente
         scenario();
         assertEquals("Este cliente ya se encuentra registrado",client.saveNewClient(100,"pablo","pablez",(short)0,"677","pablo@pablez.com","calle 1 # 10",(short)0,36));
     }
 
+    //****************************editClient********************
+    @Test
+    public void testEditClient(){
+        scenario();
+        assertEquals("Cliente editado exito",client.editClient(100,"pablo","pablez",(short)0,"677","pablo@pablez.com","cra 200 # 24 - 89",(short)0));
+    }
+    /** Documento ya existente hay que hacerlo manual**/
+
+    //****************************loadClient********************
+    @Test
+    public void testLoadClient(){
+        scenario();
+        assertEquals("pablo",client.loadClient("677","Cédula de ciudadanía").getName());
+    }
 }
