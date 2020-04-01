@@ -8,12 +8,22 @@ public class test_bank extends TestCase {
     public void scenario(){
         bank = new DaoBank();
     }
-  /*  public void testSave_bank(){
+  /*  public void testSaveNewBank(){
         scenario();
         assertEquals("Operación Realizada",(bank.saveNewBank("Caja Social","157486","458451454")));
     } */
-    public void testSet_state_bank(){
+    public void testEditBank(){
         scenario();
         assertTrue(bank.editBank(false,"2").equals("Operación Realizada"));
+    }
+
+    public void testLoadBank(){
+        scenario();
+        assertEquals("333",bank.loadBank("banco3").getNIT());
+    }
+
+    public void testLoadAllBanks(){          /**el numero esperado depende del numero de bancos que hay en la BD**/
+        scenario();
+        assertEquals(7,bank.loadAllBanks().length);
     }
 }
