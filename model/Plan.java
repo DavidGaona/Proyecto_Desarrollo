@@ -7,6 +7,7 @@ public class Plan {
     private int planMinutes;
     private int planData;
     private int planTextMsn;
+    private boolean planIsGeneric;
 
     public Plan(String planName, double planCost, int planMinutes, int planData, int planTextMsn) {
         this.planName = planName;
@@ -18,7 +19,7 @@ public class Plan {
 
 
     public boolean isNotBlank() {
-        if (planName == null || planMinutes >=  0 || planData >= 0 || planTextMsn >= 0)
+        if (planName == null || planMinutes <=  0 || planData <= 0 || planTextMsn <= 0)
             return false;
         else
             return !planName.isBlank();
@@ -62,5 +63,13 @@ public class Plan {
 
     public void setPlanTextMsn(int planTextMsn) {
         this.planTextMsn = planTextMsn;
+    }
+
+    public boolean isPlanIsGeneric() {
+        return planIsGeneric;
+    }
+
+    public void setPlanIsGeneric(boolean planIsGeneric) {
+        this.planIsGeneric = planIsGeneric;
     }
 }

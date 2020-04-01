@@ -1,7 +1,10 @@
 package controller;
 
 import connection.DbManager;
+import javafx.collections.ObservableList;
+import model.App;
 import model.Plan;
+import model.PlanTable;
 import model.Voice;
 import utilities.ProjectUtilities;
 
@@ -21,14 +24,9 @@ public class DaoPlan {
         return response;
     }
 
-    public String saveNewVoiceMins(String voiceName, int voiceMinutes, boolean unlimited){
+    public String saveNewVoiceMins(String voiceName, int voiceMinutes){
         Voice voice;
-        if(unlimited){
-            voice = new Voice(voiceName, Integer.MAX_VALUE);
-        }
-        else{
-            voice = new Voice(voiceName,voiceMinutes);
-        }
+        voice = new Voice(voiceName,voiceMinutes);
         String succes = "";
         if(voice.isNotBlank()){
             dbManager.openDBConnection();
@@ -37,4 +35,25 @@ public class DaoPlan {
         }
         return succes;
     }
+
+    public String saveApp(String appName, int appMb){
+        App app;
+        app = new App(appName,appMb);
+        String succes = "";
+        if(app.isNotBlank()){
+            dbManager.openDBConnection();
+            succes = dbManager.saveApp(app);
+            dbManager.closeDBConnection();
+        }
+        return succes;
+    }
+
+    public ObservableList<PlanTable> listExtras(){
+        dbManager.openDBConnection();
+        ObservableList<PlanTable> extras = dbManager.listExtras();
+        dbManager.closeDBConnection();
+
+        return extras;
+    }
+
 }
