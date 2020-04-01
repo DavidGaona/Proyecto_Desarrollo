@@ -49,7 +49,7 @@ public class BankMenu {
     }
 
     private HBox topBar(HBox hBox, double width, double height) {
-        
+
         double circleRadius = (height * 0.045) / 2;
         hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 

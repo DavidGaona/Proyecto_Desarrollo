@@ -28,13 +28,23 @@ public class ProjectEffects {
         pathTransition.play();
     }
 
-    public static void fadeTransition(Node node, int duration){
+    public static void fadeTransition(Node node, int duration, int mode){
         ft.setNode(node);
         ft.setDuration(new Duration(duration));
-        ft.setFromValue(1.0);
-        ft.setToValue(0.1);
-        ft.setAutoReverse(true);
-        ft.setCycleCount(Timeline.INDEFINITE);
+
+        if( mode == 1)
+        {
+            ft.setFromValue(1.0);
+            ft.setToValue(0.1);
+            ft.setAutoReverse(true);
+            ft.setCycleCount(Timeline.INDEFINITE);
+        }else{
+            ft.setFromValue(0.1);
+            ft.setToValue(1);
+            ft.setAutoReverse(false);
+            ft.setCycleCount(1);
+        }
+
         ft.play();
     }
 
