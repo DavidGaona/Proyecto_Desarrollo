@@ -129,7 +129,7 @@ public class DbManager {
     }
 
     //**************************** METODOS DEL USUARIO ********************
-    public int loginUser(String documento_id_usuario, short documentType,String password) {
+    public int loginUser(String documento_id_usuario, short documentType, String password) {
         String sql_select = "SELECT user_password, user_type, user_state, up_to_date_password, user_id" +
                 " FROM public.user WHERE user_document_number = ? AND user_document_type = ?";
 
@@ -380,7 +380,7 @@ public class DbManager {
 
     public String saveNewVoiceMins(Voice voice) {
         int numRows;
-        String saveQuery = "INSERT INTO public.plan(voice_name, voice_minutes) " +
+        String saveQuery = "INSERT INTO public.voice(voice_name, voice_minutes) " +
                 "VALUES(?, ?)";
 
         try {
@@ -413,14 +413,14 @@ public class DbManager {
             return "Operación realizada con exito";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return "Error al intentar crear los minutos";
+            return "Error al intentar crear los megas";
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             return "Ocurrio un error interno del sistema";
         }
     }
 
-    public ObservableList<PlanTable> listExtras(){
+    public ObservableList<PlanTable> listExtras() {
         String sql_select1 = "SELECT voice_name, voice_minutes" +
                 " FROM public.voice";
         String sql_select2 = "SELECT app_name, app_mb_cap " +
@@ -430,12 +430,12 @@ public class DbManager {
         try {
             Statement statement = connection.createStatement();
             ResultSet table = statement.executeQuery(sql_select1);
-            while (table.next()){
-                result.add(new PlanTable(table.getString(1),table.getInt(2),false,0));
+            while (table.next()) {
+                result.add(new PlanTable(table.getString(1), table.getInt(2), false, 0));
             }
             table = statement.executeQuery(sql_select2);
-            while (table.next()){
-                result.add(new PlanTable(table.getString(1),table.getInt(2),false,1));
+            while (table.next()) {
+                result.add(new PlanTable(table.getString(1), table.getInt(2), false, 1));
             }
             return result;
         } catch (SQLException e) {
@@ -505,9 +505,8 @@ public class DbManager {
             PreparedStatement statement = connection.prepareStatement(sql_select);
             ResultSet resultSet = statement.executeQuery();
 
-            while(resultSet.next())
-            {
-                 banks.add(resultSet.getString(1));
+            while (resultSet.next()) {
+                banks.add(resultSet.getString(1));
             }
             return banks.toArray(new String[banks.size()]);
 

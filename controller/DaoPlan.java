@@ -13,9 +13,9 @@ public class DaoPlan {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
-    public String saveNewPlan(String planName, double planCost, int planMinutes, int planData, int planTextMsn){
-        Plan plan = new Plan(planName,planCost,planMinutes, planData,planTextMsn);
-        String response="";
+    public String saveNewPlan(String planName, double planCost, int planMinutes, int planData, int planTextMsn) {
+        Plan plan = new Plan(planName, planCost, planMinutes, planData, planTextMsn);
+        String response = "";
         if (plan.isNotBlank()) {
             dbManager.openDBConnection();
             response = dbManager.saveNewPlan(plan);
@@ -24,11 +24,11 @@ public class DaoPlan {
         return response;
     }
 
-    public String saveNewVoiceMins(String voiceName, int voiceMinutes){
+    public String saveNewVoiceMins(String voiceName, String voiceMinutes) {
         Voice voice;
-        voice = new Voice(voiceName,voiceMinutes);
+        voice = new Voice(voiceName, Integer.parseInt(voiceMinutes));
         String succes = "";
-        if(voice.isNotBlank()){
+        if (voice.isNotBlank()) {
             dbManager.openDBConnection();
             succes = dbManager.saveNewVoiceMins(voice);
             dbManager.closeDBConnection();
@@ -36,11 +36,11 @@ public class DaoPlan {
         return succes;
     }
 
-    public String saveApp(String appName, int appMb){
+    public String saveApp(String appName, String appMb) {
         App app;
-        app = new App(appName,appMb);
+        app = new App(appName, Integer.parseInt(appMb));
         String succes = "";
-        if(app.isNotBlank()){
+        if (app.isNotBlank()) {
             dbManager.openDBConnection();
             succes = dbManager.saveApp(app);
             dbManager.closeDBConnection();
@@ -48,7 +48,7 @@ public class DaoPlan {
         return succes;
     }
 
-    public ObservableList<PlanTable> listExtras(){
+    public ObservableList<PlanTable> listExtras() {
         dbManager.openDBConnection();
         ObservableList<PlanTable> extras = dbManager.listExtras();
         dbManager.closeDBConnection();

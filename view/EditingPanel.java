@@ -30,6 +30,7 @@ public class EditingPanel {
     private ArrayList<SwitchButton> switchButtons = new ArrayList<>();
     private ArrayList<Text> texts = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
+    private Button addButton;
 
     private GridPane tagsPane = new GridPane();
     private HBox tablePane = new HBox();
@@ -116,6 +117,17 @@ public class EditingPanel {
         getText(name).setFill(Color.web(color));
     }
 
+    public void addButton(String message){
+        addButton = new Button(message);
+        addButton.setPrefSize(175 - (175 * percentage), 40 - (40 * percentage));
+        addButton.setMinSize(175 - (175 * percentage), 40 - (40 * percentage));
+        addButton.setStyle("-fx-font-size: " + 30 + ";");
+        addButton.getStyleClass().add("client-buttons-template");
+
+        GridPane.setConstraints(addButton, 5, textFields.size());
+        tagsPane.getChildren().addAll(addButton);
+    }
+
     @SuppressWarnings("DuplicatedCode")
     public void addComboBox(String name, String message, String[] elements) {
         comboBoxes.add(comboBoxTemplate(name, elements));
@@ -195,6 +207,10 @@ public class EditingPanel {
 
     public void changeTextMessage(String id, String message) {
         texts.get(getIndex(id)).setText(message);
+    }
+
+    public Button getAddButton(){
+        return addButton;
     }
 
     private Text getText(String id) {
@@ -420,6 +436,16 @@ public class EditingPanel {
             else
                 optionTable.getItems().add(datum);
         }
+    }
+
+    public void loadTable(PlanTable planTable) {
+        planTable.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
+        planTable.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+        planTable.getSelectPerson().getStyleClass().add("client-buttons-template");
+        if (planTable.isUsed())
+            pickedTable.getItems().add(planTable);
+        else
+            optionTable.getItems().add(planTable);
     }
 
     public HBox sendTable(double width, double height) {

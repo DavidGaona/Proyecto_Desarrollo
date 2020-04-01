@@ -1,5 +1,6 @@
 package view;
 
+import controller.DaoPlan;
 import controller.DaoUser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +9,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.PlanTable;
+import utilities.AlertBox;
+import utilities.ProjectUtilities;
 
 import java.util.ArrayList;
 
@@ -16,11 +19,11 @@ public class ManagerMenu {
     private EditingPanel basicPlanInfo, planExtras, createExtra;
     private ArrayList<EditingPanel> aligner = new ArrayList<>();
     private double percentage;
-    private DaoUser user;
+    private DaoPlan plan;
     private double buttonFont;
 
     public ManagerMenu(double percentage, double buttonFont) {
-        user = new DaoUser();
+        plan = new DaoPlan();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
@@ -69,14 +72,65 @@ public class ManagerMenu {
         createExtra.addComboBox("extraType", "Tipo:", extraTypes, 0);
 
         createExtra.addTextField("extraName", "Nombre:");
-        createExtra.addCharacterLimit(10, "extraName");
+        createExtra.addCharacterLimit(100, "extraName");
 
         createExtra.addTextField("extraQuantity", "Minutos:");
         createExtra.makeFieldNumericOnly("extraQuantity");
         createExtra.addCharacterLimit(15, "extraQuantity");
         createExtra.makeFieldFloatOnly("extraQuantity");
 
+        createExtra.addButton("Guardar");
+        saveExtra();
+
+
         aligner.add(createExtra);
+    }
+
+    private void saveExtra(){
+        createExtra.getAddButton().setOnAction(e -> {
+            String message = "No se pueden dejar campos vacios";
+            if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("Voz")) {
+                message = plan.saveNewVoiceMins(
+                        ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraName")),
+                        ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))
+                );
+
+                if (message.equals("Operación realizada con exito")) {
+                    PlanTable planTable = new PlanTable(
+                            createExtra.getContent("extraName"),
+                            Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
+                            true,
+                            1
+                    );
+                    planExtras.loadTable(planTable);
+                    createExtra.clear();
+                }
+
+                AlertBox.display("Error ", message, "");
+
+            } else if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("App")){
+                message = plan.saveApp(
+                        ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraName")),
+                        ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))
+                );
+
+                if (message.equals("Operación realizada con exito")) {
+                    PlanTable planTable = new PlanTable(
+                            createExtra.getContent("extraName"),
+                            Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
+                            true,
+                            1
+                    );
+                    planExtras.loadTable(planTable);
+                    createExtra.clear();
+                }
+                AlertBox.display("Exito ", message, "");
+
+            }
+            else {
+                AlertBox.display("Error", message, "");
+            }
+        });
     }
 
     private void createExistingExtra(double width, double height) {
