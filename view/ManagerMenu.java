@@ -144,7 +144,7 @@ public class ManagerMenu {
         createExtra.addTextField("extraName", "Nombre:");
         createExtra.addCharacterLimit(100, "extraName");
 
-        createExtra.addTextField("extraQuantity", "Minutos:");
+        createExtra.addTextField("extraQuantity", "Cantidad:");
         createExtra.makeFieldNumericOnly("extraQuantity");
         createExtra.addCharacterLimit(15, "extraQuantity");
         createExtra.makeFieldFloatOnly("extraQuantity");

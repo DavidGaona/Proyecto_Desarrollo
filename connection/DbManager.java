@@ -424,7 +424,7 @@ public class DbManager {
         String sql_select1 = "SELECT voice_name, voice_minutes" +
                 " FROM public.voice";
         String sql_select2 = "SELECT app_name, app_mb_cap " +
-                " FROM public.app";
+                " FROM public.apps";
 
         ObservableList<PlanTable> result = FXCollections.observableArrayList();
         try {
