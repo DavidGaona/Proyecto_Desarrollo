@@ -355,7 +355,7 @@ public class DbManager {
     public String saveNewPlan(Plan plan) {
 
         int numRows;
-        String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes,plan_data_cap,plan_text_message) " +
+        String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message) " +
                 "VALUES(?, ?, ?, ?, ?)";
 
         try {
@@ -424,7 +424,7 @@ public class DbManager {
         String sql_select1 = "SELECT voice_name, voice_minutes" +
                 " FROM public.voice";
         String sql_select2 = "SELECT app_name, app_mb_cap " +
-                " FROM public.voice";
+                " FROM public.app";
 
         ObservableList<PlanTable> result = FXCollections.observableArrayList();
         try {
