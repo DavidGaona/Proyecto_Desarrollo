@@ -24,7 +24,7 @@ public class Main extends Application {
         java.awt.Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(graphicsConfiguration);
         double width = screenSize.getWidth();  //2560 1920 1280 1152 1024; 768 40
         double height = screenSize.getHeight() - scnMax.bottom * 1.685;//1440 1080 720 648 576; 432 40
-
+        System.out.println(width+" "+height);
         Login login = new Login(width, height, currentWindow);
         Scene rootScene = new Scene(login.mainLoginPane());
         rootScene.getStylesheets().add("loginStyle.css");
@@ -81,6 +81,7 @@ public class Main extends Application {
         window.setTitle("Mobile solutions");
         window.setResizable(false);
         window.setScene(rootScene);
+        window.setMaximized(true);
         window.show();
     }
 
