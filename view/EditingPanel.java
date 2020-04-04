@@ -382,11 +382,11 @@ public class EditingPanel {
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
 
-        TableColumn<PlanTable, String> tittleColumnOption = new TableColumn<>("Nombre plan");
-        tittleColumnOption.setMinWidth(tableWidth);
+        TableColumn<PlanTable, String> titleColumnOption = new TableColumn<>("Nombre plan");
+        titleColumnOption.setMinWidth(tableWidth);
 
-        TableColumn<PlanTable, String> tittleColumnPick = new TableColumn<>("Nombre plan");
-        tittleColumnPick.setMinWidth(tableWidth);
+        TableColumn<PlanTable, String> titleColumnPick = new TableColumn<>("Nombre plan");
+        titleColumnPick.setMinWidth(tableWidth);
 
         TableColumn<PlanTable, String> nameColumnOption = new TableColumn<>("Nombre plan");
         nameColumnOption.setMinWidth(tableWidth * 0.5);
@@ -417,11 +417,11 @@ public class EditingPanel {
 
         loadTable(data);
 
-        tittleColumnOption.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
-        tittleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
+        titleColumnOption.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
+        titleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
 
-        optionTable.getColumns().addAll(tittleColumnOption);
-        pickedTable.getColumns().addAll(tittleColumnPick);
+        optionTable.getColumns().addAll(titleColumnOption);
+        pickedTable.getColumns().addAll(titleColumnPick);
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
