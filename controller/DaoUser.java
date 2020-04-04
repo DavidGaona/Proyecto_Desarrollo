@@ -8,22 +8,27 @@ public class DaoUser {
 
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public void saveNewUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState) {
-        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, true);
+
+    public String saveNewUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, int currentLoginUser) {
+        User user = new User(userId, userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, true);
+        String response="";
         if (user.isNotBlank()) {
             dbManager.openDBConnection();
-            dbManager.saveNewUser(user);
+            response = dbManager.saveNewUser(user, currentLoginUser);
             dbManager.closeDBConnection();
         }
+        return response;
     }
 
-    public void editUser(String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, boolean userPasswordReset) {
-        User user = new User(userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, userPasswordReset);
+    public String editUser(int userId, String userName, String userLastName, String userIdDocumentNumber, short userDocumentType, short userType, Boolean userState, boolean userPasswordReset) {
+        User user = new User(userId, userName, userLastName, userIdDocumentNumber, userDocumentType, userType, userState, userPasswordReset);
+        String success = "";
         if (user.isNotBlank()) {
             dbManager.openDBConnection();
-            dbManager.editUser(user);
+            success = dbManager.editUser(user);
             dbManager.closeDBConnection();
         }
+        return success;
     }
 
     public User loadUser(String documentNumber,String userDocumentType) {
@@ -33,28 +38,26 @@ public class DaoUser {
         return user;
     }
 
-    public int loginUser(String DocumentNumber, String password) {
+    public int loginUser(String DocumentNumber, short documentType, String password) {
         dbManager.openDBConnection();
-        int role = dbManager.loginUser(DocumentNumber, password);
+        int role = dbManager.loginUser(DocumentNumber, documentType, password);
         dbManager.closeDBConnection();
-        if (role >= 0) {
-            System.out.println("Iniciada sesión correctamente");
-        } else {
-            System.out.println("No se pudo iniciar sesión");
-        }
         return role;
     }
 
-    public boolean checkPassword(String DocumentNumber, String password){
+    public boolean checkPassword(int id, String password){
         dbManager.openDBConnection();
-        boolean success = dbManager.checkPassword(DocumentNumber, password);
+        boolean success = dbManager.checkPassword(id, password);
         dbManager.closeDBConnection();
         return success;
     }
 
-    public void changePassword(String DocumentNumber, String password){
+    public short changePassword(int id, String password){
+        short response;
         dbManager.openDBConnection();
-        dbManager.changePassword(DocumentNumber, password);
+        response = dbManager.changePassword(id, password);
         dbManager.closeDBConnection();
+        return response;
     }
+
 }

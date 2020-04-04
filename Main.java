@@ -1,12 +1,10 @@
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utilities.ConfirmBox;
-import view.ClientMenu;
-import view.Login;
-import view.UserMenu;
-import view.UserPasswordChange;
+import view.*;
 
 import java.awt.*;
 
@@ -40,18 +38,22 @@ public class Main extends Application {
                     //Default user menu
                     ClientMenu client = new ClientMenu(percentage, buttonFont);
                     Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height), width, height);
-                    clientMenuScene.getStylesheets().add("styles.css");
+                    clientMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(clientMenuScene);
                     break;
                 case 2:
-                    //ToDo manager
-
+                    //Manager plan info menu
+                    ManagerMenu manager = new ManagerMenu(percentage, buttonFont);
+                    Scene managerMenuScene = new Scene(manager.renderPlanEditingMenu(width, height), width, height);
+                    managerMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(managerMenuScene);
+                    manager.align();
                     break;
                 case 3:
                     //Admin user menu
                     UserMenu user = new UserMenu(percentage, buttonFont);
                     Scene userMenuScene = new Scene(user.renderUserEditMenu(width, height), width, height);
-                    userMenuScene.getStylesheets().add("styles.css");
+                    userMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(userMenuScene);
                     break;
                 case 4:
@@ -60,6 +62,13 @@ public class Main extends Application {
                     Scene passwordChangeScene = new Scene(userPasswordChange.BackGroundPane(width, height), width, height);
                     passwordChangeScene.getStylesheets().add("loginStyle.css");
                     window.setScene(passwordChangeScene);
+                    break;
+                case 5:
+                    //Admin bank menu
+                    BankMenu bank = new BankMenu(percentage, buttonFont);
+                    Scene bankMenuScene = new Scene(bank.renderBankEditMenu(width, height), width, height);
+                    bankMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(bankMenuScene);
                     break;
             }
 
@@ -76,8 +85,10 @@ public class Main extends Application {
     }
 
     private void closeProgram(Stage window) {
-        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?", "Si quiero cerrar", "No quiero cerrar")) {
+        if (ConfirmBox.display("Cerrar Programa", "¿ Quieres cerrar el programa ?",
+                "Si quiero cerrar", "No quiero cerrar")) {
             window.close();
+            Platform.exit();
         }
     }
 

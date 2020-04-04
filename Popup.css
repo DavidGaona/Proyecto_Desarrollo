@@ -4,6 +4,10 @@
     -fx-font-family: Consolas;
 }
 
+.button:hover{
+    -fx-background-color: #117AAA;
+}
+
 .label {
     -fx-text-fill: #3986AC;
     -fx-font-family: Consolas;

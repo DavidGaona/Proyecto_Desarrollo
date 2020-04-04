@@ -1,24 +1,21 @@
 package view;
 
 import controller.DaoUser;
-import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import model.User;
+import utilities.Icons;
 import utilities.ProjectUtilities;
+import utilities.ProjectEffects;
+import utilities.AlertBox;
+import view.components.SearchPane;
 
 public class UserMenu {
 
@@ -28,17 +25,17 @@ public class UserMenu {
         this.buttonFont = buttonFont;
     }
 
-    EditingPanel personalInfo;
-
-    private ComboBox<String> userDocumentTypeAbbComboBox;
+    private EditingPanel personalInfo;
+    private SearchPane searchPane;
     private Button saveChangesButton;
 
     private double percentage;
     private DaoUser user;
     private boolean currentUserMode = true;
     private double buttonFont;
-    private SignOut signOut = new SignOut();
-    private String currentUser = null;
+    private MenuListAdmin menuListAdmin = new MenuListAdmin();
+    private VBox menuList;
+    private int currentSelectedUser;
 
     private Button userButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
@@ -50,52 +47,30 @@ public class UserMenu {
 
     private HBox topBar(HBox hBox, double width, double height) {
 
-        Rectangle marginRect1 = new Rectangle();
-        marginRect1.setHeight(0);
-        marginRect1.setWidth(width * 0.2035);
+        double circleRadius = (height * 0.045) / 2;
+        hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
-        double rect2Reduction = 0.05;
+        Circle menuCircle = new Circle(circleRadius);
+        menuCircle.setCenterX(circleRadius);
+        menuCircle.setCenterY(circleRadius);
+        menuCircle.setFill(Color.web("#FFFFFF"));
+        menuCircle.setStroke(Color.web("#3D3D3E"));
 
-        Rectangle marginRect2 = new Rectangle();
-        marginRect2.setHeight(0);
-        marginRect2.setWidth(width * (0.198 - rect2Reduction)); //0.195
+        Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
 
-        Rectangle marginRect3 = new Rectangle();
-        marginRect3.setHeight(0);
-        marginRect3.setWidth(width * 0.10125 - (height * 0.045) / 2); //0.1475
+        Icons icons = new Icons();
+        icons.searchIcon(percentage);
+        icons.getSearchIcon().setOnAction(e -> {
+            searchPane.setVisible(true);
+            searchPane.giveFocus();
+        });
 
-        Rectangle marginRect4 = new Rectangle();
-        marginRect4.setHeight(0);
-        marginRect4.setWidth(width * 0.004);
-
-        Circle logOut = new Circle((height * 0.045) / 2);
-        logOut.setCenterX((height * 0.045) / 2);
-        logOut.setCenterY((height * 0.045) / 2);
-        logOut.setFill(Color.web("#FFFFFF"));
-        logOut.setStroke(Color.web("#3D3D3E"));
-
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(20);
-        logOut.setEffect(shadow);
-
-        TextField searchTextField = new TextField();
-        searchTextField.setPromptText("Buscar usuario por documento");
-        searchTextField.setPrefSize(width * 0.24, height * 0.03); // 0.24 , 0.03
-        searchTextField.getStyleClass().add("client-search-bar");
-        searchTextField.setId("STF1");
-        ProjectUtilities.onlyNumericTextField(searchTextField);
-
-        userDocumentTypeAbbComboBox = new ComboBox<>(FXCollections.observableArrayList(ProjectUtilities.documentTypesAbb));
-        userDocumentTypeAbbComboBox.setPrefSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setMinSize(width * 0.052, height * 0.045);
-        userDocumentTypeAbbComboBox.setStyle(userDocumentTypeAbbComboBox.getStyle() + "-fx-font-size: " + (18 - (18 * percentage)) + "px;");
-        userDocumentTypeAbbComboBox.valueProperty().set(ProjectUtilities.documentTypesAbb[1]);
-
-        searchTextField.setOnAction(e -> {
-            User searchedUser = user.loadUser(searchTextField.getText(), userDocumentTypeAbbComboBox.getValue());
+        searchPane.getSearchField().setOnAction(e -> {
+            User searchedUser = user.loadUser(searchPane.getTextContent(), searchPane.getDocumentType());
             if (searchedUser.isNotBlank()) {
                 personalInfo.clear();
 
+                currentSelectedUser = searchedUser.getId();
                 personalInfo.setTextField("userName", searchedUser.getName());
                 personalInfo.setTextField("userLastName", searchedUser.getLastName());
                 personalInfo.setTextField("userDocumentNumber", searchedUser.getDocumentIdNumber());
@@ -106,36 +81,24 @@ public class UserMenu {
 
                 saveChangesButton.setText("Modificar usuario");
                 currentUserMode = false;
-                //currentUser = userDocumentIdTextField.getText();
-            }
+                searchPane.getSearchField().setText("");
+                searchPane.setVisible(false);
+            } else
+                AlertBox.display("Error: ", "Usuario no encontrado", "");
         });
 
-        ProjectUtilities.focusListener("24222A", "C2B8E0", searchTextField);
-
-        Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
         newUserButton.setOnMouseClicked(e -> {
             personalInfo.clear();
             saveChangesButton.setText("Agregar usuario");
             currentUserMode = true;
-            searchTextField.setText("");
-            currentUser = null;
+            currentSelectedUser = -1;
         });
 
-        logOut.setOnMouseClicked(e -> {
-            if (signOut.isShowAble) {
-                signOut.display();
-                signOut.isShowAble = false;
-            } else {
-                signOut.isShowAble = true;
-            }
+        menuCircle.setOnMouseClicked(e -> {
+            menuListAdmin.displayMenu();
+            ProjectEffects.linearTransitionToRight(menuList, 250, width, height, width, height);
         });
 
-        hBox.getChildren().addAll(marginRect1, newUserButton, marginRect2,
-                userDocumentTypeAbbComboBox, marginRect4, searchTextField, marginRect3, logOut);
-        return hBox;
-    }
-
-    private HBox botBar(HBox hBox, double width, double height) {
         saveChangesButton = userButtonTemplate(width, height, "Agregar usuario");
         saveChangesButton.setOnMouseClicked(e -> {
             if (currentUserMode)
@@ -144,27 +107,43 @@ public class UserMenu {
                 editUser();
         });
 
+        hBox.getChildren().addAll(menuCircle, newUserButton, icons.getSearchIcon(), saveChangesButton);
+        HBox.setMargin(menuCircle, new Insets(0, ((width * 0.10) - circleRadius), 0, 0));
+        HBox.setMargin(icons.getSearchIcon(), new Insets(0, (width * 0.1355), 0, (width * 0.135)));
+
+        return hBox;
+    }
+
+    private HBox botBar(HBox hBox, double width, double height) {
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(saveChangesButton);
         return hBox;
     }
 
     private void saveNewUser() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            user.saveNewUser(
+            message = user.saveNewUser(
+                    currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
                     ProjectUtilities.convertDocumentType(personalInfo.getContent("userDocumentType")),
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
-                    personalInfo.getSwitchButtonValue("userState"));
-
+                    personalInfo.getSwitchButtonValue("userState"),
+                    Login.currentLoggedUser);
+            AlertBox.display("Error ", message, "");
+            personalInfo.clear();
+        } else {
+            AlertBox.display("Error", message, "");
         }
+
     }
 
     private void editUser() {
+        String message = "No se pueden dejar campos vacios";
         if (!personalInfo.isEmpty()) {
-            user.editUser(
+            message = user.editUser(
+                    currentSelectedUser,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userLastName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("userDocumentNumber")),
@@ -172,6 +151,10 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     !personalInfo.getSwitchButtonValue("userPasswordReset"));
+            AlertBox.display("Error ", message, "");
+            personalInfo.clear();
+        } else {
+            AlertBox.display("Error ", message, "");
         }
     }
 
@@ -201,16 +184,42 @@ public class UserMenu {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public BorderPane renderUserEditMenu(double width, double height) {
+    public StackPane renderUserEditMenu(double width, double height) {
+        StackPane stackPane = new StackPane();
         personalInfo(width);
+
         EditingMenu menu = new EditingMenu(width, height, percentage);
-        menu.addToMidPane(personalInfo.sendPane(width, height*0.1));
+        menu.addToMidPane(personalInfo.sendPane(width, height * 0.1));
+        menu.centerPane();
+
+        menuList = menuListAdmin.display(width, height, percentage);
+
+        searchPane = new SearchPane(width, height, percentage);
+        HBox sp = searchPane.showFrame();
+
         BorderPane userMenu;
         userMenu = menu.renderMenuTemplate();
         userMenu.setTop(topBar((HBox) userMenu.getTop(), width, height));
         userMenu.setBottom(botBar((HBox) userMenu.getBottom(), width, height));
         userMenu.setCenter(userMenu.getCenter());
-        return userMenu;
+
+        Rectangle screenFilter = new Rectangle(0, 0, width, height * 0.9);
+        screenFilter.setOnMouseClicked(e -> searchPane.setVisible(false));
+        screenFilter.setOnTouchPressed(e -> searchPane.setVisible(false));
+        screenFilter.setOnScroll(e -> {
+            double deltaY = e.getDeltaY() * 3;
+            double widthSpeed = menu.getScrollPane().getContent().getBoundsInLocal().getWidth();
+            double value = menu.getScrollPane().getVvalue();
+            menu.getScrollPane().setVvalue(value + -deltaY / widthSpeed);
+        });
+        screenFilter.setFill(Color.rgb(0, 0, 0, 0.25));
+        screenFilter.visibleProperty().bind(searchPane.getIsVisible());
+
+        stackPane.getChildren().addAll(userMenu, menuList, screenFilter, sp);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        StackPane.setAlignment(screenFilter, Pos.CENTER_LEFT);
+        StackPane.setAlignment(sp, Pos.CENTER);
+        return stackPane;
     }
 
 }

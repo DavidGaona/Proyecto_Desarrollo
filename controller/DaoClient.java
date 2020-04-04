@@ -6,35 +6,37 @@ import utilities.ProjectUtilities;
 
 public class DaoClient {
 
+
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
-    public void saveNewClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
-        Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
-        if (!client.isBlank()) {
+
+    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type, int currentLoginUser) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+        String response = "";
+        if (client.isNotBlank()) {
             dbManager.openDBConnection();
-            int status = dbManager.saveNewClient(client);
+            response = dbManager.saveNewClient(client, currentLoginUser);
             dbManager.closeDBConnection();
         }
+        return response;
     }
 
-    public void editClient(String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
-        Client client = new Client(name, lastName, documentType, documentNumber, email, direction, type);
-        if (!client.isBlank()) {
+    public String editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+        String response = "";
+        if (client.isNotBlank()) {
             dbManager.openDBConnection();
-            dbManager.editClient(client);
+            response = dbManager.editClient(client);
             dbManager.closeDBConnection();
         }
+        return response;
     }
 
-    public Client loadClient(String documentNumber,String clientDocumentType) {
+    public Client loadClient(String documentNumber, String clientDocumentType) {
         dbManager.openDBConnection();
-        Client client = dbManager.loadClient(documentNumber, ProjectUtilities.convertDocumentType(clientDocumentType));
+        Client client = dbManager.loadClient(documentNumber, clientDocumentType.equals("NIT") ? (short) 4 :
+                ProjectUtilities.convertDocumentType(clientDocumentType));
         dbManager.closeDBConnection();
         return client;
     }
-
-    public void changeClientPassword(String password) {
-        //ToDo
-    }
-
 }

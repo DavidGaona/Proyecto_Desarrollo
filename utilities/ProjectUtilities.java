@@ -1,6 +1,7 @@
 package utilities;
 
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -11,13 +12,17 @@ import java.util.ArrayList;
 public class ProjectUtilities {
 
     public static boolean isNumeric(String inputData) {
-        return inputData.matches("\\d+(\\d+)?");
+        return inputData.matches("[0-9]*");
+    }
+    public static boolean isFloat(String inputData) {
+        return inputData.matches("([0-9]*[.])?[0-9]*");
     }
 
     public static final String[] documentTypes = {"Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Pasaporte"};
     public static final String[] clientTypes = {"Natural", "Corporativo"};
     public static final String[] userTypes = {"Operador", "Gerente", "Administrador"};
     public static final String[] documentTypesAbb = {"TI", "CC", "PA", "CE"};
+
 
     public static short convertDocumentType(String documentType) {
         if (documentTypes[0].equals(documentType) || documentTypesAbb[1].equals(documentType)) {
@@ -30,6 +35,14 @@ public class ProjectUtilities {
             return (short) 3;
         }
         return (short) -1;
+    }
+
+    public static void loadComboBox(ComboBox<String> comboBox, String[] items)
+    {
+        for(int i = 0; i < items.length ; i++)
+        {
+            comboBox.getItems().add(items[i]);
+        }
     }
 
 
@@ -68,6 +81,8 @@ public class ProjectUtilities {
             return documentTypes[2];
         } else if (documentType == (short) 3) {
             return documentTypes[3];
+        } else if (documentType == (short) 4){
+            return "NIT";
         }
         return documentTypes[0];
     }
@@ -113,15 +128,23 @@ public class ProjectUtilities {
     }
 
     public static void onlyNumericTextField(TextField searchTextField) {
-        searchTextField.setOnKeyTyped(e -> {
-            if (!(ProjectUtilities.isNumeric(searchTextField.getText()))) {
-                String correctText = searchTextField.getText().replaceAll("[^\\d]", "");
+        searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!(ProjectUtilities.isNumeric(newValue))) {
                 int prevPos = searchTextField.getCaretPosition();
-                searchTextField.setText(correctText);
-                searchTextField.positionCaret(prevPos - 1);
+                searchTextField.setText(oldValue);
+                searchTextField.positionCaret(prevPos);
             }
         });
+    }
 
+    public static void onlyFloatTextField(TextField searchTextField){
+        searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!(ProjectUtilities.isFloat(newValue))) {
+                int prevPos = searchTextField.getCaretPosition();
+                searchTextField.setText(oldValue);
+                searchTextField.positionCaret(prevPos);
+            }
+        });
     }
 
     public static void resetNodeBorderColor(Node... nodes) {
@@ -237,5 +260,7 @@ public class ProjectUtilities {
             });
         }
     }
+
+
 
 }

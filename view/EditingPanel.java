@@ -1,13 +1,13 @@
 package view;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -16,7 +16,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.PlanTable;
 import utilities.ProjectUtilities;
+import view.components.SwitchButton;
 
 import java.util.Collections;
 import java.util.ArrayList;
@@ -28,22 +30,35 @@ public class EditingPanel {
     private ArrayList<SwitchButton> switchButtons = new ArrayList<>();
     private ArrayList<Text> texts = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
-    private Button addNewNode;
-    private Button deleteNewNode;
+    private Button addButton;
+
     private GridPane tagsPane = new GridPane();
+    private HBox tablePane = new HBox();
+
+    private TableView<PlanTable> optionTable = new TableView<>();
+    private TableView<PlanTable> pickedTable = new TableView<>();
+    private ObservableList<PlanTable> tableData = FXCollections.observableArrayList();
+
     private double percentage;
 
     private String color = "#948FA3";
-    private String tittle;
+    private String title;
 
-    EditingPanel(String tittle, double percentage, double width) {
+    EditingPanel(String title, double percentage, double width) {
         tagsPane.setPadding(new Insets(25, 10, 25, 10));
         tagsPane.setPrefWidth(width * 0.4);
         tagsPane.setVgap(25);
         tagsPane.setHgap(10);
         tagsPane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
                 "-fx-border-color: #28272F;\n-fx-border-width: 0;");
-        this.tittle = tittle;
+
+        tablePane.setPadding(new Insets(5, 5, 5, 5));
+        tablePane.setPrefWidth(width * 0.4);
+        tablePane.setSpacing(30);
+        tablePane.setStyle("-fx-background-color: #302E38;\n-fx-border-style: solid inside;\n" +
+                "-fx-border-color: #28272F;\n-fx-border-width: 0;");
+
+        this.title = title;
         this.percentage = percentage;
     }
 
@@ -74,8 +89,8 @@ public class EditingPanel {
         return switchButton;
     }
 
-    private void addText(String id, String tittle, String color) {
-        Text text = new Text(tittle);
+    private void addText(String id, String title, String color) {
+        Text text = new Text(title);
         text.setFont(new Font("Consolas", 20 - (20 * percentage)));
         text.setFill(Color.web(color));
         text.setId(id);
@@ -102,6 +117,17 @@ public class EditingPanel {
         getText(name).setFill(Color.web(color));
     }
 
+    public void addButton(String message){
+        addButton = new Button(message);
+        addButton.setPrefSize(175 - (175 * percentage), 40 - (40 * percentage));
+        addButton.setMinSize(175 - (175 * percentage), 40 - (40 * percentage));
+        addButton.setStyle("-fx-font-size: " + 30 + ";");
+        addButton.getStyleClass().add("client-buttons-template");
+
+        GridPane.setConstraints(addButton, 5, textFields.size());
+        tagsPane.getChildren().addAll(addButton);
+    }
+
     @SuppressWarnings("DuplicatedCode")
     public void addComboBox(String name, String message, String[] elements) {
         comboBoxes.add(comboBoxTemplate(name, elements));
@@ -115,6 +141,12 @@ public class EditingPanel {
         GridPane.setHalignment(texts.get(index), HPos.RIGHT);
         GridPane.setConstraints(comboBoxes.get(index), 5, index);
         tagsPane.getChildren().addAll(texts.get(index), comboBoxes.get(index));
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    public void addComboBox(String name, String message, String[] elements, int index) {
+        addComboBox(name, message, elements);
+        getComboBox(name).getSelectionModel().select(index);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -168,6 +200,19 @@ public class EditingPanel {
         getSwitchButton(id).setSwitchedButton(value);
     }
 
+    public void addElements(String id, String... elements) {
+        for (String element : elements)
+            getComboBox(id).getItems().add(element);
+    }
+
+    public void changeTextMessage(String id, String message) {
+        texts.get(getIndex(id)).setText(message);
+    }
+
+    public Button getAddButton(){
+        return addButton;
+    }
+
     private Text getText(String id) {
         for (int i = 0; i < names.size(); ++i) {
             if (names.get(i).equals(id))
@@ -195,6 +240,25 @@ public class EditingPanel {
 
     public boolean getSwitchButtonValue(String id) {
         return getSwitchButton(id).switchedOnProperty().get();
+    }
+
+    public double getLongestText() {
+        int index = 0;
+        for (int i = 1; i < texts.size(); ++i) {
+            if (texts.get(i).getBoundsInLocal().getWidth() > texts.get(0).getBoundsInLocal().getWidth())
+                index = i;
+        }
+        return texts.get(index).getBoundsInLocal().getWidth();
+    }
+
+    public void align(double size) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setHeight(0);
+        rectangle.setWidth(size);
+        GridPane.setConstraints(rectangle, 4, texts.size() - 1);
+        GridPane.setHalignment(rectangle, HPos.RIGHT);
+        tagsPane.getChildren().add(rectangle);
+        rectangle.setVisible(false);
     }
 
     public void swap(String name1, String name2) {
@@ -240,6 +304,7 @@ public class EditingPanel {
             if (textField != null)
                 textField.setText("");
         }
+
     }
 
     private void clearComboBoxes() {
@@ -277,7 +342,7 @@ public class EditingPanel {
             } else if (comboBoxes.get(i) != null) {
                 if (comboBoxes.get(i).getValue() == null) {
                     comboBoxes.get(i).setStyle(comboBoxes.get(i).getStyle() + "\n-fx-border-color: #ED1221;");
-                    checker = false;
+                    checker = true;
                 }
 
             }
@@ -285,29 +350,110 @@ public class EditingPanel {
         return checker;
     }
 
-    public void enableEditionMode(String addMessage, String deleteMessage){
-        addNewNode = new Button(addMessage);
-        deleteNewNode = new Button(deleteMessage);
-
-        
-    }
-
     //Restrictions
 
-    public void addCharacterLimit(int limit, String id) { ProjectUtilities.addTextFieldCharacterLimit(limit, getTextfield(id)); }
+    public void addCharacterLimit(int limit, String id) {
+        ProjectUtilities.addTextFieldCharacterLimit(limit, getTextfield(id));
+    }
 
-    public void makeFieldNumericOnly(String id) { ProjectUtilities.onlyNumericTextField(getTextfield(id)); }
+    public void makeFieldNumericOnly(String id) {
+        ProjectUtilities.onlyNumericTextField(getTextfield(id));
+    }
+
+    public void makeFieldFloatOnly(String id) {
+        ProjectUtilities.onlyFloatTextField(getTextfield(id));
+    }
+
+    public void disableTextField(String id) {
+        getTextfield(id).setEditable(false);
+    }
+
+    public void enableTextField(String id) {
+        getTextfield(id).setEditable(true);
+    }
 
     public void addRegexConstraint(String pattern) {
 
     }
 
-    public HBox sendPane(double width, double height) {
+    //----------------------------------Table----------------------------------\\
+    public void createTables(double width, double height, ObservableList<PlanTable> data) {
+        double tableWidth = ((width * 0.6) * 0.8) * 0.39;
+        optionTable.setMinSize(tableWidth, height * 0.5);
+        pickedTable.setMinSize(tableWidth, height * 0.5);
+
+        TableColumn<PlanTable, String> tittleColumnOption = new TableColumn<>("Nombre plan");
+        tittleColumnOption.setMinWidth(tableWidth);
+
+        TableColumn<PlanTable, String> tittleColumnPick = new TableColumn<>("Nombre plan");
+        tittleColumnPick.setMinWidth(tableWidth);
+
+        TableColumn<PlanTable, String> nameColumnOption = new TableColumn<>("Nombre plan");
+        nameColumnOption.setMinWidth(tableWidth * 0.5);
+        nameColumnOption.setCellValueFactory(new PropertyValueFactory<>("planName"));
+
+        TableColumn<PlanTable, String> nameColumnPick = new TableColumn<>("Nombre plan");
+        nameColumnPick.setMinWidth(tableWidth * 0.5);
+        nameColumnPick.setCellValueFactory(new PropertyValueFactory<>("planName"));
+
+        TableColumn<PlanTable, Double> quantityColumnOption = new TableColumn<>("Cantidad");
+        quantityColumnOption.setMinWidth(tableWidth * 0.25);
+        quantityColumnOption.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        TableColumn<PlanTable, Double> quantityColumnPick = new TableColumn<>("Cantidad");
+        quantityColumnPick.setMinWidth(tableWidth * 0.25);
+        quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+
+        TableColumn<PlanTable, Button> pickColumnOption = new TableColumn<>("Escoger");
+        pickColumnOption.setMinWidth(tableWidth * 0.25);
+        pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
+        pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
+
+        TableColumn<PlanTable, Button> pickColumnPick = new TableColumn<>("Escoger");
+        pickColumnPick.setMinWidth(tableWidth * 0.25);
+        pickColumnPick.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
+        pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
+
+        loadTable(data);
+
+        tittleColumnOption.getColumns().addAll(nameColumnOption, quantityColumnOption, pickColumnOption);
+        tittleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
+
+        optionTable.getColumns().addAll(tittleColumnOption);
+        pickedTable.getColumns().addAll(tittleColumnPick);
+
+        tablePane.getChildren().addAll(optionTable, pickedTable);
+    }
+
+    private void loadTable(ObservableList<PlanTable> data) {
+        for (PlanTable datum : data) {
+            datum.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
+            datum.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+            datum.getSelectPerson().getStyleClass().add("client-buttons-template");
+            if (datum.isUsed())
+                pickedTable.getItems().add(datum);
+            else
+                optionTable.getItems().add(datum);
+        }
+    }
+
+    public void loadTable(PlanTable planTable) {
+        planTable.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
+        planTable.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+        planTable.getSelectPerson().getStyleClass().add("client-buttons-template");
+        if (planTable.isUsed())
+            pickedTable.getItems().add(planTable);
+        else
+            optionTable.getItems().add(planTable);
+    }
+
+    public HBox sendTable(double width, double height) {
         //Hbox
         HBox hbox = new HBox();
         hbox.setPrefSize(width * 0.6, height);
         hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setStyle("-fx-border-width: 4;-fx-border-color: #17161B;-fx-background-color: #24222A;");
+        hbox.setStyle("-fx-border-width: 4 0 4 0;-fx-border-color: #17161B;-fx-background-color: #24222A;");
 
         //StackPane
         StackPane stackPane = new StackPane();
@@ -316,7 +462,7 @@ public class EditingPanel {
 
         //Rectangle bg
         Rectangle rect = new Rectangle();
-        rect.setHeight(Math.max(height, 280.0));
+        rect.setHeight(height);
         rect.setWidth(width * 0.2);
         rect.setFill(Color.web("#24222A"));
 
@@ -326,8 +472,49 @@ public class EditingPanel {
         centerText.setAlignment(Pos.TOP_CENTER);
 
         //Text with message
-        Text text = new Text(tittle);
-        text.setFont(new Font("Consolas", 30 - ( 30 * percentage))); // 30
+        Text text = new Text(title);
+        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
+        text.setFill(Color.web("#FFFFFF"));
+
+        //Margin for the text
+        Rectangle marginRect = new Rectangle();
+        marginRect.setHeight(30);
+        marginRect.setWidth(0);
+        marginRect.setFill(Color.web("#24222A"));
+
+        centerText.getChildren().addAll(marginRect, text);
+        stackPane.getChildren().addAll(rect, centerText);
+        hbox.getChildren().addAll(stackPane, tablePane);
+
+        return hbox;
+    }
+
+    public HBox sendPane(double width, double height) {
+        //Hbox
+        HBox hbox = new HBox();
+        hbox.setPrefSize(width * 0.6, height);
+        hbox.setAlignment(Pos.TOP_LEFT);
+        hbox.setStyle("-fx-border-width: 4 0 4 0;-fx-border-color: #17161B;-fx-background-color: #24222A;");
+
+        //StackPane
+        StackPane stackPane = new StackPane();
+        stackPane.setAlignment(Pos.TOP_LEFT);
+        stackPane.setPrefSize(width * 0.2, height);
+
+        //Rectangle bg
+        Rectangle rect = new Rectangle();
+        rect.setHeight(height);
+        rect.setWidth(width * 0.2);
+        rect.setFill(Color.web("#24222A"));
+
+        //VBox to center the text
+        VBox centerText = new VBox();
+        centerText.setMaxWidth(width * 0.2);
+        centerText.setAlignment(Pos.TOP_CENTER);
+
+        //Text with message
+        Text text = new Text(title);
+        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
         text.setFill(Color.web("#FFFFFF"));
 
         //Margin for the text

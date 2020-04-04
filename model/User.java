@@ -2,20 +2,28 @@ package model;
 
 public class User {
 
+    private int id;
     private String name;
     private String lastName;
     private String DocumentIdNumber;
     private short documentType;
     private short Type;
     private Boolean State;
-    private String password;
     private boolean passwordReset;
 
     public boolean isNotBlank() {
-        return !name.isBlank() && !lastName.isBlank() && !DocumentIdNumber.isBlank();
+        if (name == null || lastName == null || DocumentIdNumber == null)
+            return false;
+        else
+            return !name.isBlank() && !lastName.isBlank() && !DocumentIdNumber.isBlank();
     }
 
-    public User(String name, String lastName, String documentIdNumber, short documentType, short type, Boolean state, boolean passwordReset) {
+    public User(){
+
+    }
+
+    public User(int id, String name, String lastName, String documentIdNumber, short documentType, short type, Boolean state, boolean passwordReset) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
         DocumentIdNumber = documentIdNumber;
@@ -23,6 +31,10 @@ public class User {
         Type = type;
         State = state;
         this.passwordReset = passwordReset;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getName() {
@@ -43,14 +55,6 @@ public class User {
 
     public Boolean getState() {
         return State;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public short getDocumentType() {

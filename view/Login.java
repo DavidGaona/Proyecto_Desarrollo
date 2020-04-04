@@ -4,21 +4,21 @@ import controller.DaoUser;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import utilities.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
 
     public static SimpleIntegerProperty currentWindow = new SimpleIntegerProperty(0);
-    public static String currentUser = null;
+    public static int currentLoggedUser = -1;
 
     private DaoUser user;
     private double width;
     private double height;
+    ComboBox<String> documentType = new ComboBox();
+
 
     public Login(double width, double height, SimpleIntegerProperty currentWindow2) {
         user = new DaoUser();
@@ -88,6 +88,14 @@ public class Login {
         userIdTextField.setStyle(userIdTextField.getStyle() + " -fx-font-size: " + textFFont + "px; ");
         ProjectUtilities.onlyNumericTextField(userIdTextField);
 
+        ProjectUtilities.loadComboBox(documentType, ProjectUtilities.documentTypes);
+        documentType.valueProperty().set(ProjectUtilities.documentTypes[0]);
+        documentType.setMinSize(width * 0.25,height * 0.05);
+        documentType.setMaxSize(width * 0.25, height * 0.05);
+        documentType.getStylesheets().add("loginStyle.css");
+        documentType.setStyle(documentType.getStyle() + " -fx-font-size: " + textFFont + "px; ");
+
+
         passwordTextField = new PasswordField();
         passwordTextField.setMaxSize(width * 0.25, height * 0.05);
         passwordTextField.setPrefSize(width * 0.25, height * 0.05);
@@ -96,34 +104,40 @@ public class Login {
         passwordTextField.setPromptText("Contraseña");
         passwordTextField.setOnAction(e -> loginAction());
 
-        ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField);
+        ProjectUtilities.focusListener("3C4448", "3985AB", userIdTextField, passwordTextField, documentType);
 
         Button loginButton = new Button("Iniciar sesión");
         loginButton.setPrefSize(width * 0.25, height * 0.05);
         loginButton.getStyleClass().add("login-button");
         loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
-        loginButton.setOnMouseClicked(e -> loginAction());
+        loginButton.setOnMouseClicked(e -> {
+            loginAction();
+        });
 
-        vBox.getChildren().addAll(hBox, userIdTextField, passwordTextField, loginButton);
+        vBox.getChildren().addAll(hBox, userIdTextField, documentType, passwordTextField, loginButton);
 
         return vBox;
     }
 
-    private void clear(){
+    private void clear() {
         userIdTextField.setText("");
         passwordTextField.setText("");
     }
 
     private void loginAction() {
-        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()), passwordTextField.getText());
-        currentUser = userIdTextField.getText();
+        final int loginSuccess = user.loginUser(ProjectUtilities.clearWhiteSpaces(userIdTextField.getText()),
+                ProjectUtilities.convertDocumentType(documentType.getValue()),
+                passwordTextField.getText());
+
         switch (loginSuccess) {
             case 0:
                 clear();
                 Login.currentWindow.set(1);
                 break;
             case 1:
-                //ToDo manager
+                clear();
+                Login.currentWindow.set(2);
+                break;
             case 2:
                 clear();
                 Login.currentWindow.set(3);
@@ -132,8 +146,20 @@ public class Login {
                 clear();
                 Login.currentWindow.set(4);
                 break;
+            case -1:
+                AlertBox.display("Error", "No se pudo encontrar el usuario", "");
+                currentLoggedUser = -1;
+                break;
+            case -2:
+                AlertBox.display("Error", "Contraseña invalida", "");
+                currentLoggedUser = -1;
+                break;
+            case -3:
+                AlertBox.display("Error", "Cuenta desactivada", "");
+                currentLoggedUser = -1;
+                break;
             default:
-                currentUser = null;
+                currentLoggedUser = -1;
                 break;
         }
     }
