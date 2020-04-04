@@ -82,7 +82,7 @@ public class MenuListAdmin extends MenuList {
         changePasswordLabel.setOnMouseClicked(e -> {
             boolean answer = ConfirmBox.display("Cambiar Contraseña", "¿Desea Cambiar la Contraseña?", "Si", "No");
             if (answer) {
-                Login.currentWindow.set(3);
+                Login.currentWindow.set(4);
             }
         });
 
