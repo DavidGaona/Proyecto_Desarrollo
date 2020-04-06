@@ -165,42 +165,33 @@ public class ManagerMenu {
                         ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))
                 );
 
-                if (message.equals("Operación realizada con exito")) {
-                    PlanTable planTable = new PlanTable(
-                            createExtra.getContent("extraName"),
-                            Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
-                            true,
-                            1
-                    );
-                    planExtras.loadTable(planTable);
-                    createExtra.clear();
-                }
-
-                AlertBox.display("Éxito ", message, "");
-
+                wasSuccessful(message);
             } else if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("App")){
                 message = plan.saveApp(
                         ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraName")),
                         ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))
                 );
 
-                if (message.equals("Operación realizada con exito")) {
-                    PlanTable planTable = new PlanTable(
-                            createExtra.getContent("extraName"),
-                            Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
-                            true,
-                            1
-                    );
-                    planExtras.loadTable(planTable);
-                    createExtra.clear();
-                }
-                AlertBox.display("Éxito ", message, "");
-
+                wasSuccessful(message);
             }
             else {
                 AlertBox.display("Error", message, "");
             }
         });
+    }
+
+    private void wasSuccessful(String message) {
+        if (message.equals("Operación realizada con exito")) {
+            PlanTable planTable = new PlanTable(
+                    createExtra.getContent("extraName"),
+                    Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
+                    true,
+                    1
+            );
+            planExtras.loadTable(planTable);
+            createExtra.clear();
+        }
+        AlertBox.display("Éxito ", message, "");
     }
 
     private void createExistingExtra(double width, double height) {
