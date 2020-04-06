@@ -378,7 +378,7 @@ public class EditingPanel {
 
     //----------------------------------Table----------------------------------\\
     public void createTables(double width, double height, ObservableList<PlanTable> data) {
-        double tableWidth = ((width * 0.6) * 0.8) * 0.39;
+        double tableWidth = ((width * 0.6) * 0.8) * 0.5;
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
 
@@ -424,6 +424,10 @@ public class EditingPanel {
         pickedTable.getColumns().addAll(titleColumnPick);
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
+    }
+
+    public void moveFromTable(Button button){
+
     }
 
     private void loadTable(ObservableList<PlanTable> data) {
