@@ -4,6 +4,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import utilities.FA;
 
 public class MenuList {
 
@@ -33,7 +35,6 @@ public class MenuList {
         label.setPrefWidth(width * 0.2058875);
         label.setPrefHeight(height * 0.05);
         label.setStyle("-fx-font-size: " + labelFont + "px;");
-
         label.setOnMouseEntered(e -> label.setStyle(label.getStyle() + "-fx-background-color: #151919;"));
         label.setOnMouseExited(e -> label.setStyle(label.getStyle() + "-fx-background-color: #212828;"));
 

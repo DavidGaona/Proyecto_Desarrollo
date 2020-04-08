@@ -404,7 +404,6 @@ public class EditingPanel {
         quantityColumnPick.setMinWidth(tableWidth * 0.25);
         quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-
         TableColumn<PlanTable, Button> pickColumnOption = new TableColumn<>("Escoger");
         pickColumnOption.setMinWidth(tableWidth * 0.25);
         pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
@@ -426,7 +425,7 @@ public class EditingPanel {
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
-    public void moveFromTable(Button button){
+    private void moveFromTable(){
 
     }
 
@@ -446,8 +445,13 @@ public class EditingPanel {
         planTable.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
         planTable.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
         planTable.getSelectPerson().getStyleClass().add("client-buttons-template");
-        if (planTable.isUsed())
+        if (planTable.isUsed()){
             pickedTable.getItems().add(planTable);
+            planTable.getSelectPerson().setOnAction( e -> {
+
+            });
+        }
+
         else
             optionTable.getItems().add(planTable);
     }
