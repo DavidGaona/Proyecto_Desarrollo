@@ -1,10 +1,12 @@
+@font-face {
+    src: url('fontawesome-webfont.ttf');
+}
 .button {
     -fx-background-color: #212828;
     -fx-text-fill: #FFFFFF;
-    -fx-font-family: "Lucida Sans Unicode";
 }
 
 .label {
     -fx-text-fill: #3AAAAA;
-    -fx-font-family: Consolas;
+    -fx-font-family: "Font Awesome 5 Free Solid";
 }
