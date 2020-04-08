@@ -26,24 +26,18 @@ public class MenuListAdmin extends MenuList {
         closeMenu.setText("\u21A9");
         closeMenu.setStyle(closeMenu.getStyle() + "-fx-font-size: " + (80 - (80 * percentage)) + ";");
 
-        /*Circle profile = new Circle((height * 0.2) / 2);
-        profile.setCenterX((height * 0.2) / 2);
-        profile.setCenterY((height * 0.2) / 2);
-        profile.setFill(javafx.scene.paint.Color.web("#FFFFFF"));
-        profile.setStroke(Color.web("#3D3D3E"));*/
-
         Label profile = new Label();
-        profile.setFont(Font.loadFont(FA.getFont(),(80 - (80 * percentage))));
-        System.out.println(Font.loadFont(FA.getFont(),20).getFamily());
+        profile.setFont(Font.loadFont(FA.getFont(), (80 - (80 * percentage))));
+        System.out.println(Font.loadFont(FA.getFont(), 20).getFamily());
         profile.setText(FA.USER_SHIELD);
 
 
-        Label userLabel = labelGenerator("Crear/Editar Usuario "+FA.USER_PLUS, width, height, percentage);
-        Label controlLabel = labelGenerator("Control "+FA.COG, width, height, percentage);
-        Label listUsersLabel = labelGenerator("Listar Usuarios "+FA.USERS, width, height, percentage);
-        Label statsUsers = labelGenerator("Estadísticas de Usuarios "+FA.USER_POLL, width, height, percentage);
-        Label bankLabel = labelGenerator("Crear/Editar Banco "+FA.USER_COG, width, height, percentage);
-        Label changePasswordLabel = labelGenerator("Cambiar Contraseña "+FA.KEY, width, height, percentage);
+        Label userLabel = labelGenerator("Crear/Editar Usuario " + FA.USER_PLUS, width, height, percentage);
+        Label controlLabel = labelGenerator("Control " + FA.COG, width, height, percentage);
+        Label listUsersLabel = labelGenerator("Listar Usuarios " + FA.USERS, width, height, percentage);
+        Label statsUsers = labelGenerator("Estadísticas de Usuarios " + FA.USER_POLL, width, height, percentage);
+        Label bankLabel = labelGenerator("Crear/Editar Banco " + FA.BANK, width, height, percentage);
+        Label changePasswordLabel = labelGenerator("Cambiar Contraseña " + FA.KEY, width, height, percentage);
         Label logOutLabel = labelGenerator("Cerrar Sesión", width, height, percentage);
 
         userLabel.setAlignment(Pos.CENTER);
@@ -54,8 +48,8 @@ public class MenuListAdmin extends MenuList {
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
 
-        layout.setPrefSize(width * 0.2 + 2, height); // height * 0.912
-        layout.setMaxSize(width * 0.2 + 2, height); // height * 0.912
+        layout.setPrefSize(width * 0.2 + 2, height);
+        layout.setMaxSize(width * 0.2 + 2, height);
         layout.getChildren().addAll(
                 profile, separator2(width), controlLabel, separator(width), listUsersLabel,
                 separator(width), bankLabel, separator(width), userLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
@@ -68,7 +62,7 @@ public class MenuListAdmin extends MenuList {
         layout.getStylesheets().add("menuListStyle.css");
 
         //effect closeMenu
-        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700,1));
+        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu, 700, 1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
         userLabel.setOnMouseClicked(e -> {
@@ -80,7 +74,7 @@ public class MenuListAdmin extends MenuList {
 
         });
 
-        bankLabel.setOnMouseClicked( e -> {
+        bankLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(5));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);

@@ -49,17 +49,11 @@ public class UserMenu {
         double circleRadius = (height * 0.045) / 2;
         hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
-        /*Circle menuCircle = new Circle(circleRadius);
-        menuCircle.setCenterX(circleRadius);
-        menuCircle.setCenterY(circleRadius);
-        menuCircle.setFill(Color.web("#FFFFFF"));
-        menuCircle.setStroke(Color.web("#3D3D3E"));*/
-
         Label menuCircle = new Label();
-        menuCircle.setFont(Font.loadFont(FA.getFont(),(80 - (80 * percentage))));
+        menuCircle.setFont(Font.loadFont(FA.getFont(), (40 - (40 * percentage))));
         menuCircle.setText(FA.COGS);
         menuCircle.setStyle(
-                menuCircle.getStyle()+"-fx-text-fill: #FFFFFF;\n" + "-fx-font-weight: bold;\n" +
+                menuCircle.getStyle() + "-fx-text-fill: #FFFFFF;\n" + "-fx-font-weight: bold;\n" +
                         "-fx-background-color: #2E293D;\n"
         );
 
