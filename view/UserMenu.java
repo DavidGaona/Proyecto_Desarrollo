@@ -2,6 +2,7 @@ package view;
 
 import controller.DaoUser;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.geometry.Pos;
@@ -10,11 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import model.User;
-import utilities.Icons;
-import utilities.ProjectUtilities;
-import utilities.ProjectEffects;
-import utilities.AlertBox;
+import utilities.*;
 import view.components.SearchPane;
 
 public class UserMenu {
@@ -50,11 +49,19 @@ public class UserMenu {
         double circleRadius = (height * 0.045) / 2;
         hBox.setPadding(new Insets(0, 0, 0, ((width * 0.10) - circleRadius)));
 
-        Circle menuCircle = new Circle(circleRadius);
+        /*Circle menuCircle = new Circle(circleRadius);
         menuCircle.setCenterX(circleRadius);
         menuCircle.setCenterY(circleRadius);
         menuCircle.setFill(Color.web("#FFFFFF"));
-        menuCircle.setStroke(Color.web("#3D3D3E"));
+        menuCircle.setStroke(Color.web("#3D3D3E"));*/
+
+        Label menuCircle = new Label();
+        menuCircle.setFont(Font.loadFont(FA.getFont(),(80 - (80 * percentage))));
+        menuCircle.setText(FA.COGS);
+        menuCircle.setStyle(
+                menuCircle.getStyle()+"-fx-text-fill: #FFFFFF;\n" + "-fx-font-weight: bold;\n" +
+                        "-fx-background-color: #2E293D;\n"
+        );
 
         Button newUserButton = userButtonTemplate(width, height, "Nuevo usuario");
 

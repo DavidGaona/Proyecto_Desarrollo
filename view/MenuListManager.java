@@ -7,7 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import utilities.ConfirmBox;
+import utilities.FA;
 import utilities.ProjectEffects;
 
 public class MenuListManager extends MenuList {
@@ -18,11 +20,15 @@ public class MenuListManager extends MenuList {
         closeMenu.setText("\u21A9");
         closeMenu.setStyle(closeMenu.getStyle() + "-fx-font-size: " + (80 - (80 * percentage)) + ";");
 
-        Circle profile = new Circle((height * 0.2) / 2);
+        /*Circle profile = new Circle((height * 0.2) / 2);
         profile.setCenterX((height * 0.2) / 2);
         profile.setCenterY((height * 0.2) / 2);
         profile.setFill(javafx.scene.paint.Color.web("#FFFFFF"));
-        profile.setStroke(Color.web("#3D3D3E"));
+        profile.setStroke(Color.web("#3D3D3E"));*/
+
+        Label profile = new Label();
+        profile.setFont(Font.loadFont(FA.getFont(),20));
+        profile.setText(FA.USER_SECRET);
 
         Label planLabel = labelGenerator("Crear/Editar Planes", width, height, percentage);
         Label statsClientsLabel = labelGenerator("Estadísticas de Clientes", width, height, percentage);
