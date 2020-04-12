@@ -1,9 +1,6 @@
 package view;
 
 import controller.DaoPlan;
-import controller.DaoUser;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,8 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import model.Bank;
-import model.PlanTable;
+import model.Extras;
 import utilities.AlertBox;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
@@ -74,7 +70,9 @@ public class ManagerMenu {
                         ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
                         ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planMinutes")),
                         ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planDataCap")),
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")));
+                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")),
+                        planExtras.getTableData()
+                );
                 if (message.equals("Operación realizada con exito")) {
                     basicPlanInfo.clear();
                 }
@@ -152,7 +150,6 @@ public class ManagerMenu {
         createExtra.addButton("Guardar");
         saveExtra();
 
-
         aligner.add(createExtra);
     }
 
@@ -182,13 +179,13 @@ public class ManagerMenu {
 
     private void wasSuccessful(String message) {
         if (message.equals("Operación realizada con exito")) {
-            PlanTable planTable = new PlanTable(
+            Extras extras = new Extras(
                     createExtra.getContent("extraName"),
                     Integer.parseInt(ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))),
                     true,
-                    1
+                    (createExtra.getContent("extraType").equals("Voz")) ? 0 : 1
             );
-            planExtras.loadTable(planTable);
+            planExtras.loadTable(extras);
             createExtra.clear();
         }
         AlertBox.display("Éxito ", message, "");
@@ -223,8 +220,9 @@ public class ManagerMenu {
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(
                 basicPlanInfo.sendPane(width, height * 0.1),
-                createExtra.sendPane(width, height * 0.0),
-                planExtras.sendTable(width, height * 0.0)
+                planExtras.sendTable(width, height * 0.0),
+                createExtra.sendPane(width, height * 0.0)
+
         );
         BorderPane planMenu;
         planMenu = menu.renderMenuTemplate();

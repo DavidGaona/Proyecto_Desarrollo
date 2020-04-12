@@ -175,4 +175,11 @@
     -fx-background-radius: 1;
 }
 
+.extra-buttons-template {
+    -fx-background-color: #5639AC;
+    -fx-border-radius: 2;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-weight: bold;
+}
 

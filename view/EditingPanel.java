@@ -1,5 +1,6 @@
 package view;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -16,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import model.PlanTable;
+import model.Extras;
 import utilities.ProjectUtilities;
 import view.components.SwitchButton;
 
@@ -35,9 +36,9 @@ public class EditingPanel {
     private GridPane tagsPane = new GridPane();
     private HBox tablePane = new HBox();
 
-    private TableView<PlanTable> optionTable = new TableView<>();
-    private TableView<PlanTable> pickedTable = new TableView<>();
-    private ObservableList<PlanTable> tableData = FXCollections.observableArrayList();
+    private TableView<Extras> optionTable = new TableView<>();
+    private TableView<Extras> pickedTable = new TableView<>();
+    private ObservableList<Extras> tableData = FXCollections.observableArrayList();
 
     private double percentage;
 
@@ -377,39 +378,39 @@ public class EditingPanel {
     }
 
     //----------------------------------Table----------------------------------\\
-    public void createTables(double width, double height, ObservableList<PlanTable> data) {
+    public void createTables(double width, double height, ObservableList<Extras> data) {
         double tableWidth = ((width * 0.6) * 0.8) * 0.5;
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
 
-        TableColumn<PlanTable, String> titleColumnOption = new TableColumn<>("Nombre plan");
+        TableColumn<Extras, String> titleColumnOption = new TableColumn<>("Tabla de opciones");
         titleColumnOption.setMinWidth(tableWidth);
 
-        TableColumn<PlanTable, String> titleColumnPick = new TableColumn<>("Nombre plan");
+        TableColumn<Extras, String> titleColumnPick = new TableColumn<>("Tabla de seleccionados");
         titleColumnPick.setMinWidth(tableWidth);
 
-        TableColumn<PlanTable, String> nameColumnOption = new TableColumn<>("Nombre plan");
+        TableColumn<Extras, String> nameColumnOption = new TableColumn<>("Nombre plan");
         nameColumnOption.setMinWidth(tableWidth * 0.5);
         nameColumnOption.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
-        TableColumn<PlanTable, String> nameColumnPick = new TableColumn<>("Nombre plan");
+        TableColumn<Extras, String> nameColumnPick = new TableColumn<>("Nombre plan");
         nameColumnPick.setMinWidth(tableWidth * 0.5);
         nameColumnPick.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
-        TableColumn<PlanTable, Double> quantityColumnOption = new TableColumn<>("Cantidad");
+        TableColumn<Extras, Double> quantityColumnOption = new TableColumn<>("Cantidad");
         quantityColumnOption.setMinWidth(tableWidth * 0.25);
         quantityColumnOption.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<PlanTable, Double> quantityColumnPick = new TableColumn<>("Cantidad");
+        TableColumn<Extras, Double> quantityColumnPick = new TableColumn<>("Cantidad");
         quantityColumnPick.setMinWidth(tableWidth * 0.25);
         quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<PlanTable, Button> pickColumnOption = new TableColumn<>("Escoger");
+        TableColumn<Extras, Label> pickColumnOption = new TableColumn<>("Escoger");
         pickColumnOption.setMinWidth(tableWidth * 0.25);
         pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
-        TableColumn<PlanTable, Button> pickColumnPick = new TableColumn<>("Escoger");
+        TableColumn<Extras, Label> pickColumnPick = new TableColumn<>("Escoger");
         pickColumnPick.setMinWidth(tableWidth * 0.25);
         pickColumnPick.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
@@ -420,40 +421,70 @@ public class EditingPanel {
         titleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
 
         optionTable.getColumns().addAll(titleColumnOption);
+        //optionTable.setFixedCellSize(5);
+        //optionTable.prefHeightProperty().bind(Bindings.size(optionTable.getItems()).multiply(optionTable.getFixedCellSize()).add(30));
         pickedTable.getColumns().addAll(titleColumnPick);
+        //pickedTable.setFixedCellSize(5);
+        //pickedTable.prefHeightProperty().bind(Bindings.size(pickedTable.getItems()).multiply(pickedTable.getFixedCellSize()).add(30));
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
     private void moveFromTable(){
-
+        
     }
 
-    private void loadTable(ObservableList<PlanTable> data) {
-        for (PlanTable datum : data) {
-            datum.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
+    private void loadTable(ObservableList<Extras> data) {
+        for (Extras datum : data) {
+            datum.getSelectPerson().setPrefSize(100, 40);
             datum.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
             datum.getSelectPerson().getStyleClass().add("client-buttons-template");
-            if (datum.isUsed())
+
+            if (datum.isUsed()){
                 pickedTable.getItems().add(datum);
-            else
+                datum.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
+            }
+            else{
                 optionTable.getItems().add(datum);
+                datum.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
+            }
+
         }
     }
 
-    public void loadTable(PlanTable planTable) {
-        planTable.getSelectPerson().setPrefSize(100, 40); //0.10 , 0.03
-        planTable.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
-        planTable.getSelectPerson().getStyleClass().add("client-buttons-template");
-        if (planTable.isUsed()){
-            pickedTable.getItems().add(planTable);
-            planTable.getSelectPerson().setOnAction( e -> {
-
-            });
+    public void loadTable(Extras extras) {
+        extras.getSelectPerson().setPrefSize(100, 40);
+        extras.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+        extras.getSelectPerson().getStyleClass().add("client-buttons-template");
+        if (extras.isUsed()){
+            pickedTable.getItems().add(extras);
+            extras.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
         }
+        else{
+            optionTable.getItems().add(extras);
+            extras.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
+        }
+    }
 
-        else
-            optionTable.getItems().add(planTable);
+    private void switchRow(TableView<Extras> tableRemove){
+        Extras extra = new Extras(
+                tableRemove.getSelectionModel().getSelectedItem().getId(),
+                tableRemove.getSelectionModel().getSelectedItem().getPlanName(),
+                tableRemove.getSelectionModel().getSelectedItem().getQuantity(),
+                !tableRemove.getSelectionModel().getSelectedItem().isUsed(),
+                tableRemove.getSelectionModel().getSelectedItem().getType()
+        );
+        loadTable(extra);
+        deleteRow(tableRemove);
+    }
+
+    private void deleteRow(TableView<Extras> tableRemove){
+        var rowToRemove = tableRemove.getSelectionModel().getSelectedItems();
+        tableRemove.getItems().removeAll(rowToRemove);
+    }
+
+    public ObservableList<Extras> getTableData(){
+        return pickedTable.getItems();
     }
 
     public HBox sendTable(double width, double height) {

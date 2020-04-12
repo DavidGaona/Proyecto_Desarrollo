@@ -352,12 +352,15 @@ public class DbManager {
         return -1;
     }
 
-    public String saveNewPlan(Plan plan) {
+    public String saveNewPlan(Plan plan, ObservableList<Extras> extras) {
 
         int numRows;
         String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message) " +
                 "VALUES(?, ?, ?, ?, ?)";
 
+        String planIdQuery = "SELECT plan_id FROM public.plan WHERE plan_name = ?";
+        String voiceQuery = "INSERT INTO public.plan_voice(voice_id, plan_id) VALUES(?, ?)";
+        String appsQuery = "INSERT INTO public.plan_apps(app_id, plan_id) VALUES(?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(saveQuery);
             statement.setString(1, plan.getPlanName());
@@ -367,6 +370,27 @@ public class DbManager {
             statement.setInt(5, plan.getPlanTextMsn());
             numRows = statement.executeUpdate();
             System.out.println(numRows);
+            PreparedStatement select = connection.prepareStatement(planIdQuery);
+            select.setString(1, plan.getPlanName());
+            ResultSet resultSet = select.executeQuery();
+            resultSet.next();
+            int planId = resultSet.getInt(1);
+            PreparedStatement voiceInsert = connection.prepareStatement(voiceQuery);
+            PreparedStatement appsInsert = connection.prepareStatement(appsQuery);
+            for (int i = 0; i < extras.size(); i++){
+                if (extras.get(i).getType() == 0){
+                    voiceInsert.setInt(1, extras.get(i).getId());
+                    voiceInsert.setInt(2, planId);
+                    voiceInsert.addBatch();
+                } else if (extras.get(i).getType() == 1){
+                    appsInsert.setInt(1, extras.get(i).getId());
+                    appsInsert.setInt(2, planId);
+                    appsInsert.addBatch();
+                }
+            }
+            voiceInsert.executeBatch();
+            appsInsert.executeBatch();
+
             return "Plan registrado con exito";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -420,22 +444,22 @@ public class DbManager {
         }
     }
 
-    public ObservableList<PlanTable> listExtras() {
-        String sql_select1 = "SELECT voice_name, voice_minutes" +
+    public ObservableList<Extras> listExtras() {
+        String sql_select1 = "SELECT voice_id, voice_name, voice_minutes" +
                 " FROM public.voice";
-        String sql_select2 = "SELECT app_name, app_mb_cap " +
+        String sql_select2 = "SELECT app_id, app_name, app_mb_cap " +
                 " FROM public.apps";
 
-        ObservableList<PlanTable> result = FXCollections.observableArrayList();
+        ObservableList<Extras> result = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
             ResultSet table = statement.executeQuery(sql_select1);
             while (table.next()) {
-                result.add(new PlanTable(table.getString(1), table.getInt(2), false, 0));
+                result.add(new Extras(table.getInt(1), table.getString(2), table.getInt(3), false, 0));
             }
             table = statement.executeQuery(sql_select2);
             while (table.next()) {
-                result.add(new PlanTable(table.getString(1), table.getInt(2), false, 1));
+                result.add(new Extras(table.getInt(1), table.getString(2), table.getInt(3), false, 1));
             }
             return result;
         } catch (SQLException e) {
