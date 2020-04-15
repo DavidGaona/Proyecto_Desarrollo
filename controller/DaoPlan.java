@@ -24,6 +24,18 @@ public class DaoPlan {
         return response;
     }
 
+    public String editPlan(String planName, String planCost, String planMinutes, String planData, String planTextMsn, ObservableList<Extras> extras){
+        Plan plan = new Plan(planName, Double.parseDouble(planCost),
+                Integer.parseInt(planMinutes), Integer.parseInt(planData), Integer.parseInt(planTextMsn));
+        String response = "";
+        if (plan.isNotBlank()) {
+            dbManager.openDBConnection();
+            response = dbManager.editPlan(plan, extras);
+            dbManager.closeDBConnection();
+        }
+        return response;
+    }
+
     public String saveNewVoiceMins(String voiceName, String voiceMinutes) {
         Voice voice;
         voice = new Voice(voiceName, Integer.parseInt(voiceMinutes));

@@ -475,6 +475,20 @@ public class EditingPanel {
         deleteRow(tableRemove);
     }
 
+    public void resetTables(){
+        for (int i = 0; i < pickedTable.getItems().size(); i++){
+            Extras extra = new Extras(
+                    pickedTable.getItems().get(i).getId(),
+                    pickedTable.getItems().get(i).getPlanName(),
+                    pickedTable.getItems().get(i).getQuantity(),
+                    !pickedTable.getItems().get(i).isUsed(),
+                    pickedTable.getItems().get(i).getType()
+            );
+            loadTable(extra);
+        }
+        pickedTable.getItems().clear();
+    }
+
     private void deleteRow(TableView<Extras> tableRemove){
         var rowToRemove = tableRemove.getSelectionModel().getSelectedItems();
         tableRemove.getItems().removeAll(rowToRemove);

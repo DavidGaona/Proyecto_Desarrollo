@@ -74,40 +74,50 @@ public class ManagerMenu {
                 basicPlanInfo.setTextField("planMinutes", searchedPlan.getPlanMinutes() + "");
                 basicPlanInfo.setTextField("planDataCap", searchedPlan.getPlanData() + "");
                 basicPlanInfo.setTextField("planTextMessage", searchedPlan.getPlanTextMsn() + "");
-                createExistingExtra(width, height, plan.loadPlanExtras(searchedPlan.getId()));
+                createExistingExtra(plan.loadPlanExtras(searchedPlan.getId()));
                 saveChangesButton.setText("Modificar Plan");
                 currentUserMode = false;
                 searchPane.getSearchField().setText("");
                 searchPane.setVisible(false);
             } else
-                AlertBox.display("Error: ", "Usuario no encontrado", "");
+                AlertBox.display("Error: ", "Plan no encontrado", "");
         });
 
         saveChangesButton = ManagerMenuButtonTemplate(width, height, "Agregar Plan");
         saveChangesButton.setOnAction(e -> {
             String message = "No se pueden dejar campos vacios";
-            if (!basicPlanInfo.isEmpty()) {
-                message = plan.saveNewPlan(
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planMinutes")),
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planDataCap")),
-                        ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")),
-                        planExtras.getTableData()
-                );
-                if (message.equals("Plan registrado con exito")) {
-                    basicPlanInfo.clear();
+            if (currentUserMode){
+                if (!basicPlanInfo.isEmpty()) {
+                    message = createNewPlan();
+                    if (message.equals("Plan registrado con exito")) {
+                        basicPlanInfo.clear();
+                        planExtras.resetTables();
+                    }
+                    AlertBox.display("Éxito", message, "");
+                } else {
+                    AlertBox.display("Error", message, "");
                 }
-                AlertBox.display("Éxito", message, "");
             } else {
-                AlertBox.display("Error", message, "");
+                if (!basicPlanInfo.isEmpty()) {
+                    message = editPlan();
+                    if (message.equals("Plan editado con exito")) {
+                        basicPlanInfo.clear();
+                        planExtras.resetTables();
+                    }
+                    AlertBox.display("Éxito", message, "");
+                } else {
+                    AlertBox.display("Error", message, "");
+                }
             }
+
         });
 
         newBankButton.setOnAction(e -> {
             basicPlanInfo.clear();
             createExtra.clear();
+            planExtras.resetTables();
             saveChangesButton.setText("Agregar Plan");
+            currentUserMode = true;
         });
 
         menuCircle.setOnMouseClicked(e -> {
@@ -173,6 +183,28 @@ public class ManagerMenu {
         aligner.add(createExtra);
     }
 
+    private String createNewPlan(){
+        return plan.saveNewPlan(
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planMinutes")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planDataCap")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")),
+                planExtras.getTableData()
+        );
+    }
+
+    private String editPlan(){
+        return plan.editPlan(
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planMinutes")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planDataCap")),
+                ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")),
+                planExtras.getTableData()
+        );
+    }
+
     private void saveExtra(){
         createExtra.getAddButton().setOnAction(e -> {
             String message = "No se pueden dejar campos vacios";
@@ -216,7 +248,7 @@ public class ManagerMenu {
         planExtras.createTables(width, height, plan.listExtras());
     }
 
-    private void createExistingExtra(double width, double height, ObservableList<Extras> extras) {
+    private void createExistingExtra(ObservableList<Extras> extras) {
         planExtras.loadTable(extras);
     }
 

@@ -356,8 +356,8 @@ public class DbManager {
     public String saveNewPlan(Plan plan, ObservableList<Extras> extras) {
 
         int numRows;
-        String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message) " +
-                "VALUES(?, ?, ?, ?, ?)";
+        String saveQuery = "INSERT INTO public.plan(plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message, plan_creation_date) " +
+                "VALUES(?, ?, ?, ?, ?, current_timestamp(0))";
 
         String planIdQuery = "SELECT plan_id FROM public.plan WHERE plan_name = ?";
         String voiceQuery = "INSERT INTO public.plan_voice(voice_id, plan_id) VALUES(?, ?)";
@@ -376,23 +376,7 @@ public class DbManager {
             ResultSet resultSet = select.executeQuery();
             resultSet.next();
             int planId = resultSet.getInt(1);
-            PreparedStatement voiceInsert = connection.prepareStatement(voiceQuery);
-            PreparedStatement appsInsert = connection.prepareStatement(appsQuery);
-            for (int i = 0; i < extras.size(); i++){
-                if (extras.get(i).getType() == 0){
-                    voiceInsert.setInt(1, extras.get(i).getId());
-                    voiceInsert.setInt(2, planId);
-                    voiceInsert.addBatch();
-                } else if (extras.get(i).getType() == 1){
-                    appsInsert.setInt(1, extras.get(i).getId());
-                    appsInsert.setInt(2, planId);
-                    appsInsert.addBatch();
-                }
-            }
-            voiceInsert.executeBatch();
-            appsInsert.executeBatch();
-
-            return "Plan registrado con exito";
+            return insertPlanExtras(extras, voiceQuery, appsQuery, planId, true);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return "Error al crear plan";
@@ -400,7 +384,70 @@ public class DbManager {
             System.out.println(Arrays.toString(e.getStackTrace()));
             return "Ocurrio un error interno del sistema";
         }
+    }
 
+    public String editPlan(Plan plan, ObservableList<Extras> extras) {
+
+        String saveQuery = "UPDATE public.plan SET " +
+                "plan_name = ?, plan_cost = ?, plan_minutes = ?, plan_data_cap = ?, " +
+                "plan_text_message = ? WHERE plan.plan_name = ?";
+
+        String planIdQuery = "SELECT plan_id FROM public.plan WHERE plan_name = ?";
+        String deleteVoiceQuery = "DELETE FROM public.plan_voice WHERE plan_id = ?";
+        String deleteAppQuery = "DELETE FROM public.plan_apps WHERE plan_id = ?";
+        String voiceQuery = "INSERT INTO public.plan_voice(voice_id, plan_id) VALUES(?, ?)";
+        String appsQuery = "INSERT INTO public.plan_apps(app_id, plan_id) VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(saveQuery);
+            statement.setString(1, plan.getPlanName());
+            statement.setDouble(2, plan.getPlanCost());
+            statement.setInt(3, plan.getPlanMinutes());
+            statement.setInt(4, plan.getPlanData());
+            statement.setInt(5, plan.getPlanTextMsn());
+            statement.setString(6, plan.getPlanName());
+            PreparedStatement select = connection.prepareStatement(planIdQuery);
+            select.setString(1, plan.getPlanName());
+            ResultSet resultSet = select.executeQuery();
+            resultSet.next();
+            int planId = resultSet.getInt(1);
+            System.out.println(planId);
+            statement = connection.prepareStatement(deleteVoiceQuery);
+            statement.setInt(1, planId);
+            statement.executeUpdate();
+            statement = connection.prepareStatement(deleteAppQuery);
+            statement.setInt(1, planId);
+            statement.executeUpdate();
+            return insertPlanExtras(extras, voiceQuery, appsQuery, planId, false);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return "Error al editar plan";
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return "Ocurrio un error interno del sistema";
+        }
+
+    }
+
+    private String insertPlanExtras(ObservableList<Extras> extras, String voiceQuery, String appsQuery, int planId, boolean type) throws SQLException {
+        PreparedStatement voiceInsert = connection.prepareStatement(voiceQuery);
+        PreparedStatement appsInsert = connection.prepareStatement(appsQuery);
+        for (Extras extra : extras) {
+            if (extra.getType() == 0) {
+                voiceInsert.setInt(1, extra.getId());
+                voiceInsert.setInt(2, planId);
+                voiceInsert.addBatch();
+            } else if (extra.getType() == 1) {
+                appsInsert.setInt(1, extra.getId());
+                appsInsert.setInt(2, planId);
+                appsInsert.addBatch();
+            }
+        }
+        voiceInsert.executeBatch();
+        appsInsert.executeBatch();
+        if (type)
+            return "Plan registrado con exito";
+        else
+            return "Plan editado con exito";
     }
 
     public String saveNewVoiceMins(Voice voice) {
