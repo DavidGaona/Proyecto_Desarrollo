@@ -1,34 +1,39 @@
 package view;
 
 import controller.DaoPlan;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import model.Extras;
+import model.Plan;
 import utilities.AlertBox;
+import utilities.Icons;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
+import view.components.SearchPane;
 
 import java.util.ArrayList;
 
 public class ManagerMenu {
 
     private EditingPanel basicPlanInfo, planExtras, createExtra;
+    private SearchPane searchPane;
     private ArrayList<EditingPanel> aligner = new ArrayList<>();
     private double percentage;
     private DaoPlan plan;
     private double buttonFont;
-    private ComboBox<String> searchComboBox = new ComboBox();
     private Button saveChangesButton;
     private MenuListManager menuListManager = new MenuListManager();
     private VBox menuList;
+    private boolean currentUserMode = true;
 
     public ManagerMenu(double percentage, double buttonFont) {
         plan = new DaoPlan();
@@ -56,10 +61,27 @@ public class ManagerMenu {
 
         Button newBankButton = ManagerMenuButtonTemplate(width, height, "Nuevo Plan");
 
-        searchComboBox.setId("STF2");
-        searchComboBox.setMinSize(width * 0.2, height * 0.05);
-        searchComboBox.setMinSize(width * 0.2, height * 0.05);
-        searchComboBox.setStyle(searchComboBox.getStyle() + "-fx-font-size: " + buttonFont + ";");
+        Icons icons = new Icons();
+        icons.searchIcon(percentage);
+        icons.getSearchIcon().setOnAction(e -> searchPane.setVisible(true));
+
+        searchPane.getSearchField().setOnAction(e -> {
+            Plan searchedPlan = plan.loadPlan(searchPane.getTextContent());
+            if (searchedPlan.isNotBlank()) {
+                planExtras.clearTables();
+                basicPlanInfo.setTextField("planName", searchedPlan.getPlanName());
+                basicPlanInfo.setTextField("planCost", searchedPlan.getPlanCost() + "");
+                basicPlanInfo.setTextField("planMinutes", searchedPlan.getPlanMinutes() + "");
+                basicPlanInfo.setTextField("planDataCap", searchedPlan.getPlanData() + "");
+                basicPlanInfo.setTextField("planTextMessage", searchedPlan.getPlanTextMsn() + "");
+                createExistingExtra(width, height, plan.loadPlanExtras(searchedPlan.getId()));
+                saveChangesButton.setText("Modificar Plan");
+                currentUserMode = false;
+                searchPane.getSearchField().setText("");
+                searchPane.setVisible(false);
+            } else
+                AlertBox.display("Error: ", "Usuario no encontrado", "");
+        });
 
         saveChangesButton = ManagerMenuButtonTemplate(width, height, "Agregar Plan");
         saveChangesButton.setOnAction(e -> {
@@ -73,21 +95,19 @@ public class ManagerMenu {
                         ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planTextMessage")),
                         planExtras.getTableData()
                 );
-                if (message.equals("Operación realizada con exito")) {
+                if (message.equals("Plan registrado con exito")) {
                     basicPlanInfo.clear();
                 }
                 AlertBox.display("Éxito", message, "");
             } else {
                 AlertBox.display("Error", message, "");
             }
-            searchComboBox.valueProperty().set(null);
         });
-
-        ProjectUtilities.focusListener("24222A", "C2B8E0", searchComboBox);
 
         newBankButton.setOnAction(e -> {
             basicPlanInfo.clear();
             createExtra.clear();
+            saveChangesButton.setText("Agregar Plan");
         });
 
         menuCircle.setOnMouseClicked(e -> {
@@ -96,9 +116,9 @@ public class ManagerMenu {
         });
 
 
-        hBox.getChildren().addAll(menuCircle, newBankButton, searchComboBox, saveChangesButton);
+        hBox.getChildren().addAll(menuCircle, newBankButton, icons.getSearchIcon(), saveChangesButton);
         HBox.setMargin(menuCircle, new Insets(0, ((width * 0.10) - circleRadius), 0, 0));
-        HBox.setMargin(searchComboBox, new Insets(0, (width * 0.05), 0, (width * 0.05)));
+        HBox.setMargin(icons.getSearchIcon(), new Insets(0, (width * 0.1355), 0, (width * 0.135)));
         return hBox;
     }
 
@@ -196,6 +216,10 @@ public class ManagerMenu {
         planExtras.createTables(width, height, plan.listExtras());
     }
 
+    private void createExistingExtra(double width, double height, ObservableList<Extras> extras) {
+        planExtras.loadTable(extras);
+    }
+
     public void align() {
         double longestTextSize = 0.0;
         for (EditingPanel editingPanel : aligner) {
@@ -222,16 +246,33 @@ public class ManagerMenu {
                 basicPlanInfo.sendPane(width, height * 0.1),
                 planExtras.sendTable(width, height * 0.0),
                 createExtra.sendPane(width, height * 0.0)
-
         );
         BorderPane planMenu;
+
+        searchPane = new SearchPane(width, height, percentage, true);
+        HBox sp = searchPane.showFrame();
+
+        Rectangle screenFilter = new Rectangle(0, 0, width, height * 0.9);
+        screenFilter.setOnMouseClicked(e -> searchPane.setVisible(false));
+        screenFilter.setOnTouchPressed(e -> searchPane.setVisible(false));
+        screenFilter.setOnScroll(e -> {
+            double deltaY = e.getDeltaY() * 3;
+            double widthSpeed = menu.getScrollPane().getContent().getBoundsInLocal().getWidth();
+            double value = menu.getScrollPane().getVvalue();
+            menu.getScrollPane().setVvalue(value + -deltaY / widthSpeed);
+        });
+        screenFilter.setFill(Color.rgb(0, 0, 0, 0.25));
+        screenFilter.visibleProperty().bind(searchPane.getIsVisible());
+
         planMenu = menu.renderMenuTemplate();
         planMenu.setTop(topBar((HBox) planMenu.getTop(), width, height));
         planMenu.setBottom(botBar((HBox) planMenu.getBottom(), width, height));
         planMenu.setCenter(planMenu.getCenter());
 
-        stackPane.getChildren().addAll(planMenu, menuList);
+        stackPane.getChildren().addAll(planMenu, menuList, screenFilter, sp); //userMenu, menuList,
         stackPane.setAlignment(Pos.TOP_LEFT);
+        StackPane.setAlignment(screenFilter, Pos.CENTER_LEFT);
+        StackPane.setAlignment(sp, Pos.CENTER);
         return stackPane;
     }
 }

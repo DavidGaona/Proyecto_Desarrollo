@@ -56,4 +56,19 @@ public class DaoPlan {
         return extras;
     }
 
+    public Plan loadPlan(String planName){
+        dbManager.openDBConnection();
+        Plan plan = dbManager.loadPlan(planName);
+        dbManager.closeDBConnection();
+        return plan;
+    }
+
+    public ObservableList<Extras> loadPlanExtras(int planId){
+        dbManager.openDBConnection();
+        ObservableList<Extras> extras = dbManager.loadPlanExtras(planId);
+        dbManager.closeDBConnection();
+
+        return extras;
+    }
+
 }

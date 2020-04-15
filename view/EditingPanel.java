@@ -379,7 +379,7 @@ public class EditingPanel {
 
     //----------------------------------Table----------------------------------\\
     public void createTables(double width, double height, ObservableList<Extras> data) {
-        double tableWidth = ((width * 0.6) * 0.8) * 0.5;
+        double tableWidth = ((width * 0.6) * 0.8) * 0.39;
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
 
@@ -421,20 +421,17 @@ public class EditingPanel {
         titleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
 
         optionTable.getColumns().addAll(titleColumnOption);
-        //optionTable.setFixedCellSize(5);
-        //optionTable.prefHeightProperty().bind(Bindings.size(optionTable.getItems()).multiply(optionTable.getFixedCellSize()).add(30));
         pickedTable.getColumns().addAll(titleColumnPick);
-        //pickedTable.setFixedCellSize(5);
-        //pickedTable.prefHeightProperty().bind(Bindings.size(pickedTable.getItems()).multiply(pickedTable.getFixedCellSize()).add(30));
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
-    private void moveFromTable(){
-        
+    public void clearTables(){
+        optionTable.getItems().clear();
+        pickedTable.getItems().clear();
     }
 
-    private void loadTable(ObservableList<Extras> data) {
+    public void loadTable(ObservableList<Extras> data) {
         for (Extras datum : data) {
             datum.getSelectPerson().setPrefSize(100, 40);
             datum.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
