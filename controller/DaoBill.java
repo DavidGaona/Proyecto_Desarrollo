@@ -5,10 +5,10 @@ import connection.DbManager;
 public class DaoBill {
     private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
-    public String generateBills(int idUser){
+    public String generateBills(){
         int response;
         dbManager.openDBConnection();
-        response = dbManager.generateBills(idUser);
+        response = dbManager.generateBills();
         dbManager.closeDBConnection();
         if(response>0)
             return "Operación realizada con exíto, facturas generadas "+response;
