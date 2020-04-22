@@ -563,6 +563,36 @@ public class DbManager {
         }
     }
 
+    public int generateBills(){
+        int[] numRows;
+        String sql_select = "SELECT client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message FROM ((SELECT client_id, plan_id FROM public.phone) AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            ResultSet resultSet = statement.executeQuery();
+            String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?) ON CONFLICT DO NOTHING";
+            statement = connection.prepareStatement(sql_save);
+            connection.setAutoCommit(false);
+            while (resultSet.next()) {
+                statement.setInt(1,resultSet.getInt(1));
+                statement.setDouble(2,resultSet.getDouble(2));
+                statement.setInt(4,(int) Math.random()*resultSet.getInt(3)); //simulacion de consulta API
+                statement.setInt(5,(int) Math.random()*resultSet.getInt(4));
+                statement.setInt(6,(int) Math.random()*resultSet.getInt(5));
+                statement.addBatch();
+            }
+                numRows = statement.executeBatch();
+                connection.commit();
+                return Arrays.stream(numRows).reduce(0, Integer::sum);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return -2;
+        }
+    }
+
 
     public void openDBConnection() {
         connection = dBconnect.getConnection();
