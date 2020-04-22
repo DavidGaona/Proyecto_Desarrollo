@@ -130,6 +130,7 @@ public class EditingPanel {
         tagsPane.getChildren().addAll(addButton);
     }
 
+
     @SuppressWarnings("DuplicatedCode")
     public void addComboBox(String name, String message, String[] elements) {
         comboBoxes.add(comboBoxTemplate(name, elements));

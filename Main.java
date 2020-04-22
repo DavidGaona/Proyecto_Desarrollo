@@ -70,6 +70,15 @@ public class Main extends Application {
                     bankMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(bankMenuScene);
                     break;
+                case 6:
+                    //Admin bank menu
+                    BillingMenu bill = new BillingMenu(percentage, buttonFont);
+                    Scene billingMenuScene = new Scene(bill.renderBillingEditMenu(width, height), width, height);
+                    billingMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(billingMenuScene);
+                    break;
+
+
             }
 
         });
@@ -81,7 +90,7 @@ public class Main extends Application {
         window.setTitle("Mobile solutions");
         window.setResizable(false);
         window.setScene(rootScene);
-        window.setMaximized(true);
+        //window.setMaximized(true);
         window.show();
     }
 

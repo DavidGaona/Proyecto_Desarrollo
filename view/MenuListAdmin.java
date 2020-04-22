@@ -33,7 +33,7 @@ public class MenuListAdmin extends MenuList {
 
 
         Label userLabel = labelGenerator("Crear/Editar Usuario " + FA.USER_PLUS, width, height, percentage);
-        Label controlLabel = labelGenerator("Control " + FA.COG, width, height, percentage);
+        Label billingLabel = labelGenerator("Facturación " + FA.COG, width, height, percentage);
         Label listUsersLabel = labelGenerator("Listar Usuarios " + FA.USERS, width, height, percentage);
         Label statsUsers = labelGenerator("Estadísticas de Usuarios " + FA.USER_POLL, width, height, percentage);
         Label bankLabel = labelGenerator("Crear/Editar Banco " + FA.BANK, width, height, percentage);
@@ -41,7 +41,7 @@ public class MenuListAdmin extends MenuList {
         Label logOutLabel = labelGenerator("Cerrar Sesión", width, height, percentage);
 
         userLabel.setAlignment(Pos.CENTER);
-        controlLabel.setAlignment(Pos.CENTER);
+        billingLabel.setAlignment(Pos.CENTER);
         listUsersLabel.setAlignment(Pos.CENTER);
         statsUsers.setAlignment(Pos.CENTER);
         bankLabel.setAlignment(Pos.CENTER);
@@ -51,7 +51,7 @@ public class MenuListAdmin extends MenuList {
         layout.setPrefSize(width * 0.2 + 2, height);
         layout.setMaxSize(width * 0.2 + 2, height);
         layout.getChildren().addAll(
-                profile, separator2(width), controlLabel, separator(width), listUsersLabel,
+                profile, separator2(width), billingLabel, separator(width), listUsersLabel,
                 separator(width), bankLabel, separator(width), userLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu
         );
@@ -65,12 +65,18 @@ public class MenuListAdmin extends MenuList {
         closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu, 700, 1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
+        billingLabel.setOnMouseClicked( e -> {
+            PauseTransition p = new PauseTransition(Duration.millis(250));
+            p.setOnFinished(ex -> Login.currentWindow.set(6));
+            ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
+            p.play();
+        });
+
         userLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(3));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
             p.play();
-
 
         });
 
