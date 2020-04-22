@@ -16,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import model.Bank;
 import utilities.AlertBox;
 import utilities.FA;
@@ -23,6 +25,8 @@ import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
 import view.components.SearchPane;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BillingMenu {
@@ -91,7 +95,7 @@ public class BillingMenu {
         VBox centerText = new VBox();
         centerText.setMaxWidth(width * 0.2);
         centerText.setAlignment(Pos.CENTER);
-        centerText.setSpacing(20);
+        centerText.setSpacing(15);
 
         //Text with message
         Text text = new Text("Facturación");
@@ -99,12 +103,24 @@ public class BillingMenu {
         text.setFill(Color.web("#FFFFFF"));
 
         Button generateBillButton = billingButtonTemplate(width, height, "Generar Factura");
+        Button downloadBills = billingButtonTemplate(width, height, "Descargar Facturas");
 
         generateBillButton.setOnMouseClicked( e -> {
 
         });
+        downloadBills.setOnMouseClicked( e -> {
 
-        centerText.getChildren().addAll( text , generateBillButton);
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Guardar en la carpeta especificada: ");
+
+            File selectedFile = directoryChooser.showDialog(null);
+            if (selectedFile != null) {
+                System.out.print(selectedFile.getAbsolutePath());
+            }
+
+        });
+
+        centerText.getChildren().addAll( text , generateBillButton, downloadBills);
         hbox.getChildren().addAll(centerText);
 
 

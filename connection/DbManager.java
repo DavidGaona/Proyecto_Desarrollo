@@ -405,6 +405,7 @@ public class DbManager {
             statement.setInt(4, plan.getPlanData());
             statement.setInt(5, plan.getPlanTextMsn());
             statement.setString(6, plan.getPlanName());
+            statement.executeUpdate();
             PreparedStatement select = connection.prepareStatement(planIdQuery);
             select.setString(1, plan.getPlanName());
             ResultSet resultSet = select.executeQuery();
