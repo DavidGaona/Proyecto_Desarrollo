@@ -73,6 +73,7 @@ public class EditingPanel {
         return textField;
     }
 
+
     private ComboBox<String> comboBoxTemplate(String id, String[] elements) {
         ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableArrayList(elements));
         comboBox.setPrefSize(350 - (350 * percentage), 40 - (40 * percentage));
@@ -120,9 +121,9 @@ public class EditingPanel {
 
     public void addButton(String message){
         addButton = new Button(message);
-        addButton.setPrefSize(175 - (175 * percentage), 40 - (40 * percentage));
-        addButton.setMinSize(175 - (175 * percentage), 40 - (40 * percentage));
-        addButton.setStyle("-fx-font-size: " + 30 + ";");
+        addButton.setPrefSize(175 - (175 * percentage), 50 - (50 * percentage));
+        addButton.setMinSize(175 - (175 * percentage), 50 - (50 * percentage));
+        addButton.setStyle("-fx-font-size: " + (30 - (30 * percentage)) + ";");
         addButton.getStyleClass().add("client-buttons-template");
 
         GridPane.setConstraints(addButton, 5, textFields.size());
@@ -379,7 +380,7 @@ public class EditingPanel {
 
     //----------------------------------Table----------------------------------\\
     public void createTables(double width, double height, ObservableList<Extras> data) {
-        double tableWidth = ((width * 0.6) * 0.8) * 0.5;
+        double tableWidth = ((width * 0.6) * 0.8) * 0.39;
         optionTable.setMinSize(tableWidth, height * 0.5);
         pickedTable.setMinSize(tableWidth, height * 0.5);
 
@@ -390,28 +391,34 @@ public class EditingPanel {
         titleColumnPick.setMinWidth(tableWidth);
 
         TableColumn<Extras, String> nameColumnOption = new TableColumn<>("Nombre plan");
-        nameColumnOption.setMinWidth(tableWidth * 0.5);
+        nameColumnOption.setMinWidth(tableWidth * 0.6);
         nameColumnOption.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
         TableColumn<Extras, String> nameColumnPick = new TableColumn<>("Nombre plan");
-        nameColumnPick.setMinWidth(tableWidth * 0.5);
+        nameColumnPick.setMinWidth(tableWidth * 0.6);
         nameColumnPick.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
         TableColumn<Extras, Double> quantityColumnOption = new TableColumn<>("Cantidad");
-        quantityColumnOption.setMinWidth(tableWidth * 0.25);
+        quantityColumnOption.setMinWidth(tableWidth * 0.3);
+        quantityColumnOption.setMaxWidth(tableWidth * 0.3);
         quantityColumnOption.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         TableColumn<Extras, Double> quantityColumnPick = new TableColumn<>("Cantidad");
-        quantityColumnPick.setMinWidth(tableWidth * 0.25);
+        quantityColumnPick.setMinWidth(tableWidth * 0.3);
+        quantityColumnPick.setMaxWidth(tableWidth * 0.3);
         quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         TableColumn<Extras, Label> pickColumnOption = new TableColumn<>("Escoger");
-        pickColumnOption.setMinWidth(tableWidth * 0.25);
+        pickColumnOption.setMinWidth(tableWidth * 0.3);
+        pickColumnOption.setMaxWidth(tableWidth * 0.3);
+        pickColumnOption.setSortable(false);
         pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
         TableColumn<Extras, Label> pickColumnPick = new TableColumn<>("Escoger");
-        pickColumnPick.setMinWidth(tableWidth * 0.25);
+        pickColumnPick.setMinWidth(tableWidth * 0.3);
+        pickColumnPick.setMaxWidth(tableWidth * 0.3);
+        pickColumnPick.setSortable(false);
         pickColumnPick.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
@@ -421,23 +428,20 @@ public class EditingPanel {
         titleColumnPick.getColumns().addAll(nameColumnPick, quantityColumnPick, pickColumnPick);
 
         optionTable.getColumns().addAll(titleColumnOption);
-        //optionTable.setFixedCellSize(5);
-        //optionTable.prefHeightProperty().bind(Bindings.size(optionTable.getItems()).multiply(optionTable.getFixedCellSize()).add(30));
         pickedTable.getColumns().addAll(titleColumnPick);
-        //pickedTable.setFixedCellSize(5);
-        //pickedTable.prefHeightProperty().bind(Bindings.size(pickedTable.getItems()).multiply(pickedTable.getFixedCellSize()).add(30));
 
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
-    private void moveFromTable(){
-        
+    public void clearTables(){
+        optionTable.getItems().clear();
+        pickedTable.getItems().clear();
     }
 
-    private void loadTable(ObservableList<Extras> data) {
+    public void loadTable(ObservableList<Extras> data) {
         for (Extras datum : data) {
-            datum.getSelectPerson().setPrefSize(100, 40);
-            datum.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+            datum.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
+            datum.getSelectPerson().setStyle("-fx-font-size: " + (16 - (16 * percentage)) + ";");
             datum.getSelectPerson().getStyleClass().add("client-buttons-template");
 
             if (datum.isUsed()){
@@ -453,8 +457,8 @@ public class EditingPanel {
     }
 
     public void loadTable(Extras extras) {
-        extras.getSelectPerson().setPrefSize(100, 40);
-        extras.getSelectPerson().setStyle("-fx-font-size: " + 16 + ";");
+        extras.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
+        extras.getSelectPerson().setStyle("-fx-font-size: " + (16 - (16 * percentage)) + ";");
         extras.getSelectPerson().getStyleClass().add("client-buttons-template");
         if (extras.isUsed()){
             pickedTable.getItems().add(extras);
@@ -476,6 +480,20 @@ public class EditingPanel {
         );
         loadTable(extra);
         deleteRow(tableRemove);
+    }
+
+    public void resetTables(){
+        for (int i = 0; i < pickedTable.getItems().size(); i++){
+            Extras extra = new Extras(
+                    pickedTable.getItems().get(i).getId(),
+                    pickedTable.getItems().get(i).getPlanName(),
+                    pickedTable.getItems().get(i).getQuantity(),
+                    !pickedTable.getItems().get(i).isUsed(),
+                    pickedTable.getItems().get(i).getType()
+            );
+            loadTable(extra);
+        }
+        pickedTable.getItems().clear();
     }
 
     private void deleteRow(TableView<Extras> tableRemove){
