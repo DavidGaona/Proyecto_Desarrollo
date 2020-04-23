@@ -1,34 +1,22 @@
 package view;
 
-import controller.DaoBank;
-
 import controller.DaoBill;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import model.Bank;
 import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
-import utilities.ProjectUtilities;
 import view.components.SearchPane;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class BillingMenu {
 

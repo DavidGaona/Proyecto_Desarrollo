@@ -22,6 +22,7 @@ public class ProjectUtilities {
     public static final String[] clientTypes = {"Natural", "Corporativo"};
     public static final String[] userTypes = {"Operador", "Gerente", "Administrador"};
     public static final String[] documentTypesAbb = {"TI", "CC", "PA", "CE"};
+    public static final String[] chartPlan = {"Número de Ventas", "Número de Canceladas", "Ventas por Mes"};
 
 
     public static short convertDocumentType(String documentType) {

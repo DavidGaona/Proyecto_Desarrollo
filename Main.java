@@ -71,12 +71,31 @@ public class Main extends Application {
                     window.setScene(bankMenuScene);
                     break;
                 case 6:
-                    //Admin bank menu
+                    //Admin bill menu
                     BillingMenu bill = new BillingMenu(percentage, buttonFont);
                     Scene billingMenuScene = new Scene(bill.renderBillingEditMenu(width, height), width, height);
                     billingMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(billingMenuScene);
                     break;
+
+                case 7:
+                    //Manager statsClient menu
+                    ChartClientsMenu chartClient = new ChartClientsMenu(percentage, buttonFont);
+                    Scene chartClientMenuScene = new Scene(chartClient.renderChartClientsEditMenu(width, height), width, height);
+                    chartClientMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(chartClientMenuScene);
+
+                    break;
+
+                case 8:
+                    //Manager statsPlan menu
+                    ChartPlansMenu chartPlan = new ChartPlansMenu(percentage, buttonFont);
+                    Scene chartPlanMenuScene = new Scene(chartPlan.renderChartPlansEditMenu(width, height), width, height);
+                    chartPlanMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    window.setScene(chartPlanMenuScene);
+
+                    break;
+
 
 
             }
