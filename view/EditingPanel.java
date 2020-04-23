@@ -121,9 +121,9 @@ public class EditingPanel {
 
     public void addButton(String message){
         addButton = new Button(message);
-        addButton.setPrefSize(175 - (175 * percentage), 50 - (50 * percentage));
-        addButton.setMinSize(175 - (175 * percentage), 50 - (50 * percentage));
-        addButton.setStyle("-fx-font-size: " + (30 - (30 * percentage)) + ";");
+        addButton.setPrefSize(175 - (175 * percentage), 45 - (45 * percentage));
+        addButton.setMinSize(175 - (175 * percentage), 45 - (45 * percentage));
+        addButton.setStyle("-fx-font-size: " + (25 - (25 * percentage)) + ";");
         addButton.getStyleClass().add("client-buttons-template");
 
         GridPane.setConstraints(addButton, 5, textFields.size());
@@ -392,33 +392,29 @@ public class EditingPanel {
         titleColumnPick.setMinWidth(tableWidth);
 
         TableColumn<Extras, String> nameColumnOption = new TableColumn<>("Nombre plan");
-        nameColumnOption.setMinWidth(tableWidth * 0.6);
+        nameColumnOption.setMinWidth(tableWidth * 0.5);
         nameColumnOption.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
         TableColumn<Extras, String> nameColumnPick = new TableColumn<>("Nombre plan");
-        nameColumnPick.setMinWidth(tableWidth * 0.6);
+        nameColumnPick.setMinWidth(tableWidth * 0.5);
         nameColumnPick.setCellValueFactory(new PropertyValueFactory<>("planName"));
 
         TableColumn<Extras, Double> quantityColumnOption = new TableColumn<>("Cantidad");
-        quantityColumnOption.setMinWidth(tableWidth * 0.3);
-        quantityColumnOption.setMaxWidth(tableWidth * 0.3);
+        quantityColumnOption.setMinWidth(tableWidth * 0.25);
         quantityColumnOption.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         TableColumn<Extras, Double> quantityColumnPick = new TableColumn<>("Cantidad");
-        quantityColumnPick.setMinWidth(tableWidth * 0.3);
-        quantityColumnPick.setMaxWidth(tableWidth * 0.3);
+        quantityColumnPick.setMinWidth(tableWidth * 0.25);
         quantityColumnPick.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         TableColumn<Extras, Label> pickColumnOption = new TableColumn<>("Escoger");
-        pickColumnOption.setMinWidth(tableWidth * 0.3);
-        pickColumnOption.setMaxWidth(tableWidth * 0.3);
+        pickColumnOption.setMinWidth(tableWidth * 0.25);
         pickColumnOption.setSortable(false);
         pickColumnOption.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnOption.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
 
         TableColumn<Extras, Label> pickColumnPick = new TableColumn<>("Escoger");
-        pickColumnPick.setMinWidth(tableWidth * 0.3);
-        pickColumnPick.setMaxWidth(tableWidth * 0.3);
+        pickColumnPick.setMinWidth(tableWidth * 0.25);
         pickColumnPick.setSortable(false);
         pickColumnPick.setStyle(pickColumnOption.getStyle() + "-fx-alignment: CENTER;");
         pickColumnPick.setCellValueFactory(new PropertyValueFactory<>("selectPerson"));
@@ -459,7 +455,7 @@ public class EditingPanel {
 
     public void loadTable(Extras extras) {
         extras.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
-        extras.getSelectPerson().setStyle("-fx-font-size: " + (16 - (16 * percentage)) + ";");
+        extras.getSelectPerson().setStyle("-fx-font-size: " + (16 ) + ";");
         extras.getSelectPerson().getStyleClass().add("client-buttons-template");
         if (extras.isUsed()){
             pickedTable.getItems().add(extras);
