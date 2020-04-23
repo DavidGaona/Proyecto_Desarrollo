@@ -4,9 +4,13 @@ package utilities;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Date;
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-
+import model.Bill;
+import model.Client;
+import model.Plan;
 
 
 public class GeneratorPDF {
@@ -15,7 +19,7 @@ public class GeneratorPDF {
     private BaseFont bf;
     private int pageNumber = 0;
 
-    public void createPDF (String pdfFilename){
+    public void createPDF (String pdfFilename, Bill bill){
 
         Document doc = new Document();
         PdfWriter docWriter = null;
@@ -30,13 +34,14 @@ public class GeneratorPDF {
             doc.addCreator("ModiPlanSolutions");
             doc.addTitle("Factura");
             doc.setPageSize(PageSize.LETTER);
-
+            Client client = bill.getBill_Client();
+            Plan plan = bill.getBillPlan();
             doc.open();
             PdfContentByte cb = docWriter.getDirectContent();
             generateLayout(doc, cb);
-            generateHeader(doc, cb);
-            generateDetail(doc, cb, 1, 615);
-            generateBarCode(doc,cb,"1144186919");
+            generateHeader(cb, client.getName()+ " " +client.getLastName(),bill.getPhone(),client.getDirection(), Integer.toString(bill.getBillPlan().getId()),Integer.toString(client.getId()),bill.getBill_date());
+            generateDetail(doc, cb, 1, 615, plan);
+            generateBarCode(cb,Integer.toString(client.getId())+bill.getBill_date());
             printPageNumber(cb);
             printPageNumber(cb);
 
@@ -62,7 +67,7 @@ public class GeneratorPDF {
         }
     }
 
-    private void generateBarCode(Document doc, PdfContentByte cb, String code){
+    private void generateBarCode(PdfContentByte cb, String code){
             try {
                 Barcode128 code128 = new Barcode128();
                 code128.setCode(code);
@@ -117,8 +122,8 @@ public class GeneratorPDF {
             // Invoice Detail box Text Headings
             createHeadings(cb,22,633,"Item");
             createHeadings(cb,52,633,"Nombre del plan");
-            createHeadings(cb,152,633,"Descripcion del plan");
-            createHeadings(cb,432,633,"Extras");
+            createHeadings(cb,152,633,"Descripción del plan");
+            createHeadings(cb,432,633,"Recargo");
             createHeadings(cb,502,633,"Total");
 
             //add the images
@@ -138,18 +143,16 @@ public class GeneratorPDF {
 
     }
 
-    private void generateHeader(Document doc, PdfContentByte cb)  {
+    private void generateHeader(PdfContentByte cb, String name, String phone, String direction, String client_id, String plan_id, Date bill_date)  {
 
         try {
-            createHeadings(cb,200,750,"Alexander Gonzalez");
-            createHeadings(cb,200,735,"Numero: 3338877445");
-            createHeadings(cb,200,720,"Address Line 2");
-            createHeadings(cb,200,705,"Cali, Valle del Cauca");
-            createHeadings(cb,200,690,"Colombia");
+            createHeadings(cb,200,750, name);
+            createHeadings(cb,200,735,"Numero: "+phone);
+            createHeadings(cb,200,720,direction);
 
-            createHeadings(cb,482,743,"ABC0001");
-            createHeadings(cb,482,723,"123456");
-            createHeadings(cb,482,703, "10-03-2020");
+            createHeadings(cb,482,743,client_id);
+            createHeadings(cb,482,723,plan_id);
+            createHeadings(cb,482,703, bill_date.toString());
 
         }
 
@@ -159,16 +162,18 @@ public class GeneratorPDF {
 
     }
 
-    private void generateDetail(Document doc, PdfContentByte cb, int index, int y)  {
+    private void generateDetail(Document doc, PdfContentByte cb, int index, int y, Plan plan)  {
         DecimalFormat df = new DecimalFormat("0.00");
 
         try {
 
             createContent(cb,48,y,String.valueOf(index+1),PdfContentByte.ALIGN_RIGHT);
             createContent(cb,52,y, "ITEM" + (index+1),PdfContentByte.ALIGN_LEFT);
-            createContent(cb,152,y, "Product Description - SIZE " + (index+1),PdfContentByte.ALIGN_LEFT);
+            createContent(cb,152,y, "Descripcion del plan: \n " +
+                    "Nombre: "+plan.getPlanName()+"\n"+"Costo: "+plan.getPlanCost()+"\n"+"Minutos: "+plan.getPlanMinutes()+"\n"+
+                    "Datos: "+plan.getPlanData()+"\n"+"Mensajes: "+plan.getPlanTextMsn(),PdfContentByte.ALIGN_LEFT);
 
-            double price = Double.valueOf(df.format(Math.random() * 10));
+            double price = Double.valueOf(df.format(plan.getPlanCost()));
             double extPrice = price * (index+1) ;
             createContent(cb,498,y, df.format(price),PdfContentByte.ALIGN_RIGHT);
             createContent(cb,568,y, df.format(extPrice),PdfContentByte.ALIGN_RIGHT);

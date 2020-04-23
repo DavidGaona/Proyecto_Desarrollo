@@ -712,6 +712,27 @@ public class DbManager {
         }
     }
 
+    public ArrayList<Bill> getAllBills(){
+        ArrayList<Bill> array_bills = new ArrayList<Bill>();
+        String sql_select = "SELECT * FROM (public.active_bills NATURAL JOIN public.phone NATURAL JOIN public.client NATURAL JOIN public.plan)";
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet =  statement.executeQuery(sql_select);
+            while (resultSet.next()){
+                array_bills.add(new Bill(resultSet.getDouble(3),resultSet.getDate(4),resultSet.getInt(5),resultSet.getInt(6),resultSet.getInt(7),
+                        resultSet.getString(8),new Client(resultSet.getInt(2),resultSet.getString(9),resultSet.getString(10),resultSet.getShort(14),resultSet.getString(11),
+                        resultSet.getString(12),resultSet.getString(13),resultSet.getShort(15)),
+                        new Plan(resultSet.getInt(1), resultSet.getString(16),
+                                resultSet.getDouble(17),resultSet.getInt(18),resultSet.getInt(19),resultSet.getInt(20))));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return array_bills;
+    }
+
 
     public void openDBConnection() {
         connection = dBconnect.getConnection();

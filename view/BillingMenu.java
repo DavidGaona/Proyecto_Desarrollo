@@ -2,6 +2,7 @@ package view;
 
 import controller.DaoBank;
 
+import controller.DaoBill;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -32,13 +33,13 @@ import java.util.ArrayList;
 public class BillingMenu {
 
     public BillingMenu(double percentage, double buttonFont) {
-        bank = new DaoBank();
+        bill = new DaoBill();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
 
     private double percentage;
-    private DaoBank bank;
+    private DaoBill bill;
     private boolean currentBankMode = true;
     private double buttonFont;
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
@@ -106,7 +107,7 @@ public class BillingMenu {
         Button downloadBills = billingButtonTemplate(width, height, "Descargar Facturas");
 
         generateBillButton.setOnMouseClicked( e -> {
-
+            AlertBox.display("Mensaje: ",bill.generateBills(),"");
         });
         downloadBills.setOnMouseClicked( e -> {
 
@@ -115,7 +116,7 @@ public class BillingMenu {
 
             File selectedFile = directoryChooser.showDialog(null);
             if (selectedFile != null) {
-                System.out.print(selectedFile.getAbsolutePath());
+                AlertBox.display("Mensaje: ", bill.getAllBills(selectedFile.getAbsolutePath()),"");
             }
 
         });
@@ -146,7 +147,6 @@ public class BillingMenu {
         bankMenu.setBottom(botBar((HBox) bankMenu.getBottom(), width, height));
         bankMenu.setCenter(bankMenu.getCenter());
 
-        ProjectUtilities.loadComboBox(searchComboBox, bank.loadAllBanks());
 
         stackPane.getChildren().addAll(bankMenu, menuList, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);
