@@ -34,16 +34,14 @@ public class MenuListAdmin extends MenuList {
 
         Label userLabel = labelGenerator("Crear/Editar Usuario " + FA.USER_PLUS, width, height, percentage);
         Label billingLabel = labelGenerator("Facturación " + FA.COG, width, height, percentage);
-        Label listUsersLabel = labelGenerator("Listar Usuarios " + FA.USERS, width, height, percentage);
-        Label statsUsers = labelGenerator("Estadísticas de Usuarios " + FA.USER_POLL, width, height, percentage);
+        Label historyUsers = labelGenerator("Historial de Actividad " + FA.USERS, width, height, percentage);
         Label bankLabel = labelGenerator("Crear/Editar Banco " + FA.BANK, width, height, percentage);
         Label changePasswordLabel = labelGenerator("Cambiar Contraseña " + FA.KEY, width, height, percentage);
         Label logOutLabel = labelGenerator("Cerrar Sesión", width, height, percentage);
 
         userLabel.setAlignment(Pos.CENTER);
         billingLabel.setAlignment(Pos.CENTER);
-        listUsersLabel.setAlignment(Pos.CENTER);
-        statsUsers.setAlignment(Pos.CENTER);
+        historyUsers.setAlignment(Pos.CENTER);
         bankLabel.setAlignment(Pos.CENTER);
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
@@ -51,8 +49,8 @@ public class MenuListAdmin extends MenuList {
         layout.setPrefSize(width * 0.2 + 2, height);
         layout.setMaxSize(width * 0.2 + 2, height);
         layout.getChildren().addAll(
-                profile, separator2(width), billingLabel, separator(width), listUsersLabel,
-                separator(width), bankLabel, separator(width), userLabel, separator(width), statsUsers, separator(width), changePasswordLabel,
+                profile, separator2(width), billingLabel, separator(width),
+                bankLabel, separator(width), historyUsers, separator(width), userLabel, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu
         );
         layout.setAlignment(Pos.CENTER);
