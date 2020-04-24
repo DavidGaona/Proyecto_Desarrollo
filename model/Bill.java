@@ -8,11 +8,11 @@ public class Bill {
     private int bill_mins;
     private int bill_gb;
     private int bill_msg;
-    private String phone;
+    private long phone;
     private Client client;
     private Plan plan;
 
-    public Bill(double bill_cost, Date bill_date, int bill_mins, int bill_gb, int bill_msg, String phone, Client client, Plan plan) {
+    public Bill(double bill_cost, Date bill_date, int bill_mins, int bill_gb, int bill_msg, long phone, Client client, Plan plan) {
         this.bill_cost = bill_cost;
         this.bill_date = bill_date;
         this.bill_mins = bill_mins;
@@ -43,7 +43,7 @@ public class Bill {
         return bill_msg;
     }
 
-    public String getPhone() {
+    public long getBill_Phone() {
         return phone;
     }
 
