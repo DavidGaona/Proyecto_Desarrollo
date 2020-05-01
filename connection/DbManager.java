@@ -626,7 +626,7 @@ public class DbManager {
         }
     }
 
-    public Plan loadPlan(String planName){
+    public Plan loadPlan(String planName) {
         String loadPlanQuery = "SELECT plan_id, plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
                 "FROM plan where plan_name = ?";
         try {
@@ -815,27 +815,31 @@ public class DbManager {
         }
     }
 
-    public int generateBills(){
+    public int generateBills() {
         int[] numRows;
-        String sql_select = "SELECT client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message FROM ((SELECT client_id, plan_id FROM public.phone) AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
+        String sql_select = "SELECT phone_number,client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
+                "FROM ((SELECT phone_number, client_id, plan_id FROM public.phone WHERE phone_number " +
+                "NOT IN (SELECT phone_number FROM public.active_bills) AND phone_date > current_timestamp(0)) " +
+                "AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             ResultSet resultSet = statement.executeQuery();
-            String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?) ON CONFLICT DO NOTHING";
+            String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql_save);
             connection.setAutoCommit(false);
             while (resultSet.next()) {
-                statement.setInt(1,resultSet.getInt(1));
-                statement.setDouble(2,resultSet.getDouble(2));
-                statement.setInt(4,(int) Math.random()*resultSet.getInt(3)); //simulacion de consulta API
-                statement.setInt(5,(int) Math.random()*resultSet.getInt(4));
-                statement.setInt(6,(int) Math.random()*resultSet.getInt(5));
+                statement.setLong(1, resultSet.getLong(1));
+                statement.setDouble(2, resultSet.getDouble(3));
+                statement.setInt(3, (int) Math.random() * resultSet.getInt(4)); //simulacion de consulta API
+                statement.setInt(4, (int) Math.random() * resultSet.getInt(5));
+                statement.setInt(5, (int) Math.random() * resultSet.getInt(6));
+                statement.setInt(6, resultSet.getInt(2));
                 statement.addBatch();
             }
-                numRows = statement.executeBatch();
-                connection.commit();
-                return Arrays.stream(numRows).reduce(0, Integer::sum);
+            numRows = statement.executeBatch();
+            connection.commit();
+            return Arrays.stream(numRows).reduce(0, Integer::sum);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return -1;
@@ -845,27 +849,31 @@ public class DbManager {
         }
     }
 
-    public ArrayList<Bill> getAllBills(){
+    public ArrayList<Bill> getAllBills() {
         ArrayList<Bill> array_bills = new ArrayList<Bill>();
         String sql_select = "SELECT * FROM (public.active_bills NATURAL JOIN public.phone NATURAL JOIN public.client NATURAL JOIN public.plan)";
-        try{
+        try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet =  statement.executeQuery(sql_select);
-            while (resultSet.next()){
-                array_bills.add(new Bill(resultSet.getDouble(3),resultSet.getDate(4),resultSet.getInt(5),resultSet.getInt(6),resultSet.getInt(7),
-                        resultSet.getString(8),new Client(resultSet.getInt(2),resultSet.getString(9),resultSet.getString(10),resultSet.getShort(14),resultSet.getString(11),
-                        resultSet.getString(12),resultSet.getString(13),resultSet.getShort(15)),
-                        new Plan(resultSet.getInt(1), resultSet.getString(16),
-                                resultSet.getDouble(17),resultSet.getInt(18),resultSet.getInt(19),resultSet.getInt(20))));
+            ResultSet resultSet = statement.executeQuery(sql_select);
+            while (resultSet.next()) {
+                array_bills.add(new Bill(
+                        resultSet.getDouble(4), resultSet.getDate(5),
+                        resultSet.getInt(6), resultSet.getInt(7), resultSet.getInt(8),
+                        resultSet.getLong(3), new Client(resultSet.getInt(2),
+                        resultSet.getString(10), resultSet.getString(11), resultSet.getShort(16),
+                        resultSet.getString(12), resultSet.getString(13), resultSet.getString(14),
+                        resultSet.getShort(15)), new Plan(resultSet.getInt(1), resultSet.getString(17),
+                        resultSet.getDouble(18), resultSet.getInt(19), resultSet.getInt(20),
+                        resultSet.getInt(21)))
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return array_bills;
     }
-
 
     public void openDBConnection() {
         connection = dBconnect.getConnection();
