@@ -94,11 +94,144 @@ public class DbManager {
         }
     }
 
+    public ArrayList<Integer> loadPhoneNumbers(int clientId) {
+        String getNumbersQuery = "SELECT phone_number FROM public.phone where client_id = ?";
+        ArrayList<Integer> numbers = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(getNumbersQuery);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                numbers.add(resultSet.getInt(1));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return numbers;
+    }
+
+    public String addNewClientLine(int clientId, String planName) {
+        String getClientType = "SELECT client_type FROM public.client WHERE client_id = ?";
+        String checkForMaxLines = "SELECT count(*) FROM (SELECT phone_number FROM public.phone WHERE client_id = ? LIMIT 5) sq1;";
+        String getLastNumberQuery = "SELECT phone_number FROM public.phone WHERE phone_number = (select max(phone_number) from public.phone)";
+        String addLineQuery = "INSERT INTO public.phone(phone_number, client_id, plan_id, phone_date) VALUES(?, ?, ?, current_timestamp(0)) ";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(getClientType);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            short clientType = resultSet.getShort(1);
+            if (clientType == (short) 0) {
+                statement = connection.prepareStatement(checkForMaxLines);
+                statement.setInt(1, clientId);
+                resultSet = statement.executeQuery();
+                resultSet.next();
+                if (resultSet.getInt(1) == 3)
+                    return "Numero de lineas máximo excedido";
+            }
+            int planId = getPlanId(planName);
+            if (planId == -1)
+                return "Plan no encontrado";
+            statement = connection.prepareStatement(getLastNumberQuery);
+            resultSet = statement.executeQuery();
+            if (resultSet.next())
+                return "Error interno";
+            long phoneNumber = resultSet.getLong(1);
+            ++phoneNumber;
+            statement = connection.prepareStatement(addLineQuery);
+            statement.setLong(1, phoneNumber);
+            statement.setInt(2, clientId);
+            statement.setInt(3, planId);
+            statement.executeUpdate();
+            return "Plan y número agredado con éxito";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+
+        return "Cliente no encontrado";
+    }
+
+    public String queueNewPlan(long phoneNumber, String planName) {
+        String changePlanQuery = "INSERT INTO public.phone_pending(client_id, plan_id, phone_number)  " +
+                "VALUES (?, ?, ?);";
+        try {
+            int planId = getPlanId(planName);
+            if (planId == -1)
+                return "Plan no encontrado";
+            PreparedStatement statement = connection.prepareStatement(changePlanQuery);
+            statement.setInt(1, planId);
+            statement.setLong(2, phoneNumber);
+            return "Plan pendiente por cambio, sera cambiado en su proximo pago";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+
+        return "Usuario no encontrado";
+    }
+
+    public String changeSelectedPlan(long phoneNumber) {
+        String selectNewPlan = "SELECT plan_id FROM public.phone_pending WHERE phone_number = ?";
+        String changePlanQuery = "UPDATE public.phone SET plan_id = ?, phone_date = current_timestamp(0) WHERE phone_number = ?";
+        String deletePendingPlanChange = "DELETE FROM public.phone_pending WHERE phone_number = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectNewPlan);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            int planId = resultSet.getInt(1);
+            statement = connection.prepareStatement(changePlanQuery);
+            statement.setInt(1, planId);
+            statement.setLong(2, phoneNumber);
+            statement.executeUpdate();
+            statement = connection.prepareStatement(deletePendingPlanChange);
+            statement.setLong(1, phoneNumber);
+            statement.executeUpdate();
+
+            return "Plan cambiado con éxito";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+
+        return "Numero de telefono invalido";
+    }
+
+    private int getPlanId(String planName) {
+        String getPlanIdQuery = "SELECT plan_id FROM public.plan WHERE plan_name = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
+            statement.setString(1, planName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                return -1;
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return -1;
+    }
+
     public Client loadClient(String documentNumber, short clientDocumentType) {
-        System.out.println(documentNumber + " " + clientDocumentType);
         String sql_select = "SELECT client_id, client_name, client_last_name," +
                 " client_email, client_address, client_type " +
                 "FROM public.client WHERE client_document_number = ? AND client_document_type = ?";
+
         Client client = new Client();
         try {
             System.out.println("consultando en la base de datos");
