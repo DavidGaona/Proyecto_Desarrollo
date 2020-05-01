@@ -26,7 +26,7 @@ public class ClientMenu {
         this.buttonFont = buttonFont;
     }
 
-    EditingPanel personalInfo;
+    EditingPanel personalInfo, newLine, changePlan, payPlan;
 
 
     private Button saveChangesButton;
@@ -189,12 +189,81 @@ public class ClientMenu {
 
     }
 
+    private void changePlan(double width){
+        changePlan = new EditingPanel("Cambiar plan", percentage, width);
+
+        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        changePlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
+        changePlan.limitVisibleRows("phoneNumbers", 6);
+
+        changePlan.addComboBox("planName", "Plan:", placeHolder);
+        changePlan.limitVisibleRows("planName", 6);
+
+        changePlan.addTextField("planCost", "Costo:");
+        changePlan.disableTextField("planCost");
+
+        changePlan.addTextField("planMinutes", "Minutos:");
+        changePlan.disableTextField("planMinutes");
+
+        changePlan.addTextField("planDataCap", "Gigas del plan:");
+        changePlan.disableTextField("planDataCap");
+
+        changePlan.addTextField("planTextMessage", "Número de mensajes:");
+        changePlan.disableTextField("planTextMessage");
+
+        changePlan.addButton("Cambiar plan");
+    }
+
+    private void newLine(double width){
+        newLine = new EditingPanel("Añadir linea", percentage, width);
+
+        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        newLine.addComboBox("planName", "Plan:", placeHolder);
+        newLine.limitVisibleRows("planName", 6);
+
+        newLine.addTextField("planCost", "Costo:");
+        newLine.disableTextField("planCost");
+
+        newLine.addTextField("planMinutes", "Minutos:");
+        newLine.disableTextField("planMinutes");
+
+        newLine.addTextField("planDataCap", "Gigas del plan:");
+        newLine.disableTextField("planDataCap");
+
+        newLine.addTextField("planTextMessage", "Número de mensajes:");
+        newLine.disableTextField("planTextMessage");
+
+        newLine.addButton("Añadir linea");
+
+    }
+
+    private void payPlan(double width){
+        payPlan = new EditingPanel("Pago de plan", percentage, width);
+
+        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        payPlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
+        payPlan.limitVisibleRows("phoneNumbers", 6);
+
+        payPlan.addTextField("payValue", "Valor a pagar:");
+        payPlan.disableTextField("payValue");
+
+        payPlan.addButton("Pagar plan");
+    }
+
     public StackPane renderClientEditMenu(double width, double height) {
         StackPane stackPane = new StackPane();
         personalInfo(width);
+        changePlan(width);
+        newLine(width);
+        payPlan(width);
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
-        menu.addToMidPane(personalInfo.sendPane(width, height * 0.1));
+        menu.addToMidPane(
+                personalInfo.sendPane(width, height * 0.1),
+                changePlan.sendPane(width, 0),
+                newLine.sendPane(width, 0),
+                payPlan.sendPane(width, 0)
+        );
 
         searchPane = new SearchPane(width, height, percentage);
         HBox sp = searchPane.showFrame();

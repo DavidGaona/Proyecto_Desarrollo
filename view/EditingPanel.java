@@ -123,7 +123,7 @@ public class EditingPanel {
         addButton = new Button(message);
         addButton.setPrefSize(175 - (175 * percentage), 45 - (45 * percentage));
         addButton.setMinSize(175 - (175 * percentage), 45 - (45 * percentage));
-        addButton.setStyle("-fx-font-size: " + (25 - (25 * percentage)) + ";");
+        addButton.setStyle("-fx-font-size: " + (20 - (20 * percentage)) + ";");
         addButton.getStyleClass().add("client-buttons-template");
 
         GridPane.setConstraints(addButton, 5, textFields.size());
@@ -373,6 +373,10 @@ public class EditingPanel {
 
     public void enableTextField(String id) {
         getTextfield(id).setEditable(true);
+    }
+
+    public void limitVisibleRows(String id, int limit){
+        getComboBox(id).setVisibleRowCount(limit);
     }
 
     public void addRegexConstraint(String pattern) {
