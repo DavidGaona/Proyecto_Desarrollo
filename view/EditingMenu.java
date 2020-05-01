@@ -79,6 +79,12 @@ public class EditingMenu {
 
     }
 
+    public void topRightPane()
+    {
+        midPane.setAlignment(Pos.TOP_RIGHT);
+        midPane.setStyle(midPane.getStyle() + "-fx-background-color: #18171C;");
+    }
+
     public void centerPane(){
         midPane.setAlignment(Pos.CENTER);
         midPane.setStyle(midPane.getStyle() + "-fx-background-color: #18171C;");

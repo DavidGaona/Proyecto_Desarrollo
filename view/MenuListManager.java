@@ -1,5 +1,6 @@
 package view;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import utilities.ConfirmBox;
 import utilities.FA;
 import utilities.ProjectEffects;
@@ -19,12 +21,6 @@ public class MenuListManager extends MenuList {
         Button closeMenu = new Button();
         closeMenu.setText("\u21A9");
         closeMenu.setStyle(closeMenu.getStyle() + "-fx-font-size: " + (80 - (80 * percentage)) + ";");
-
-        /*Circle profile = new Circle((height * 0.2) / 2);
-        profile.setCenterX((height * 0.2) / 2);
-        profile.setCenterY((height * 0.2) / 2);
-        profile.setFill(javafx.scene.paint.Color.web("#FFFFFF"));
-        profile.setStroke(Color.web("#3D3D3E"));*/
 
         Label profile = new Label();
         profile.setFont(Font.loadFont(FA.getFont(),20));
@@ -56,6 +52,27 @@ public class MenuListManager extends MenuList {
         //effect closeMenu
         closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700,1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
+
+        planLabel.setOnMouseClicked( e -> {
+            PauseTransition p = new PauseTransition(Duration.millis(250));
+            p.setOnFinished(ex -> Login.currentWindow.set(2));
+            ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
+            p.play();
+        });
+
+        statsClientsLabel.setOnMouseClicked( e -> {
+            PauseTransition p = new PauseTransition(Duration.millis(250));
+            p.setOnFinished(ex -> Login.currentWindow.set(7));
+            ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
+            p.play();
+        });
+
+        statsPlansLabel.setOnMouseClicked( e -> {
+            PauseTransition p = new PauseTransition(Duration.millis(250));
+            p.setOnFinished(ex -> Login.currentWindow.set(8));
+            ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
+            p.play();
+        });
 
         changePasswordLabel.setOnMouseClicked(e -> {
             boolean answer = ConfirmBox.display("Cambiar Contraseña", "¿Desea Cambiar la Contraseña?", "Si", "No");
