@@ -1,5 +1,6 @@
 package view;
 import controller.DaoBill;
+import controller.DaoChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -15,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import model.DataChart;
 import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
@@ -22,13 +24,17 @@ import utilities.ProjectUtilities;
 import view.components.SearchPane;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class ChartClientsMenu {
+
+    private DaoChart daoChart;
 
     public ChartClientsMenu(double percentage, double buttonFont) {
         bill = new DaoBill();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
+        this.daoChart = new DaoChart();
     }
 
     private double percentage;
@@ -106,18 +112,23 @@ public class ChartClientsMenu {
         DatePicker dateTo = new DatePicker();
 
         generateChart.setOnMouseClicked( e -> {
-            ObservableList<PieChart.Data> pieChartData =
-                    FXCollections.observableArrayList(
-                            new PieChart.Data("Grapefruit", 13),
-                            new PieChart.Data("Oranges", 25),
-                            new PieChart.Data("Plums", 10),
-                            new PieChart.Data("Pears", 22),
-                            new PieChart.Data("Apples", 30));
-            final PieChart chart = new PieChart();
-            chart.setTitle("Imported Fruits");
-            chart.setLegendSide(Side.LEFT);
-            stackChart.getChildren().addAll(chart);
+            ArrayList<DataChart> data = daoChart.getDataAboutClientsNC(true); //Cambiar
+            if(data != null){
+                ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+                for (DataChart dataPiece: data){
+                    pieChartData.add(new PieChart.Data(dataPiece.getValueX(),dataPiece.getValueY()));
+                }
+                final PieChart chart = new PieChart(pieChartData);
+                chart.setTitle("Tipos de Cliente");
+                chart.setLegendSide(Side.LEFT);
+
+                stackChart.getChildren().clear();
+                stackChart.getChildren().addAll(chart);
+            }else {
+                AlertBox.display("Error: ", "No se pudo generar el gráfico","");
+            }
         });
+
         centerText.getChildren().addAll(text, date, dateTo, generateChart);
         hbox.getChildren().addAll(centerText, stackChart);
 

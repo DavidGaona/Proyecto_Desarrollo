@@ -6,11 +6,18 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
+import utilities.ProjectUtilities;
 import view.Login;
 
 import java.sql.*;
+import java.text.DateFormatSymbols;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class DbManager {
@@ -873,6 +880,54 @@ public class DbManager {
             e.printStackTrace();
         }
         return array_bills;
+    }
+
+    public ArrayList<DataChart> getDataAboutClientsNC(boolean activos){
+        ArrayList<DataChart> data = new ArrayList<DataChart>();
+        String sql_select;
+        if(activos){
+            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client GROUP BY client_type";
+        }else{
+            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type FROM public.client NATURAL JOIN public.phone) AS result GROUP BY client_type";
+        }
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql_select);
+            while (resultSet.next()) {
+                    data.add(
+                            new DataChart(ProjectUtilities.convertClientTypeString(resultSet.getShort(1)),resultSet.getLong(2))
+                    );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+
+    }
+
+    public ArrayList<DataChart> getDataPlansPerMonths(Timestamp from, Timestamp to){
+        ArrayList<DataChart> data = new ArrayList<DataChart>();
+        String sql_select = "SELECT EXTRACT(MONTH FROM phone_date) AS month, COUNT(phone_number) AS sum FROM public.phone GROUP BY EXTRACT(MONTH FROM phone_date) ORDER BY month DESC HAVING BETWEEN ? AND ?";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setTimestamp(1, from);
+            statement.setTimestamp(2,to);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.add(
+                        new DataChart(Month.of(resultSet.getInt(1)).name(),resultSet.getLong(2))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
+        return data;
     }
 
     public void openDBConnection() {

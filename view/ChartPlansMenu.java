@@ -1,33 +1,39 @@
 package view;
 
 import controller.DaoBill;
+import controller.DaoChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.chart.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.DataChart;
+import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
 import view.components.SearchPane;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 public class ChartPlansMenu {
+
+    private DaoChart daoChart;
 
     public ChartPlansMenu(double percentage, double buttonFont) {
         bill = new DaoBill();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
+        this.daoChart = new DaoChart();
     }
 
     private double percentage;
@@ -119,22 +125,26 @@ public class ChartPlansMenu {
 
 
         generateChart.setOnMouseClicked( e -> {
-
             if(chartComboBox.getValue().equals("Ventas por Mes"))
             {
-                ObservableList<PieChart.Data> pieChartData =
-                        FXCollections.observableArrayList(
-                                new PieChart.Data("Grapefruit", 13),
-                                new PieChart.Data("Oranges", 25),
-                                new PieChart.Data("Plums", 10),
-                                new PieChart.Data("Pears", 22),
-                                new PieChart.Data("Apples", 30));
-                final PieChart chart = new PieChart(pieChartData);
-                chart.setTitle("Imported Fruits");
-                chart.setLegendSide(Side.LEFT);
+                LocalDate from = date.getValue();
+                LocalDate to = dateTo.getValue();
+                ArrayList<DataChart> data = daoChart.getDataPlansPerMonths(from,to);
+                if(data != null){
+                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+                    for (DataChart dataPiece: data){
+                        pieChartData.add(new PieChart.Data(dataPiece.getValueX(),dataPiece.getValueY()));
+                    }
+                    final PieChart chart = new PieChart(pieChartData);
+                    chart.setTitle("Imported Fruits");
+                    chart.setLegendSide(Side.LEFT);
 
-                stackChart.getChildren().clear();
-                stackChart.getChildren().addAll(chart);
+                    stackChart.getChildren().clear();
+                    stackChart.getChildren().addAll(chart);
+                }else {
+                    AlertBox.display("Error: ","No se pudo generar","");
+                }
+
             }else{
 
                 final CategoryAxis xAxis = new CategoryAxis();
@@ -167,8 +177,6 @@ public class ChartPlansMenu {
                 stackChart.getChildren().clear();
                 stackChart.getChildren().addAll(lineChart);
             }
-
-
 
         });
 
