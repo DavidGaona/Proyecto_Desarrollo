@@ -7,6 +7,8 @@ import model.Plan;
 import model.Extras;
 import model.Voice;
 
+import java.util.ArrayList;
+
 public class DaoPlan {
 
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
@@ -81,6 +83,14 @@ public class DaoPlan {
         dbManager.closeDBConnection();
 
         return extras;
+    }
+
+    public ArrayList<String> loadPlans(){
+        dbManager.openDBConnection();
+        ArrayList<String> plans = dbManager.loadPlans();
+        dbManager.closeDBConnection();
+
+        return plans;
     }
 
 }

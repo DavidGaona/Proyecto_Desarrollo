@@ -11,12 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import model.Extras;
 import model.Plan;
 import utilities.*;
+import view.components.AlertBox;
 import view.components.SearchPane;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class ManagerMenu {
                 searchPane.getSearchField().setText("");
                 searchPane.setVisible(false);
             } else
-                AlertBox.display("Error: ", "Plan no encontrado", "");
+                AlertBox.display("Error: ", "Plan no encontrado");
         });
 
         saveChangesButton = ManagerMenuButtonTemplate(width, height, "Agregar Plan");
@@ -94,9 +94,9 @@ public class ManagerMenu {
                         basicPlanInfo.clear();
                         planExtras.resetTables();
                     }
-                    AlertBox.display("Éxito", message, "");
+                    AlertBox.display("Éxito", message);
                 } else {
-                    AlertBox.display("Error", message, "");
+                    AlertBox.display("Error", message);
                 }
             } else {
                 if (!basicPlanInfo.isEmpty()) {
@@ -105,9 +105,9 @@ public class ManagerMenu {
                         basicPlanInfo.clear();
                         planExtras.resetTables();
                     }
-                    AlertBox.display("Éxito", message, "");
+                    AlertBox.display("Éxito", message);
                 } else {
-                    AlertBox.display("Error", message, "");
+                    AlertBox.display("Error", message);
                 }
             }
 
@@ -225,7 +225,7 @@ public class ManagerMenu {
                 wasSuccessful(message);
             }
             else {
-                AlertBox.display("Error", message, "");
+                AlertBox.display("Error", message);
             }
         });
     }
@@ -241,7 +241,7 @@ public class ManagerMenu {
             planExtras.loadTable(extras);
             createExtra.clear();
         }
-        AlertBox.display("Éxito ", message, "");
+        AlertBox.display("Éxito ", message);
     }
 
     private void createExistingExtra(double width, double height) {

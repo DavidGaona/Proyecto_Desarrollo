@@ -179,7 +179,7 @@ public class EditingPanel {
         getTextfield(id).setText(value);
     }
 
-    private ComboBox<String> getComboBox(String id) {
+    public ComboBox<String> getComboBox(String id) {
         for (int i = 0; i < names.size(); ++i) {
             if (names.get(i).equals(id))
                 return comboBoxes.get(i);
@@ -189,6 +189,22 @@ public class EditingPanel {
 
     public void setComboBox(String id, String value) {
         getComboBox(id).valueProperty().set(value);
+    }
+
+    public void setComboBox(String id, ArrayList<Long> list){
+        getComboBox(id).getItems().clear();
+        for (Long number : list) {
+            getComboBox(id).getItems().add(number + "");
+        }
+        getComboBox(id).getSelectionModel().selectFirst();
+    }
+
+    public void setComboBoxString(String id, ArrayList<String> list){
+        getComboBox(id).getItems().clear();
+        for (String string : list) {
+            getComboBox(id).getItems().add(string);
+        }
+        getComboBox(id).getSelectionModel().selectFirst();
     }
 
     private SwitchButton getSwitchButton(String id) {
@@ -262,37 +278,6 @@ public class EditingPanel {
         GridPane.setHalignment(rectangle, HPos.RIGHT);
         tagsPane.getChildren().add(rectangle);
         rectangle.setVisible(false);
-    }
-
-    public void swap(String name1, String name2) {
-        int indexName1 = getIndex(name1);
-        int indexName2 = getIndex(name2);
-
-        Collections.swap(textFields, indexName1, indexName2);
-        Collections.swap(comboBoxes, indexName1, indexName2);
-        Collections.swap(switchButtons, indexName1, indexName2);
-        Collections.swap(texts, indexName1, indexName2);
-        Collections.swap(names, indexName1, indexName2);
-
-        GridPane.setConstraints(texts.get(indexName1), 4 + indexName1, 0);
-        GridPane.setHalignment(texts.get(indexName1), HPos.RIGHT);
-        if (textFields.get(indexName1) != null)
-            GridPane.setConstraints(textFields.get(indexName1), 5 + indexName1, 0);
-        else if (comboBoxes.get(indexName1) != null)
-            GridPane.setConstraints(comboBoxes.get(indexName1), 5 + indexName1, 0);
-        else if (switchButtons.get(indexName1) != null) {
-            GridPane.setConstraints(switchButtons.get(indexName1), 5 + indexName1, 0);
-        }
-
-        GridPane.setConstraints(texts.get(indexName2), 4 + indexName2, 0);
-        GridPane.setHalignment(texts.get(indexName2), HPos.RIGHT);
-        if (textFields.get(indexName2) != null)
-            GridPane.setConstraints(textFields.get(indexName2), 5 + indexName2, 0);
-        else if (comboBoxes.get(indexName2) != null)
-            GridPane.setConstraints(comboBoxes.get(indexName2), 5 + indexName2, 0);
-        else if (switchButtons.get(indexName2) != null) {
-            GridPane.setConstraints(switchButtons.get(indexName2), 5 + indexName2, 0);
-        }
     }
 
     public void clear() {

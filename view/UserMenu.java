@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import model.User;
 import utilities.*;
+import view.components.AlertBox;
 import view.components.SearchPane;
 
 public class UserMenu {
@@ -85,7 +86,7 @@ public class UserMenu {
                 searchPane.getSearchField().setText("");
                 searchPane.setVisible(false);
             } else
-                AlertBox.display("Error: ", "Usuario no encontrado", "");
+                AlertBox.display("Error: ", "Usuario no encontrado");
         });
 
         newUserButton.setOnMouseClicked(e -> {
@@ -132,10 +133,10 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     Login.currentLoggedUser);
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
             personalInfo.clear();
         } else {
-            AlertBox.display("Error", message, "");
+            AlertBox.display("Error", message);
         }
 
     }
@@ -152,10 +153,10 @@ public class UserMenu {
                     ProjectUtilities.convertUserType(personalInfo.getContent("userType")),
                     personalInfo.getSwitchButtonValue("userState"),
                     !personalInfo.getSwitchButtonValue("userPasswordReset"));
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
             personalInfo.clear();
         } else {
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
         }
     }
 

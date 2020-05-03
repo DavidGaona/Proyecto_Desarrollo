@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import utilities.AlertBox;
+import view.components.AlertBox;
 import utilities.ProjectUtilities;
 
 
@@ -87,11 +87,11 @@ public class UserPasswordChange {
                 if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
                     Login.currentWindow.set(user.changePassword(Login.currentLoggedUser, confirmPasswordTextField.getText())+1);
                 } else {
-                    AlertBox.display("Error", "Las contraseñas no coinciden", "");
+                    AlertBox.display("Error", "Las contraseñas no coinciden");
                     confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #FF0000;");
                 }
             } else {
-                AlertBox.display("Error", "Contraseña incorrecta", "");
+                AlertBox.display("Error", "Contraseña incorrecta");
             }
         });
 

@@ -14,14 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
-import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
-import utilities.ProjectUtilities;
-import view.components.SearchPane;
-
-import java.io.File;
 
 public class ChartClientsMenu {
 
