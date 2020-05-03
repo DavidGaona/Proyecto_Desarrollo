@@ -14,10 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.DataChart;
-import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
+import view.components.AlertBox;
 import view.components.SearchPane;
 
 import java.sql.Timestamp;
@@ -142,7 +142,7 @@ public class ChartPlansMenu {
                     stackChart.getChildren().clear();
                     stackChart.getChildren().addAll(chart);
                 }else {
-                    AlertBox.display("Error: ","No se pudo generar","");
+                    AlertBox.display("Error: ","No se pudo generar");
                 }
 
             }else{

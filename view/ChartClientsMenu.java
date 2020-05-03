@@ -15,15 +15,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import model.DataChart;
-import utilities.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
-import utilities.ProjectUtilities;
-import view.components.SearchPane;
-
-import java.io.File;
+import view.components.AlertBox;
 import java.util.ArrayList;
 
 public class ChartClientsMenu {
@@ -125,7 +120,7 @@ public class ChartClientsMenu {
                 stackChart.getChildren().clear();
                 stackChart.getChildren().addAll(chart);
             }else {
-                AlertBox.display("Error: ", "No se pudo generar el gráfico","");
+                AlertBox.display("Error: ", "No se pudo generar el gráfico");
             }
         });
 

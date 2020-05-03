@@ -16,7 +16,6 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -101,15 +100,15 @@ public class DbManager {
         }
     }
 
-    public ArrayList<Integer> loadPhoneNumbers(int clientId) {
+    public ArrayList<Long> loadPhoneNumbers(int clientId) {
         String getNumbersQuery = "SELECT phone_number FROM public.phone where client_id = ?";
-        ArrayList<Integer> numbers = new ArrayList<>();
+        ArrayList<Long> numbers = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(getNumbersQuery);
             statement.setInt(1, clientId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                numbers.add(resultSet.getInt(1));
+                numbers.add(resultSet.getLong(1));
             }
 
         } catch (SQLException e) {
@@ -146,7 +145,7 @@ public class DbManager {
                 return "Plan no encontrado";
             statement = connection.prepareStatement(getLastNumberQuery);
             resultSet = statement.executeQuery();
-            if (resultSet.next())
+            if (!resultSet.next())
                 return "Error interno";
             long phoneNumber = resultSet.getLong(1);
             ++phoneNumber;
@@ -166,7 +165,7 @@ public class DbManager {
         return "Cliente no encontrado";
     }
 
-    public String queueNewPlan(long phoneNumber, String planName) {
+    public String queueNewPlan(int clientId, long phoneNumber, String planName) {
         String changePlanQuery = "INSERT INTO public.phone_pending(client_id, plan_id, phone_number)  " +
                 "VALUES (?, ?, ?);";
         try {
@@ -174,8 +173,10 @@ public class DbManager {
             if (planId == -1)
                 return "Plan no encontrado";
             PreparedStatement statement = connection.prepareStatement(changePlanQuery);
-            statement.setInt(1, planId);
-            statement.setLong(2, phoneNumber);
+            statement.setInt(1, clientId);
+            statement.setInt(2, planId);
+            statement.setLong(3, phoneNumber);
+            statement.executeUpdate();
             return "Plan pendiente por cambio, sera cambiado en su proximo pago";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -187,7 +188,7 @@ public class DbManager {
         return "Usuario no encontrado";
     }
 
-    public String changeSelectedPlan(long phoneNumber) {
+    public boolean changeSelectedPlan(long phoneNumber) {
         String selectNewPlan = "SELECT plan_id FROM public.phone_pending WHERE phone_number = ?";
         String changePlanQuery = "UPDATE public.phone SET plan_id = ?, phone_date = current_timestamp(0) WHERE phone_number = ?";
         String deletePendingPlanChange = "DELETE FROM public.phone_pending WHERE phone_number = ?";
@@ -204,8 +205,7 @@ public class DbManager {
             statement = connection.prepareStatement(deletePendingPlanChange);
             statement.setLong(1, phoneNumber);
             statement.executeUpdate();
-
-            return "Plan cambiado con éxito";
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
@@ -213,7 +213,26 @@ public class DbManager {
             System.out.println("Ocurrio un error interno del sistema");
         }
 
-        return "Numero de telefono invalido";
+        return false;
+    }
+
+    public String getPhonePlan(long phoneNumber) {
+        String getPlanIdQuery = "SELECT plan_name FROM " +
+                "(SELECT plan_id FROM public.phone WHERE phone_number = ?) sq1 NATURAL JOIN public.plan;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next())
+                return "Numero no encontrado";
+            return resultSet.getString(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "Error";
     }
 
     private int getPlanId(String planName) {
@@ -222,7 +241,7 @@ public class DbManager {
             PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
             statement.setString(1, planName);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
+            if (!resultSet.next())
                 return -1;
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -246,9 +265,7 @@ public class DbManager {
             statement.setString(1, documentNumber);
             statement.setShort(2, clientDocumentType);
             ResultSet resultSet = statement.executeQuery();
-            System.out.println("All good");
             resultSet.next();
-            System.out.println("All good 1");
             client.setId(resultSet.getInt(1));
             client.setName(resultSet.getString(2));
             client.setLastName(resultSet.getString(3));
@@ -266,6 +283,73 @@ public class DbManager {
         }
 
         return new Client();
+    }
+
+    public double getValueToPay(long phoneNumber){
+        String getPlanIdQuery = "SELECT bill_cost FROM public.active_bills WHERE phone_number = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next())
+                return 0.0;
+            return resultSet.getDouble(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return 0.0;
+    }
+
+    public String payPlan(long phoneNumber, int userId, String bankName) {
+        String selectCurrentBill = "SELECT * FROM public.active_bills WHERE phone_number = ?;";
+        String insertToLegacyBills = "INSERT INTO public.legacy_bills(client_id, user_id, bill_cost, bank_id, " +
+                "bill_date_legacy, bill_mins_legacy, bill_gb_legacy, bill_msg_legacy, phone_number, bill_payed_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp(0));"; //bank and user
+        String deleteFromCurrentBills = "DELETE FROM public.active_bills WHERE phone_number = ?;";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectCurrentBill);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next())
+                return "No tiene facturas por pagar";
+            resultSet.getLong(1);
+            double billCost = resultSet.getDouble(2);
+            Timestamp billDate = resultSet.getTimestamp(3);
+            int billMinutes = resultSet.getInt(4);
+            int billGb = resultSet.getInt(5);
+            int billMsg = resultSet.getInt(6);
+            int clientId = resultSet.getInt(7);
+            int bankId = getBankId(bankName);
+            if (bankId == -1)
+                return "Banco no encontrado";
+            statement = connection.prepareStatement(insertToLegacyBills);
+            statement.setInt(1, clientId);
+            statement.setInt(2, userId);
+            statement.setDouble(3, billCost);
+            statement.setInt(4, bankId);
+            statement.setTimestamp(5, billDate);
+            statement.setInt(6, billMinutes);
+            statement.setInt(7, billGb);
+            statement.setInt(8, billMsg);
+            statement.setLong(9, phoneNumber);
+            statement.executeUpdate();
+            statement = connection.prepareStatement(deleteFromCurrentBills);
+            statement.setLong(1, phoneNumber);
+            statement.executeUpdate();
+            if (changeSelectedPlan(phoneNumber))
+                return "Factura pagada con éxito y cambio exitoso al nuevo plan";
+            return "Factura pagada con éxito";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "No se pudo realizar el pago por favor intente de nuevo";
     }
 
     //**************************** METODOS DEL USUARIO ********************
@@ -633,6 +717,20 @@ public class DbManager {
         }
     }
 
+    public ArrayList<String> loadPlans() {
+        ArrayList<String> plans = new ArrayList<>();
+        String loadPlanQuery = "SELECT plan_name FROM plan;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(loadPlanQuery);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                plans.add(resultSet.getString(1));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return plans;
+    }
+
     public Plan loadPlan(String planName) {
         String loadPlanQuery = "SELECT plan_id, plan_name, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
                 "FROM plan where plan_name = ?";
@@ -822,6 +920,23 @@ public class DbManager {
         }
     }
 
+    private int getBankId(String bankName){
+        String sql_select = "SELECT bank_id " +
+                "FROM public.bank WHERE bank_name = ?";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setString(1, bankName);
+            ResultSet resultSet = statement.executeQuery();
+            return (resultSet.next()) ? resultSet.getInt(1) : -1;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return -1;
+    }
+
     public int generateBills() {
         int[] numRows;
         String sql_select = "SELECT phone_number,client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
@@ -857,7 +972,7 @@ public class DbManager {
     }
 
     public ArrayList<Bill> getAllBills() {
-        ArrayList<Bill> array_bills = new ArrayList<Bill>();
+        ArrayList<Bill> array_bills = new ArrayList<>();
         String sql_select = "SELECT * FROM (public.active_bills NATURAL JOIN public.phone NATURAL JOIN public.client NATURAL JOIN public.plan)";
         try {
             Statement statement = connection.createStatement();

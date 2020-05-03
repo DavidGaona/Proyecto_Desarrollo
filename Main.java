@@ -40,6 +40,7 @@ public class Main extends Application {
                     Scene clientMenuScene = new Scene(client.renderClientEditMenu(width, height), width, height);
                     clientMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
                     window.setScene(clientMenuScene);
+                    client.align();
                     break;
                 case 2:
                     //Manager plan info menu

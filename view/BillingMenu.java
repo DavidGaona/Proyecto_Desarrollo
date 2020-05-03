@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import utilities.AlertBox;
+import view.components.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
 import view.components.SearchPane;
@@ -94,22 +94,22 @@ public class BillingMenu {
         Button generateBillButton = billingButtonTemplate(width, height, "Generar Factura");
         Button downloadBills = billingButtonTemplate(width, height, "Descargar Facturas");
 
-        generateBillButton.setOnMouseClicked( e -> {
-            AlertBox.display("Mensaje: ",bill.generateBills(),"");
+        generateBillButton.setOnMouseClicked(e -> {
+            AlertBox.display("Mensaje: ", bill.generateBills());
         });
-        downloadBills.setOnMouseClicked( e -> {
+        downloadBills.setOnMouseClicked(e -> {
 
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Guardar en la carpeta especificada: ");
 
             File selectedFile = directoryChooser.showDialog(null);
             if (selectedFile != null) {
-                AlertBox.display("Mensaje: ", bill.getAllBills(selectedFile.getAbsolutePath()),"");
+                AlertBox.display("Mensaje: ", bill.getAllBills(selectedFile.getAbsolutePath()));
             }
 
         });
 
-        centerText.getChildren().addAll( text , generateBillButton, downloadBills);
+        centerText.getChildren().addAll(text, generateBillButton, downloadBills);
         hbox.getChildren().addAll(centerText);
 
 

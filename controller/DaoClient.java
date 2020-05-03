@@ -4,6 +4,8 @@ import connection.DbManager;
 import model.Client;
 import utilities.ProjectUtilities;
 
+import java.util.ArrayList;
+
 public class DaoClient {
 
 
@@ -38,5 +40,47 @@ public class DaoClient {
                 ProjectUtilities.convertDocumentType(clientDocumentType));
         dbManager.closeDBConnection();
         return client;
+    }
+
+    public ArrayList<Long> loadPhoneNumbers(int clientId){
+        dbManager.openDBConnection();
+        ArrayList<Long> numbers = dbManager.loadPhoneNumbers(clientId);
+        dbManager.closeDBConnection();
+        return numbers;
+    }
+
+    public String addNewClientLine(int clientId, String planName){
+        dbManager.openDBConnection();
+        String response = dbManager.addNewClientLine(clientId, planName);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String getPhonePlan(long phoneNumber){
+        dbManager.openDBConnection();
+        String response = dbManager.getPhonePlan(phoneNumber);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String queueNewPlan(int clientId, long phoneNumber, String planName){
+        dbManager.openDBConnection();
+        String response = dbManager.queueNewPlan(clientId, phoneNumber, planName);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String payPlan(long phoneNumber, int userId, String bankName){
+        dbManager.openDBConnection();
+        String response = dbManager.payPlan(phoneNumber, userId, bankName);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public double getValueToPay(long clientId){
+        dbManager.openDBConnection();
+        double response = dbManager.getValueToPay(clientId);
+        dbManager.closeDBConnection();
+        return response;
     }
 }

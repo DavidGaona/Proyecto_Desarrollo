@@ -1,6 +1,8 @@
 package view;
 
+import controller.DaoBank;
 import controller.DaoClient;
+import controller.DaoPlan;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,16 +14,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import model.Client;
-import utilities.AlertBox;
+import model.Plan;
+import view.components.AlertBox;
 import utilities.Icons;
 import utilities.ProjectUtilities;
 import view.components.SearchPane;
 import view.components.SignOut;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ClientMenu {
 
     public ClientMenu(double percentage, double buttonFont) {
         client = new DaoClient();
+        plan = new DaoPlan();
+        bank = new DaoBank();
         this.percentage = percentage;
         this.buttonFont = buttonFont;
     }
@@ -30,11 +38,13 @@ public class ClientMenu {
 
 
     private Button saveChangesButton;
+    private ArrayList<EditingPanel> aligner = new ArrayList<>();
     private int currentClient = -1;
     private SearchPane searchPane;
-
-    private double percentage;
+    private DaoPlan plan;
     private DaoClient client;
+    private DaoBank bank;
+    private double percentage;
     private boolean currentClientMode = true;
     private double buttonFont;
     private SignOut signOut = new SignOut();
@@ -84,7 +94,6 @@ public class ClientMenu {
             Client searchedClient = client.loadClient(searchPane.getTextContent(), searchPane.getDocumentType());
             if (searchedClient.isNotBlank()) {
                 personalInfo.clear();
-                System.out.println("hello");
 
                 currentClient = searchedClient.getId();
                 personalInfo.setTextField("clientName", searchedClient.getName());
@@ -93,14 +102,20 @@ public class ClientMenu {
                 personalInfo.setTextField("clientEmail", searchedClient.getEmail());
                 personalInfo.setTextField("clientAddress", searchedClient.getDirection());
                 personalInfo.setComboBox("clientDocumentType", ProjectUtilities.convertDocumentTypeString(searchedClient.getDocumentType()));
-                personalInfo.setComboBox("clientType", ProjectUtilities.convertDocumentTypeString(searchedClient.getType()));
+                personalInfo.setComboBox("clientType", ProjectUtilities.convertClientTypeString(searchedClient.getType()));
 
                 searchPane.getSearchField().setText("");
                 searchPane.setVisible(false);
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
+                ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
+                if (!numbers.isEmpty()) {
+                    payPlan.setComboBox("phoneNumbers", numbers);
+                    changePlan.setComboBox("phoneNumbers", numbers);
+                }
+                payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + "");
             } else
-                AlertBox.display("Error: ", "Usuario no encontrado", "");
+                AlertBox.display("Error: ", "Cliente no encontrado");
         });
 
         Button newClientButton = clientButtonTemplate(width * 0.15, height * 0.03, "Nuevo cliente");
@@ -133,7 +148,7 @@ public class ClientMenu {
                     -1,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
-                    (personalInfo.getContent("clientDocumentType").equals("NIT") ? (short)4 :
+                    (personalInfo.getContent("clientDocumentType").equals("NIT") ? (short) 4 :
                             ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType"))),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
@@ -142,7 +157,7 @@ public class ClientMenu {
                     Login.currentLoggedUser);
             personalInfo.clear();
         }
-        AlertBox.display("Error", message, "");
+        AlertBox.display("Error", message);
     }
 
     private void editClient() {
@@ -152,7 +167,7 @@ public class ClientMenu {
                     currentClient,
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientName")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientLastName")),
-                    (personalInfo.getContent("clientDocumentType").equals("NIT") ? (short)4 :
+                    (personalInfo.getContent("clientDocumentType").equals("NIT") ? (short) 4 :
                             ProjectUtilities.convertDocumentType(personalInfo.getContent("clientDocumentType"))),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientDocumentNumber")),
                     ProjectUtilities.clearWhiteSpaces(personalInfo.getContent("clientEmail")),
@@ -160,7 +175,37 @@ public class ClientMenu {
                     ProjectUtilities.convertClientType(personalInfo.getContent("clientType")));
             personalInfo.clear();
         }
-        AlertBox.display("Error", message, "");
+        AlertBox.display("Error", message);
+    }
+
+    private void getSelectedPlan(EditingPanel panel) {
+        Plan selectedPlan = plan.loadPlan(panel.getContent("planName"));
+        panel.setTextField("planCost", selectedPlan.getPlanCost() + "");
+        panel.setTextField("planMinutes", selectedPlan.getPlanMinutes() + "");
+        panel.setTextField("planDataCap", selectedPlan.getPlanData() + "");
+        panel.setTextField("planTextMessage", selectedPlan.getPlanTextMsn() + "");
+    }
+
+    private void getSelectedPlan(EditingPanel panel, String planName) {
+        Plan selectedPlan = plan.loadPlan(planName);
+        panel.setComboBox("planName", planName);
+        panel.setTextField("planCost", selectedPlan.getPlanCost() + "");
+        panel.setTextField("planMinutes", selectedPlan.getPlanMinutes() + "");
+        panel.setTextField("planDataCap", selectedPlan.getPlanData() + "");
+        panel.setTextField("planTextMessage", selectedPlan.getPlanTextMsn() + "");
+    }
+
+    private void saveNewLine() {
+        String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
+        if (response.equals("Plan y número agredado con éxito")) {
+            AlertBox.display("Éxito: ", response);
+            ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
+            if (!numbers.isEmpty()) {
+                payPlan.setComboBox("phoneNumbers", numbers);
+                changePlan.setComboBox("phoneNumbers", numbers);
+            }
+        } else
+            AlertBox.display("Error: ", response);
     }
 
     private void personalInfo(double width) {
@@ -187,14 +232,19 @@ public class ClientMenu {
 
         personalInfo.addComboBox("clientType", "Tipo de cliente:", ProjectUtilities.clientTypes);
 
+        aligner.add(personalInfo);
     }
 
-    private void changePlan(double width){
+    private void changePlan(double width) {
         changePlan = new EditingPanel("Cambiar plan", percentage, width);
 
-        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        String[] placeHolder = {""};
         changePlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
         changePlan.limitVisibleRows("phoneNumbers", 6);
+        changePlan.getComboBox("phoneNumbers").setOnAction(e -> {
+            String planName = client.getPhonePlan(Long.parseLong(changePlan.getContent("phoneNumbers")));
+            getSelectedPlan(changePlan, planName);
+        });
 
         changePlan.addComboBox("planName", "Plan:", placeHolder);
         changePlan.limitVisibleRows("planName", 6);
@@ -211,13 +261,32 @@ public class ClientMenu {
         changePlan.addTextField("planTextMessage", "Número de mensajes:");
         changePlan.disableTextField("planTextMessage");
 
+        changePlan.getComboBox("planName").setOnAction(e -> getSelectedPlan(changePlan));
+
         changePlan.addButton("Cambiar plan");
+        changePlan.getAddButton().setOnAction(e -> {
+            if (currentClientMode)
+                AlertBox.display("Error: ", "Seleccione un cliente primero");
+            else {
+                String response = client.queueNewPlan(
+                        currentClient,
+                        Long.parseLong(changePlan.getContent("phoneNumbers")),
+                        changePlan.getContent("planName")
+                );
+                if (response.equals("Plan pendiente por cambio, sera cambiado en su proximo pago"))
+                    AlertBox.display("Éxito: ", response);
+                else
+                    AlertBox.display("Error: ", "Seleccione un cliente primero");
+            }
+        });
+
+        aligner.add(changePlan);
     }
 
-    private void newLine(double width){
+    private void newLine(double width) {
         newLine = new EditingPanel("Añadir linea", percentage, width);
 
-        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        String[] placeHolder = {""};
         newLine.addComboBox("planName", "Plan:", placeHolder);
         newLine.limitVisibleRows("planName", 6);
 
@@ -233,21 +302,63 @@ public class ClientMenu {
         newLine.addTextField("planTextMessage", "Número de mensajes:");
         newLine.disableTextField("planTextMessage");
 
-        newLine.addButton("Añadir linea");
+        newLine.getComboBox("planName").setOnAction(e -> getSelectedPlan(newLine));
 
+        newLine.addButton("Añadir linea");
+        newLine.getAddButton().setOnAction(e -> {
+            if (currentClientMode)
+                AlertBox.display("Error: ", "Seleccione un cliente primero");
+            else
+                saveNewLine();
+        });
+
+        aligner.add(newLine);
     }
 
-    private void payPlan(double width){
+    private void payPlan(double width) {
         payPlan = new EditingPanel("Pago de plan", percentage, width);
 
-        String[] placeHolder = {"3167890293", "3167890294", "3167890295", "3167890296", "3167890297", "3167890298", "3167890299", "3167890292", "3167890291"};
+        String[] placeHolder = {""};
         payPlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
         payPlan.limitVisibleRows("phoneNumbers", 6);
 
-        payPlan.addTextField("payValue", "Valor a pagar:");
-        payPlan.disableTextField("payValue");
+        payPlan.addComboBox("banks", "Banco:", placeHolder);
+        payPlan.limitVisibleRows("banks", 3);
+
+        payPlan.addTextField("cost", "Valor a pagar:");
+        payPlan.disableTextField("cost");
 
         payPlan.addButton("Pagar plan");
+        payPlan.getAddButton().setOnAction(e -> {
+            String response = "No tiene facturas por pagar";
+            if (!payPlan.getContent("cost").equals("0.0")){
+                response = client.payPlan(
+                        Long.parseLong(payPlan.getContent("phoneNumbers")),
+                        currentClient,
+                        payPlan.getContent("banks")
+                );
+            }
+
+            if (response.equals("Factura pagada con éxito")) {
+                AlertBox.display("Éxito: ", response);
+            } else
+                AlertBox.display("Error: ", response);
+        });
+
+        aligner.add(payPlan);
+    }
+
+    public void align() {
+        double longestTextSize = 0.0;
+        for (EditingPanel editingPanel : aligner) {
+            if (editingPanel.getLongestText() > longestTextSize) {
+                longestTextSize = editingPanel.getLongestText();
+            }
+        }
+
+        for (EditingPanel editingPanel : aligner) {
+            editingPanel.align(longestTextSize);
+        }
     }
 
     public StackPane renderClientEditMenu(double width, double height) {
@@ -256,6 +367,9 @@ public class ClientMenu {
         changePlan(width);
         newLine(width);
         payPlan(width);
+        changePlan.setComboBoxString("planName", plan.loadPlans());
+        newLine.setComboBoxString("planName", plan.loadPlans());
+        payPlan.setComboBoxString("banks", new ArrayList<>(Arrays.asList(bank.loadAllBanks())));
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(

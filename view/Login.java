@@ -6,7 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import utilities.AlertBox;
+import view.components.AlertBox;
 import utilities.ProjectUtilities;
 
 public class Login {
@@ -90,7 +90,7 @@ public class Login {
 
         ProjectUtilities.loadComboBox(documentType, ProjectUtilities.documentTypes);
         documentType.valueProperty().set(ProjectUtilities.documentTypes[0]);
-        documentType.setMinSize(width * 0.25,height * 0.05);
+        documentType.setMinSize(width * 0.25, height * 0.05);
         documentType.setMaxSize(width * 0.25, height * 0.05);
         documentType.getStylesheets().add("loginStyle.css");
         documentType.setStyle(documentType.getStyle() + " -fx-font-size: " + textFFont + "px; ");
@@ -147,15 +147,15 @@ public class Login {
                 Login.currentWindow.set(4);
                 break;
             case -1:
-                AlertBox.display("Error", "No se pudo encontrar el usuario", "");
+                AlertBox.display("Error", "No se pudo encontrar el usuario");
                 currentLoggedUser = -1;
                 break;
             case -2:
-                AlertBox.display("Error", "Contraseña invalida", "");
+                AlertBox.display("Error", "Contraseña invalida");
                 currentLoggedUser = -1;
                 break;
             case -3:
-                AlertBox.display("Error", "Cuenta desactivada", "");
+                AlertBox.display("Error", "Cuenta desactivada");
                 currentLoggedUser = -1;
                 break;
             default:

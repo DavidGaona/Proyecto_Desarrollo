@@ -7,17 +7,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import model.Bank;
-import utilities.AlertBox;
+import view.components.AlertBox;
 import utilities.FA;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
@@ -85,7 +81,7 @@ public class BankMenu {
             if (searchComboBox.getValue() != null) {
                 Bank searchedBank = bank.loadBank(searchComboBox.getValue());
                 if (searchedBank == null) {
-                    AlertBox.display("Error: ", "Ocurrio un error interno del sistema", "");
+                    AlertBox.display("Error: ", "Ocurrio un error interno del sistema");
                 }
                 if (searchedBank.isNotBlank()) {
                     bankInfo.clear();
@@ -101,7 +97,7 @@ public class BankMenu {
                     bankInfo.disableTextField("bankName");
                     bankInfo.disableTextField("bankAccountNumber");
                 } else {
-                    AlertBox.display("Error: ", "Banco no encontrado", "");
+                    AlertBox.display("Error: ", "Banco no encontrado");
                 }
             }
 
@@ -145,10 +141,10 @@ public class BankMenu {
                     ProjectUtilities.clearWhiteSpaces(bankInfo.getContent("bankNIT"))
             );
             searchComboBox.getItems().add(bankInfo.getContent("bankName"));
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
             bankInfo.clear();
         } else {
-            AlertBox.display("Error", message, "");
+            AlertBox.display("Error", message);
         }
 
     }
@@ -160,10 +156,10 @@ public class BankMenu {
                     bankInfo.getSwitchButtonValue("bankState"),
                     bankInfo.getContent("bankNIT")
             );
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
             bankInfo.clear();
         } else {
-            AlertBox.display("Error ", message, "");
+            AlertBox.display("Error ", message);
         }
     }
 
