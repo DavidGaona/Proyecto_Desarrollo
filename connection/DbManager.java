@@ -10,14 +10,9 @@ import utilities.ProjectUtilities;
 import view.Login;
 
 import java.sql.*;
-import java.text.DateFormatSymbols;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-
 
 public class DbManager {
     private DBconnect dBconnect;
@@ -35,8 +30,8 @@ public class DbManager {
         saveQuery = "INSERT INTO public.client(client_name, client_last_name, client_document_number, client_email, client_address, client_type, client_document_type)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-
         selectQuery = "SELECT client_id FROM public.client WHERE client_document_number = ?  AND client_document_type = ?";
+        logQuery = "INSERT INTO public.client_date(client_id, user_id, join_date) VALUES(?, ?, current_timestamp(0))";
 
         try {
             PreparedStatement statement = connection.prepareStatement(saveQuery);
@@ -55,8 +50,6 @@ public class DbManager {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             id = resultSet.getInt(1);
-            System.out.println(id);
-            logQuery = "INSERT INTO public.client_date(client_id, user_id, join_date) VALUES(?, ?, current_timestamp(0))";
             statement = connection.prepareStatement(logQuery);
             statement.setInt(1, id);
             statement.setInt(2, currentLoginUser);
@@ -285,7 +278,7 @@ public class DbManager {
         return new Client();
     }
 
-    public double getValueToPay(long phoneNumber){
+    public double getValueToPay(long phoneNumber) {
         String getPlanIdQuery = "SELECT bill_cost FROM public.active_bills WHERE phone_number = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
@@ -307,7 +300,7 @@ public class DbManager {
         String selectCurrentBill = "SELECT * FROM public.active_bills WHERE phone_number = ?;";
         String insertToLegacyBills = "INSERT INTO public.legacy_bills(client_id, user_id, bill_cost, bank_id, " +
                 "bill_date_legacy, bill_mins_legacy, bill_gb_legacy, bill_msg_legacy, phone_number, bill_payed_date) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp(0));"; //bank and user
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp(0));";
         String deleteFromCurrentBills = "DELETE FROM public.active_bills WHERE phone_number = ?;";
 
         try {
@@ -920,7 +913,7 @@ public class DbManager {
         }
     }
 
-    private int getBankId(String bankName){
+    private int getBankId(String bankName) {
         String sql_select = "SELECT bank_id " +
                 "FROM public.bank WHERE bank_name = ?";
         try {
@@ -939,23 +932,23 @@ public class DbManager {
 
     public int generateBills() {
         int[] numRows;
-        String sql_select = "SELECT phone_number,client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
+        String sql_select = "SELECT phone_number, client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
                 "FROM ((SELECT phone_number, client_id, plan_id FROM public.phone WHERE phone_number " +
-                "NOT IN (SELECT phone_number FROM public.active_bills) AND phone_date > current_timestamp(0)) " +
+                "NOT IN (SELECT phone_number FROM public.active_bills) AND phone_date < current_timestamp(0)) " +
                 "AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
+        String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             ResultSet resultSet = statement.executeQuery();
-            String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql_save);
             connection.setAutoCommit(false);
             while (resultSet.next()) {
                 statement.setLong(1, resultSet.getLong(1));
                 statement.setDouble(2, resultSet.getDouble(3));
-                statement.setInt(3, (int) Math.random() * resultSet.getInt(4)); //simulacion de consulta API
-                statement.setInt(4, (int) Math.random() * resultSet.getInt(5));
-                statement.setInt(5, (int) Math.random() * resultSet.getInt(6));
+                statement.setInt(3, (int) (Math.random() * resultSet.getInt(4)));
+                statement.setInt(4, (int) (Math.random() * resultSet.getInt(5)));
+                statement.setInt(5, (int) (Math.random() * resultSet.getInt(6)));
                 statement.setInt(6, resultSet.getInt(2));
                 statement.addBatch();
             }
@@ -997,21 +990,21 @@ public class DbManager {
         return array_bills;
     }
 
-    public ArrayList<DataChart> getDataAboutClientsNC(boolean activos){
+    public ArrayList<DataChart> getDataAboutClientsNC(boolean activos) {
         ArrayList<DataChart> data = new ArrayList<DataChart>();
         String sql_select;
-        if(activos){
+        if (activos) {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client GROUP BY client_type";
-        }else{
+        } else {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type FROM public.client NATURAL JOIN public.phone) AS result GROUP BY client_type";
         }
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql_select);
             while (resultSet.next()) {
-                    data.add(
-                            new DataChart(ProjectUtilities.convertClientTypeString(resultSet.getShort(1)),resultSet.getLong(2))
-                    );
+                data.add(
+                        new DataChart(ProjectUtilities.convertClientTypeString(resultSet.getShort(1)), resultSet.getLong(2))
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1022,18 +1015,20 @@ public class DbManager {
 
     }
 
-    public ArrayList<DataChart> getDataPlansPerMonths(Timestamp from, Timestamp to){
-        ArrayList<DataChart> data = new ArrayList<DataChart>();
-        String sql_select = "SELECT EXTRACT(MONTH FROM phone_date) AS month, COUNT(phone_number) AS sum FROM public.phone GROUP BY EXTRACT(MONTH FROM phone_date) ORDER BY month DESC HAVING BETWEEN ? AND ?";
+    public ArrayList<DataChart> getDataPlansPerMonths(Timestamp from, Timestamp to) {
+        ArrayList<DataChart> data = new ArrayList<>();
+        String sql_select = "SELECT EXTRACT(MONTH FROM phone_date) AS month, COUNT(phone_number) AS sum " +
+                "FROM (SELECT * FROM public.phone WHERE phone_date BETWEEN ? AND ?) AS result " +
+                "GROUP BY EXTRACT(MONTH FROM phone_date) ORDER BY month DESC";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setTimestamp(1, from);
-            statement.setTimestamp(2,to);
+            statement.setTimestamp(2, to);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 data.add(
-                        new DataChart(Month.of(resultSet.getInt(1)).name(),resultSet.getLong(2))
+                        new DataChart(Month.of(resultSet.getInt(1)).name(), resultSet.getLong(2))
                 );
             }
         } catch (SQLException e) {

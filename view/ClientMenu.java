@@ -113,7 +113,6 @@ public class ClientMenu {
                     payPlan.setComboBox("phoneNumbers", numbers);
                     changePlan.setComboBox("phoneNumbers", numbers);
                 }
-                payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + "");
             } else
                 AlertBox.display("Error: ", "Cliente no encontrado");
         });
@@ -327,18 +326,20 @@ public class ClientMenu {
 
         payPlan.addTextField("cost", "Valor a pagar:");
         payPlan.disableTextField("cost");
+        payPlan.getComboBox("phoneNumbers").setOnAction(e -> payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + ""));
 
         payPlan.addButton("Pagar plan");
         payPlan.getAddButton().setOnAction(e -> {
             String response = "No tiene facturas por pagar";
-            if (!payPlan.getContent("cost").equals("0.0")){
+            if (!payPlan.getContent("cost").equals("0.0") && !payPlan.getContent("cost").isBlank()){
                 response = client.payPlan(
                         Long.parseLong(payPlan.getContent("phoneNumbers")),
                         currentClient,
                         payPlan.getContent("banks")
                 );
             }
-
+            if (currentClient == -1)
+                response = "Seleccione un cliente primero";
             if (response.equals("Factura pagada con éxito")) {
                 AlertBox.display("Éxito: ", response);
             } else

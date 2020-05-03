@@ -124,16 +124,15 @@ public class ChartPlansMenu {
         DatePicker dateTo = new DatePicker();
 
 
-        generateChart.setOnMouseClicked( e -> {
-            if(chartComboBox.getValue().equals("Ventas por Mes"))
-            {
+        generateChart.setOnMouseClicked(e -> {
+            if (chartComboBox.getValue().equals("Ventas por Mes")) {
                 LocalDate from = date.getValue();
                 LocalDate to = dateTo.getValue();
-                ArrayList<DataChart> data = daoChart.getDataPlansPerMonths(from,to);
-                if(data != null){
+                ArrayList<DataChart> data = daoChart.getDataPlansPerMonths(from, to);
+                if (data != null) {
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-                    for (DataChart dataPiece: data){
-                        pieChartData.add(new PieChart.Data(dataPiece.getValueX(),dataPiece.getValueY()));
+                    for (DataChart dataPiece : data) {
+                        pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
                     }
                     final PieChart chart = new PieChart(pieChartData);
                     chart.setTitle("Imported Fruits");
@@ -141,18 +140,18 @@ public class ChartPlansMenu {
 
                     stackChart.getChildren().clear();
                     stackChart.getChildren().addAll(chart);
-                }else {
-                    AlertBox.display("Error: ","No se pudo generar");
+                } else {
+                    AlertBox.display("Error: ", "No se pudo generar");
                 }
 
-            }else{
+            } else {
 
                 final CategoryAxis xAxis = new CategoryAxis();
                 final NumberAxis yAxis = new NumberAxis();
                 xAxis.setLabel("Month");
 
-                final LineChart<String,Number> lineChart =
-                        new LineChart<String,Number>(xAxis,yAxis);
+                final LineChart<String, Number> lineChart =
+                        new LineChart<String, Number>(xAxis, yAxis);
 
                 lineChart.setTitle("Stock Monitoring, 2010");
 

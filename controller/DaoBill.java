@@ -7,7 +7,7 @@ import utilities.GeneratorPDF;
 import java.util.ArrayList;
 
 public class DaoBill {
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public String generateBills(){
         int response;
