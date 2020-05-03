@@ -42,8 +42,7 @@ public class GeneratorPDF {
             generateHeader(cb, client.getName() + " " + client.getLastName(), bill.getBill_Phone() + "",
                     client.getDirection(), Integer.toString(bill.getBillPlan().getId()), Integer.toString(client.getId()), bill.getBill_date());
             generateDetail(doc, cb, 1, 615, plan);
-            generateBarCode(cb, Integer.toString(client.getId()) + bill.getBill_date());
-            printPageNumber(cb);
+            generateBarCode(cb, client.getId()+"-"+ bill.getBill_date().toString());
             printPageNumber(cb);
 
         } catch (DocumentException dex) {
@@ -103,8 +102,8 @@ public class GeneratorPDF {
             cb.lineTo(50, 650);
             cb.moveTo(150, 500);
             cb.lineTo(150, 650);
-            cb.moveTo(430, 500);
-            cb.lineTo(430, 650);
+            //cb.moveTo(430, 500);
+            //cb.lineTo(430, 650);
             cb.moveTo(500, 500);
             cb.lineTo(500, 650);
             cb.stroke();
@@ -113,8 +112,8 @@ public class GeneratorPDF {
             createHeadings(cb, 22, 633, "Item");
             createHeadings(cb, 52, 633, "Nombre del plan");
             createHeadings(cb, 152, 633, "Descripción del plan");
-            createHeadings(cb, 432, 633, "Recargo");
-            createHeadings(cb, 502, 633, "Total");
+            //createHeadings(cb, 432, 633, "Recargo");
+            createHeadings(cb, 502, 633, "Costo");
 
             //add the images
             //Image companyLogo = Image.getInstance("images/olympics_logo.gif");
@@ -155,16 +154,13 @@ public class GeneratorPDF {
 
         try {
 
-            createContent(cb, 48, y, String.valueOf(index + 1), PdfContentByte.ALIGN_RIGHT);
-            createContent(cb, 52, y, "ITEM" + (index + 1), PdfContentByte.ALIGN_LEFT);
-            createContent(cb, 152, y, "Descripcion del plan: \n " +
-                    "Nombre: " + plan.getPlanName() + "\n" + "Costo: " + plan.getPlanCost() + "\n" + "Minutos: " + plan.getPlanMinutes() + "\n" +
-                    "Datos: " + plan.getPlanData() + "\n" + "Mensajes: " + plan.getPlanTextMsn(), PdfContentByte.ALIGN_LEFT);
-
+            createContent(cb, 48, y, String.valueOf(index), PdfContentByte.ALIGN_RIGHT);
+            createContent(cb, 52, y, plan.getPlanName(), PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y, "Minutos: " + plan.getPlanMinutes(),PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y-20, "Datos: " + plan.getPlanData(),PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y-40, "Mensajes: " + plan.getPlanTextMsn(),PdfContentByte.ALIGN_LEFT);
             double price = Double.valueOf(df.format(plan.getPlanCost()));
-            double extPrice = price * (index + 1);
-            createContent(cb, 498, y, df.format(price), PdfContentByte.ALIGN_RIGHT);
-            createContent(cb, 568, y, df.format(extPrice), PdfContentByte.ALIGN_RIGHT);
+            createContent(cb, 568, y, df.format(price), PdfContentByte.ALIGN_RIGHT);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -190,8 +186,6 @@ public class GeneratorPDF {
         cb.setFontAndSize(bfBold, 8);
         cb.showTextAligned(PdfContentByte.ALIGN_RIGHT, "Page No. " + (pageNumber + 1), 570, 25, 0);
         cb.endText();
-
-        pageNumber++;
 
     }
 

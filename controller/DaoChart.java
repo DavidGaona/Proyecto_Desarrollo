@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DaoChart {
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public ArrayList<DataChart> getDataAboutClientsNC(boolean activos){
         ArrayList<DataChart> data;
