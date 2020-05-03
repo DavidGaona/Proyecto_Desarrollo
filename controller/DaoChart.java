@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DaoChart {
-    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
     public ArrayList<DataChart> getDataAboutClientsNC(boolean activos){
         ArrayList<DataChart> data;
@@ -33,4 +33,17 @@ public class DaoChart {
 
         return data;
     }
+
+    public ArrayList<DataChart> getDataPlansOnRange(LocalDate from, LocalDate to){
+        ArrayList<DataChart> data;
+        dbManager.openDBConnection();
+        data = dbManager.getDataPlansOnRange(Timestamp.valueOf(from.atStartOfDay()),Timestamp.valueOf(to.atStartOfDay()));
+        dbManager.closeDBConnection();
+        if(data.isEmpty()){
+            return null;
+        }
+
+        return data;
+    }
+
 }

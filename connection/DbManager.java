@@ -1040,6 +1040,31 @@ public class DbManager {
         return data;
     }
 
+    public ArrayList<DataChart> getDataPlansOnRange(Timestamp from, Timestamp to){
+        ArrayList<DataChart> data = new ArrayList<>();
+        String sql_select = "SELECT plan_name, COUNT(phone_number) AS sum " +
+                "FROM (SELECT * FROM public.phone NATURAL JOIN public.plan WHERE phone_date BETWEEN ? AND ?) AS result " +
+                "GROUP BY plan_name";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setTimestamp(1, from);
+            statement.setTimestamp(2, to);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.add(
+                        new DataChart(resultSet.getString(1), resultSet.getLong(2))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
+        return data;
+    }
+
     public void openDBConnection() {
         connection = dBconnect.getConnection();
     }
