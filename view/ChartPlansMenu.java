@@ -151,7 +151,7 @@ public class ChartPlansMenu {
                     stackChart.getChildren().clear();
                     stackChart.getChildren().addAll(chart);
                 }
-            } else {
+            } else if(chartComboBox.getValue().equals("Número de Ventas")) {
                 if (from != null && to != null) {
                     data = daoChart.getDataPlansOnRange(from,to);
                 }else{
@@ -180,6 +180,8 @@ public class ChartPlansMenu {
                     stackChart.getChildren().addAll(lineChart);
                 }
 
+            }else{
+                /* ToDo */
             }
             if(show){
                 AlertBox.display("Error: ", "No se pudo generar el grafico");

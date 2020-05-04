@@ -1065,6 +1065,28 @@ public class DbManager {
         return data;
     }
 
+    public ArrayList<DataChart> getBestTenClients(int numberOfClients){
+        ArrayList<DataChart> data = new ArrayList<>();
+        String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setInt(1, numberOfClients);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.add(
+                        new DataChart(resultSet.getString(1)+" "+resultSet.getString(2)+" Celular: "+resultSet.getString(3), resultSet.getLong(4))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
+        return data;
+    }
+
     public void openDBConnection() {
         connection = dBconnect.getConnection();
     }
