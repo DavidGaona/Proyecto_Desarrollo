@@ -22,6 +22,8 @@ import view.components.SearchPane;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 
@@ -125,58 +127,65 @@ public class ChartPlansMenu {
 
 
         generateChart.setOnMouseClicked(e -> {
+            LocalDate from = date.getValue();
+            LocalDate to = dateTo.getValue();
+            ArrayList<DataChart> data = new ArrayList<DataChart>();
+            boolean show = true;
+
             if (chartComboBox.getValue().equals("Ventas por Mes")) {
-                LocalDate from = date.getValue();
-                LocalDate to = dateTo.getValue();
-                ArrayList<DataChart> data = daoChart.getDataPlansPerMonths(from, to);
-                if (data != null) {
+                if(from != null && to != null && 12>(ChronoUnit.MONTHS.between(YearMonth.from(from),YearMonth.from(to)))){
+                    data = daoChart.getDataPlansPerMonths(from, to);
+                }else{
+                    show = false;
+                    AlertBox.display("Error: ","Por favor seleccione un rango de fechas valido");
+                }
+                if (data != null && !data.isEmpty()) {
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
                     for (DataChart dataPiece : data) {
                         pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
                     }
                     final PieChart chart = new PieChart(pieChartData);
-                    chart.setTitle("Imported Fruits");
+                    chart.setTitle("Ventas por Mes");
                     chart.setLegendSide(Side.LEFT);
-
+                    show = false;
                     stackChart.getChildren().clear();
                     stackChart.getChildren().addAll(chart);
-                } else {
-                    AlertBox.display("Error: ", "No se pudo generar");
+                }
+            } else if(chartComboBox.getValue().equals("Número de Ventas")) {
+                if (from != null && to != null) {
+                    data = daoChart.getDataPlansOnRange(from,to);
+                }else{
+                    show = false;
+                    AlertBox.display("Error: ","Por favor seleccione un rango de fechas valido");
+                }
+                if(data != null && !data.isEmpty()){
+                    final CategoryAxis xAxis = new CategoryAxis();
+                    final NumberAxis yAxis = new NumberAxis();
+                    xAxis.setLabel("Plan");
+
+                    final LineChart<String, Number> lineChart =
+                            new LineChart<String, Number>(xAxis, yAxis);
+
+                    lineChart.setTitle("Venta de planes desde "+from.toString()+" hasta "+to.toString());
+
+                    XYChart.Series series = new XYChart.Series();
+                    series.setName("Ventas");
+
+                    for (DataChart dataPiece : data) {
+                        series.getData().add(new XYChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+                    }
+                    show = false;
+                    lineChart.getData().add(series);
+                    stackChart.getChildren().clear();
+                    stackChart.getChildren().addAll(lineChart);
                 }
 
-            } else {
-
-                final CategoryAxis xAxis = new CategoryAxis();
-                final NumberAxis yAxis = new NumberAxis();
-                xAxis.setLabel("Month");
-
-                final LineChart<String, Number> lineChart =
-                        new LineChart<String, Number>(xAxis, yAxis);
-
-                lineChart.setTitle("Stock Monitoring, 2010");
-
-                XYChart.Series series = new XYChart.Series();
-                series.setName("My portfolio");
-
-                series.getData().add(new XYChart.Data("Jan", 23));
-                series.getData().add(new XYChart.Data("Feb", 14));
-                series.getData().add(new XYChart.Data("Mar", 15));
-                series.getData().add(new XYChart.Data("Apr", 24));
-                series.getData().add(new XYChart.Data("May", 34));
-                series.getData().add(new XYChart.Data("Jun", 36));
-                series.getData().add(new XYChart.Data("Jul", 22));
-                series.getData().add(new XYChart.Data("Aug", 45));
-                series.getData().add(new XYChart.Data("Sep", 43));
-                series.getData().add(new XYChart.Data("Oct", 17));
-                series.getData().add(new XYChart.Data("Nov", 29));
-                series.getData().add(new XYChart.Data("Dec", 25));
-
-                lineChart.getData().add(series);
-
-                stackChart.getChildren().clear();
-                stackChart.getChildren().addAll(lineChart);
+            }else{
+                /* ToDo */
             }
-
+            if(show){
+                AlertBox.display("Error: ", "No se pudo generar el grafico");
+            }
         });
 
         centerText.getChildren().addAll(text, text2, chartComboBox, text3, date, text4, dateTo, generateChart);

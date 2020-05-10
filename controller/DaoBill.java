@@ -25,6 +25,7 @@ public class DaoBill {
     }
 
     public String getAllBills(String absolutePath){
+        System.out.println(absolutePath);
         ArrayList<Bill> bills;
         GeneratorPDF pdf = new GeneratorPDF();
         dbManager.openDBConnection();
@@ -33,10 +34,11 @@ public class DaoBill {
         if(bills.isEmpty()){
             return "Error al momento de obtener los PDF";
         }
-        int iterator = 0;
+        int iterator = 1;
+
         for (Bill bill:
              bills) {
-            pdf.createPDF(absolutePath+"factura_numero_"+iterator,bill);
+            pdf.createPDF(absolutePath+"/factura_numero_"+iterator+".pdf",bill);
             iterator++;
         }
         return "Se han creado los PDF con exito";
