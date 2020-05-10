@@ -38,7 +38,6 @@ public class EditingPanel {
 
     private TableView<Extras> optionTable = new TableView<>();
     private TableView<Extras> pickedTable = new TableView<>();
-    private ObservableList<Extras> tableData = FXCollections.observableArrayList();
 
     private double percentage;
 
@@ -123,7 +122,7 @@ public class EditingPanel {
         addButton = new Button(message);
         addButton.setPrefSize(175 - (175 * percentage), 45 - (45 * percentage));
         addButton.setMinSize(175 - (175 * percentage), 45 - (45 * percentage));
-        addButton.setStyle("-fx-font-size: " + (20 - (20 * percentage)) + ";");
+        addButton.setStyle("-fx-font-size: " + (18 - (18 * percentage)) + ";");
         addButton.getStyleClass().add("client-buttons-template");
 
         GridPane.setConstraints(addButton, 5, textFields.size());
@@ -287,7 +286,7 @@ public class EditingPanel {
         resetHighLightColor();
     }
 
-    private void clearTextFields() {
+    public void clearTextFields() {
         for (TextField textField : textFields) {
             if (textField != null)
                 textField.setText("");
@@ -307,6 +306,11 @@ public class EditingPanel {
             if (switchButton != null)
                 switchButton.setToDefault();
         }
+    }
+
+    public void clearCombobox(String id){
+        getComboBox(id).getItems().clear();
+        getComboBox(id).getItems().add("");
     }
 
     private void resetHighLightColor() {

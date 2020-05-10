@@ -35,8 +35,7 @@ public class ClientMenu {
         this.buttonFont = buttonFont;
     }
 
-    EditingPanel personalInfo, newLine, changePlan, payPlan, cancelPlan;
-
+    EditingPanel personalInfo, newLine, changePlan, payPlan, cancelPlan, payDebt;
 
     private Button saveChangesButton;
     private ArrayList<EditingPanel> aligner = new ArrayList<>();
@@ -109,12 +108,8 @@ public class ClientMenu {
                 searchPane.setVisible(false);
                 saveChangesButton.setText("Modificar cliente");
                 currentClientMode = false;
-                ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
-                if (!numbers.isEmpty()) {
-                    payPlan.setComboBox("phoneNumbers", numbers);
-                    changePlan.setComboBox("phoneNumbers", numbers);
-                    cancelPlan.setComboBox("phoneNumbers", numbers);
-                }
+                payDebt.setTextField("debt", client.getDept(currentClient) + "");
+                resetPhoneNumbers();
             } else
                 AlertBox.display("Error: ", "Cliente no encontrado");
         });
@@ -125,6 +120,13 @@ public class ClientMenu {
             saveChangesButton.setText("Agregar cliente");
             currentClientMode = true;
             searchPane.getSearchField().setText("");
+            changePlan.clearTextFields();
+            changePlan.clearCombobox("phoneNumbers");
+            newLine.clearTextFields();
+            payPlan.clearTextFields();
+            payPlan.clearCombobox("phoneNumbers");
+            cancelPlan.clearCombobox("phoneNumbers");
+            payDebt.setTextField("debt", 0.0 + "");
         });
 
         logOut.setOnMouseClicked(e -> signOut.display());
@@ -196,16 +198,26 @@ public class ClientMenu {
         panel.setTextField("planTextMessage", selectedPlan.getPlanTextMsn() + "");
     }
 
+    private void resetPhoneNumbers(){
+        ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
+        if (!numbers.isEmpty()) {
+            payPlan.setComboBox("phoneNumbers", numbers);
+            changePlan.setComboBox("phoneNumbers", numbers);
+            cancelPlan.setComboBox("phoneNumbers", numbers);
+        } else {
+            changePlan.clearTextFields();
+            changePlan.clearCombobox("phoneNumbers");
+            payPlan.clearCombobox("phoneNumbers");
+            cancelPlan.clearCombobox("phoneNumbers");
+        }
+    }
+
     private void saveNewLine() {
         if (!client.hasDebt(currentClient)){
             String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
             if (response.equals("Plan y número agredado con éxito")) {
                 AlertBox.display("Éxito: ", response);
-                ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
-                if (!numbers.isEmpty()) {
-                    payPlan.setComboBox("phoneNumbers", numbers);
-                    changePlan.setComboBox("phoneNumbers", numbers);
-                }
+                resetPhoneNumbers();
             } else
                 AlertBox.display("Error: ", response);
         } else
@@ -276,6 +288,14 @@ public class ClientMenu {
             if (currentClientMode)
                 AlertBox.display("Error: ", "Seleccione un cliente primero");
             else {
+                if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0){
+                    AlertBox.display("Error: ", "El cliente no tiene lineas activas");
+                    return;
+                } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")){
+                    AlertBox.display("Error: ", "El cliente no tiene lineas activas");
+                    return;
+                }
+
                 String response = client.queueNewPlan(
                         currentClient,
                         Long.parseLong(changePlan.getContent("phoneNumbers")),
@@ -371,14 +391,26 @@ public class ClientMenu {
         cancelPlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
         cancelPlan.limitVisibleRows("phoneNumbers", 6);
 
-        cancelPlan.addButton("cancelButton");
+        cancelPlan.addButton("Cancelar linea");
         cancelPlan.getAddButton().setOnAction(e -> {
+            if (currentClient == -1){
+                AlertBox.display("Error: ", "Seleccione un cliente primero");
+                return;
+            } else if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0){
+                AlertBox.display("Error: ", "El cliente no tiene lineas activas");
+                return;
+            } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")){
+                AlertBox.display("Error: ", "El cliente no tiene lineas activas");
+                return;
+            }
+
             String response = "No se pudo cancelar el número";
             long phoneNumber = Long.parseLong(cancelPlan.getContent("phoneNumbers"));
             if (!cancelPlan.getContent("phoneNumbers").isBlank()){
                 response = client.checkForBills(phoneNumber);
                 if (response.equals("No tiene facturas pendientes")){
                     response = client.cancelLine(phoneNumber);
+                    resetPhoneNumbers();
                     AlertBox.display("Éxito: ", response);
                     return;
                 } else if (response.equals("Tiene facturas por pagar")){
@@ -393,6 +425,7 @@ public class ClientMenu {
                             response = client.cancelLineTransferCost(phoneNumber, currentClient);
                             if (!response.equals("error al cancelar, por favor intente mas tarde")){
                                 AlertBox.display("Éxito: ", response);
+                                resetPhoneNumbers();
                                 return;
                             }
                          } else if (cancelPlan.getComboBox("phoneNumbers").getItems().size() == 1){
@@ -401,14 +434,50 @@ public class ClientMenu {
                                  AlertBox.display("Éxito: ", response);
                                  return;
                              }
-                         } else
-                             return;
-                     }
+                         }
+                     } else
+                         return;
                 }
             }
             AlertBox.display("Error: ", response);
         });
         aligner.add(cancelPlan);
+    }
+
+    private void payDebt(double width){
+        payDebt = new EditingPanel("Pagar deudas", percentage, width);
+
+        String[] placeHolder = {""};
+        payDebt.addComboBox("banks", "Bancos:", placeHolder);
+        payDebt.limitVisibleRows("banks", 3);
+
+        payDebt.addTextField("debt", "Valor de deuda:");
+        payDebt.disableTextField("debt");
+        payDebt.setTextField("debt", "0.0");
+
+        payDebt.addButton("Pagar deuda");
+        payDebt.getAddButton().setOnAction(e -> {
+            if (currentClient == -1){
+                AlertBox.display("Error: ", "Seleccione un cliente primero");
+                return;
+            }
+
+            if (Double.parseDouble(payDebt.getContent("debt")) == 0.0){
+                AlertBox.display("Error: ", "No tiene deudas por pagar");
+                return;
+            }
+
+            String response = client.payDebt(currentClient, payDebt.getContent("banks"), Login.currentLoggedUser);
+            if (response.equals("Deuda pagada con éxito")){
+                AlertBox.display("Éxito: ", response);
+                payDebt.setTextField("debt", 0.0 + "");
+            }
+            else
+                AlertBox.display("Error: ", response);
+
+        });
+
+        aligner.add(payDebt);
     }
 
     public void align() {
@@ -431,9 +500,13 @@ public class ClientMenu {
         newLine(width);
         payPlan(width);
         cancelPlan(width);
-        changePlan.setComboBoxString("planName", plan.loadPlans());
-        newLine.setComboBoxString("planName", plan.loadPlans());
-        payPlan.setComboBoxString("banks", new ArrayList<>(Arrays.asList(bank.loadAllBanks())));
+        payDebt(width);
+        var allPlans = plan.loadPlans();
+        var allBanks = new ArrayList<>(Arrays.asList(bank.loadAllBanks()));
+        changePlan.setComboBoxString("planName", allPlans);
+        newLine.setComboBoxString("planName", allPlans);
+        payPlan.setComboBoxString("banks", allBanks);
+        payDebt.setComboBoxString("banks", allBanks);
 
         EditingMenu menu = new EditingMenu(width, height, percentage);
         menu.addToMidPane(
@@ -441,7 +514,8 @@ public class ClientMenu {
                 changePlan.sendPane(width, 0),
                 newLine.sendPane(width, 0),
                 payPlan.sendPane(width, 0),
-                cancelPlan.sendPane(width, 0)
+                cancelPlan.sendPane(width, 0),
+                payDebt.sendPane(width, 0)
         );
 
         searchPane = new SearchPane(width, height, percentage);

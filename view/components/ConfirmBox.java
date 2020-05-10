@@ -27,7 +27,7 @@ public class ConfirmBox {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setWidth(screenSize.getWidth() * 0.30);
-        window.setHeight(screenSize.getHeight() * 0.25);
+        window.setHeight(screenSize.getHeight() * 0.30);
 
         //Message label
         Label label = new Label();

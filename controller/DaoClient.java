@@ -118,4 +118,18 @@ public class DaoClient {
         dbManager.closeDBConnection();
         return response;
     }
+
+    public double getDept(int clientId){
+        dbManager.openDBConnection();
+        double response = dbManager.getDept(clientId);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String payDebt(int clientId, String bankName, int userId){
+        dbManager.openDBConnection();
+        String response = dbManager.payDebt(clientId, bankName, userId);
+        dbManager.closeDBConnection();
+        return response;
+    }
 }

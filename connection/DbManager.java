@@ -13,6 +13,7 @@ import java.sql.*;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class DbManager {
     private DBconnect dBconnect;
@@ -477,6 +478,71 @@ public class DbManager {
         statement = connection.prepareStatement(cancelLineQuery);
         statement.setLong(1, phoneNumber);
         statement.executeUpdate();
+    }
+
+    public double getDept(int clientId){
+        String getDept = "select case when sum(bill_cost) IS NULL then 0 else sum(bill_cost) end as cost from debt_bills where client_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(getDept);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getDouble(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return 0.0;
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    public String payDebt(int clientId, String bankName, int userId){
+        String selectCurrentDebt = "SELECT * FROM public.debt_bills WHERE client_id = ?;";
+        String insertToLegacyDebt = "INSERT INTO public.debt_bills_legacy " +
+                "VALUES (?, ?, ?, ?, current_timestamp(0), ?, ?, ?, ?, ?, ?);";
+        String deleteFromDebt = "DELETE FROM public.debt_bills WHERE client_id = ?;";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectCurrentDebt);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            int bankId = getBankId(bankName);
+            if (bankId == -1)
+                return "Banco no encontrado";
+            while (resultSet.next()){
+                long phoneNumber = resultSet.getLong(1);
+                double billCost = resultSet.getDouble(2);
+                Timestamp billDate = resultSet.getTimestamp(3);
+                Timestamp billDateCancelled = resultSet.getTimestamp(4);
+                int billMinutes = resultSet.getInt(5);
+                int billGb = resultSet.getInt(6);
+                int billMsg = resultSet.getInt(7);
+                statement = connection.prepareStatement(insertToLegacyDebt);
+                statement.setLong(1, phoneNumber);
+                statement.setDouble(2, billCost);
+                statement.setTimestamp(3, billDate);
+                statement.setTimestamp(4, billDateCancelled);
+                statement.setInt(5, billMinutes);
+                statement.setInt(6, billGb);
+                statement.setInt(7, billMsg);
+                statement.setInt(8, clientId);
+                statement.setInt(9, userId);
+                statement.setInt(10, bankId);
+                statement.executeUpdate();
+                statement = connection.prepareStatement(deleteFromDebt);
+                statement.setInt(1, clientId);
+                statement.executeUpdate();
+            }
+            return "Deuda pagada con éxito";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "No se pudo realizar el pago por favor intente de nuevo";
     }
 
     //**************************** METODOS DEL USUARIO ********************
