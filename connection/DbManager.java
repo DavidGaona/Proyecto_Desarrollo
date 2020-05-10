@@ -1072,6 +1072,7 @@ public class DbManager {
                 "AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
         String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
         try {
+            cancelServiceForDebt();
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             ResultSet resultSet = statement.executeQuery();
@@ -1203,7 +1204,6 @@ public class DbManager {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
         try {
-            cancelServiceForDebt();
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setInt(1, numberOfClients);
