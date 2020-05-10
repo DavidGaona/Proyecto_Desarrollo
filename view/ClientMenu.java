@@ -18,6 +18,7 @@ import model.Plan;
 import view.components.AlertBox;
 import utilities.Icons;
 import utilities.ProjectUtilities;
+import view.components.ConfirmBox;
 import view.components.SearchPane;
 import view.components.SignOut;
 
@@ -34,7 +35,7 @@ public class ClientMenu {
         this.buttonFont = buttonFont;
     }
 
-    EditingPanel personalInfo, newLine, changePlan, payPlan;
+    EditingPanel personalInfo, newLine, changePlan, payPlan, cancelPlan;
 
 
     private Button saveChangesButton;
@@ -112,6 +113,7 @@ public class ClientMenu {
                 if (!numbers.isEmpty()) {
                     payPlan.setComboBox("phoneNumbers", numbers);
                     changePlan.setComboBox("phoneNumbers", numbers);
+                    cancelPlan.setComboBox("phoneNumbers", numbers);
                 }
             } else
                 AlertBox.display("Error: ", "Cliente no encontrado");
@@ -195,16 +197,19 @@ public class ClientMenu {
     }
 
     private void saveNewLine() {
-        String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
-        if (response.equals("Plan y número agredado con éxito")) {
-            AlertBox.display("Éxito: ", response);
-            ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
-            if (!numbers.isEmpty()) {
-                payPlan.setComboBox("phoneNumbers", numbers);
-                changePlan.setComboBox("phoneNumbers", numbers);
-            }
+        if (client.hasDebt(currentClient)){
+            String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
+            if (response.equals("Plan y número agredado con éxito")) {
+                AlertBox.display("Éxito: ", response);
+                ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
+                if (!numbers.isEmpty()) {
+                    payPlan.setComboBox("phoneNumbers", numbers);
+                    changePlan.setComboBox("phoneNumbers", numbers);
+                }
+            } else
+                AlertBox.display("Error: ", response);
         } else
-            AlertBox.display("Error: ", response);
+            AlertBox.display("Error: ", "Error interno por favor consulte mas tarde");
     }
 
     private void personalInfo(double width) {
@@ -241,8 +246,12 @@ public class ClientMenu {
         changePlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
         changePlan.limitVisibleRows("phoneNumbers", 6);
         changePlan.getComboBox("phoneNumbers").setOnAction(e -> {
-            String planName = client.getPhonePlan(Long.parseLong(changePlan.getContent("phoneNumbers")));
-            getSelectedPlan(changePlan, planName);
+            try {
+                String planName = client.getPhonePlan(Long.parseLong(changePlan.getContent("phoneNumbers")));
+                getSelectedPlan(changePlan, planName);
+            } catch (Exception err){
+                System.out.println("UwU");
+            }
         });
 
         changePlan.addComboBox("planName", "Plan:", placeHolder);
@@ -326,7 +335,13 @@ public class ClientMenu {
 
         payPlan.addTextField("cost", "Valor a pagar:");
         payPlan.disableTextField("cost");
-        payPlan.getComboBox("phoneNumbers").setOnAction(e -> payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + ""));
+        payPlan.getComboBox("phoneNumbers").setOnAction(e -> {
+            try {
+                payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + "");
+            } catch (Exception err){
+                System.out.println("UwU");
+            }
+        });
 
         payPlan.addButton("Pagar plan");
         payPlan.getAddButton().setOnAction(e -> {
@@ -349,6 +364,53 @@ public class ClientMenu {
         aligner.add(payPlan);
     }
 
+    private void cancelPlan(double width){
+        cancelPlan = new EditingPanel("Cancelar linea", percentage, width);
+
+        String[] placeHolder = {""};
+        cancelPlan.addComboBox("phoneNumbers", "Numero de Celular:", placeHolder);
+        cancelPlan.limitVisibleRows("phoneNumbers", 6);
+
+        cancelPlan.addButton("cancelButton");
+        cancelPlan.getAddButton().setOnAction(e -> {
+            String response = "No se pudo cancelar el número";
+            long phoneNumber = Long.parseLong(cancelPlan.getContent("phoneNumbers"));
+            if (!cancelPlan.getContent("phoneNumbers").isBlank()){
+                response = client.checkForBills(phoneNumber);
+                if (response.equals("No tiene facturas pendientes")){
+                    response = client.cancelLine(phoneNumber);
+                    AlertBox.display("Éxito: ", response);
+                    return;
+                } else if (response.equals("Tiene facturas por pagar")){
+                     boolean confirmation = ConfirmBox.display(
+                             "Confirmar" ,
+                             "Aun no ha pagado la factura de la linea que desea cancelar, está seguro que desea cancelarla",
+                             "SI",
+                             "NO"
+                     );
+                     if (confirmation){
+                         if (cancelPlan.getComboBox("phoneNumbers").getItems().size() > 1){
+                            response = client.cancelLineTransferCost(phoneNumber, currentClient);
+                            if (!response.equals("error al cancelar, por favor intente mas tarde")){
+                                AlertBox.display("Éxito: ", response);
+                                return;
+                            }
+                         } else if (cancelPlan.getComboBox("phoneNumbers").getItems().size() == 1){
+                             response = client.cancelLineDebt(phoneNumber);
+                             if (!response.equals("error al cancelar, por favor intente mas tarde")){
+                                 AlertBox.display("Éxito: ", response);
+                                 return;
+                             }
+                         } else
+                             return;
+                     }
+                }
+            }
+            AlertBox.display("Error: ", response);
+        });
+        aligner.add(cancelPlan);
+    }
+
     public void align() {
         double longestTextSize = 0.0;
         for (EditingPanel editingPanel : aligner) {
@@ -368,6 +430,7 @@ public class ClientMenu {
         changePlan(width);
         newLine(width);
         payPlan(width);
+        cancelPlan(width);
         changePlan.setComboBoxString("planName", plan.loadPlans());
         newLine.setComboBoxString("planName", plan.loadPlans());
         payPlan.setComboBoxString("banks", new ArrayList<>(Arrays.asList(bank.loadAllBanks())));
@@ -377,7 +440,8 @@ public class ClientMenu {
                 personalInfo.sendPane(width, height * 0.1),
                 changePlan.sendPane(width, 0),
                 newLine.sendPane(width, 0),
-                payPlan.sendPane(width, 0)
+                payPlan.sendPane(width, 0),
+                cancelPlan.sendPane(width, 0)
         );
 
         searchPane = new SearchPane(width, height, percentage);

@@ -3,7 +3,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utilities.ConfirmBox;
+import view.components.ConfirmBox;
 import view.*;
 
 import java.awt.*;

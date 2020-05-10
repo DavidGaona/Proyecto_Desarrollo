@@ -83,4 +83,39 @@ public class DaoClient {
         dbManager.closeDBConnection();
         return response;
     }
+
+    public String checkForBills(long phoneNumber){
+        dbManager.openDBConnection();
+        String response = dbManager.checkForBills(phoneNumber);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String cancelLine(long phoneNumber){
+        dbManager.openDBConnection();
+        String response = dbManager.cancelLine(phoneNumber);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String cancelLineDebt(long phoneNumber){
+        dbManager.openDBConnection();
+        String response = dbManager.cancelLineDebt(phoneNumber);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public String cancelLineTransferCost(long phoneNumber, int clientId){
+        dbManager.openDBConnection();
+        String response = dbManager.cancelLineTransferCost(phoneNumber, clientId);
+        dbManager.closeDBConnection();
+        return response;
+    }
+
+    public boolean hasDebt(int clientId){
+        dbManager.openDBConnection();
+        boolean response = dbManager.hasDebt(clientId);
+        dbManager.closeDBConnection();
+        return response;
+    }
 }

@@ -1,4 +1,4 @@
-package utilities;
+package view.components;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,20 +31,21 @@ public class ConfirmBox {
 
         //Message label
         Label label = new Label();
-        double fontLabel = 20 - ( 20 * percentage);
+        double fontLabel = 20 - (20 * percentage);
         label.setText(message);
-        label.setStyle("-fx-font-size: "+fontLabel+"px");
+        label.setWrapText(true);
+        label.setStyle("-fx-font-size: " + fontLabel + "px");
 
         //Yes/No buttons
         Button yesButton = new Button();
         Button noButton = new Button();
-        double fontButton = 16 - ( 16 * percentage);
-        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
-        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        double fontButton = 16 - (16 * percentage);
+        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.10);
+        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.10);
         yesButton.setText(yesAnswerMessage);
         noButton.setText(noAnswerMessage);
-        yesButton.setStyle("-fx-font-size: "+fontButton+"px");
-        noButton.setStyle("-fx-font-size: "+fontButton+"px");
+        yesButton.setStyle("-fx-font-size: " + fontButton + "px");
+        noButton.setStyle("-fx-font-size: " + fontButton + "px");
 
         yesButton.setOnAction(e -> {
             answer = true;
@@ -70,8 +71,8 @@ public class ConfirmBox {
 
         window.setScene(scene);
         window.initStyle(StageStyle.UNDECORATED);
-        window.setX((screenSize.getWidth()/2) - ((screenSize.getWidth() * 0.30)/2));
-        window.setY((screenSize.getHeight()/2) - ((screenSize.getHeight() * 0.25)/2));
+        window.setX((screenSize.getWidth() / 2) - ((screenSize.getWidth() * 0.30) / 2));
+        window.setY((screenSize.getHeight() / 2) - ((screenSize.getHeight() * 0.25) / 2));
         window.setResizable(false);
         window.showAndWait();
 

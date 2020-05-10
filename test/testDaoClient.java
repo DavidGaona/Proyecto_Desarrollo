@@ -10,14 +10,16 @@ public class testDaoClient extends TestCase {
         client = new DaoClient();
     }
 
-    /**
+
      //****************************saveNewClient********************
+    /*
     @Test
     public void testSaveNewClient(){ //caso exitoso
         scenario();
         assertEquals("Cliente creado con exito",client.saveNewClient(102,"felipe","pelaez",(short)0,"678","pablo@pablez.com","calle 1 # 10",(short)0,36));
     }
-    **/
+    */
+
 
     @Test
     public void testSaveNewClientExistente(){ //cliente existente

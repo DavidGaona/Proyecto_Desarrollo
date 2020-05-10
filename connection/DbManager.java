@@ -345,6 +345,142 @@ public class DbManager {
         return "No se pudo realizar el pago por favor intente de nuevo";
     }
 
+    public String checkForBills(long phoneNumber) {
+        String checkForBillQuery = "SELECT exists(SELECT 1 FROM public.active_bills WHERE phone_number = ?);";
+        try {
+            PreparedStatement statement = connection.prepareStatement(checkForBillQuery);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next())
+                return "Error al cancelar por favor intente mas tarde";
+
+            if (resultSet.getBoolean(1))
+                return "Tiene facturas por pagar";
+            else
+                return "No tiene facturas pendientes";
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "Error al cancelar por favor intente mas tarde";
+    }
+
+    public String cancelLine(long phoneNumber) {
+        try {
+            removeLine(phoneNumber);
+            return "Linea cancelada";
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "error al cancelar, por favor intente mas tarde";
+    }
+
+    public String cancelLineDebt(long phoneNumber) {
+        String selectCurrentBill = "SELECT * FROM public.active_bills WHERE phone_number = ?;";
+        String addClientToDebt = "INSERT INTO public.debt_bills " +
+                "VALUES (?, ?, ?, current_timestamp(0), ?, ?, ?, ?);";
+        String deleteFromCurrentBills = "DELETE FROM public.active_bills WHERE phone_number = ?;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectCurrentBill);
+            statement.setLong(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next())
+                return "error al cancelar, por favor intente mas tarde";
+            resultSet.getLong(1);
+            double billCost = resultSet.getDouble(2);
+            Timestamp billDate = resultSet.getTimestamp(3);
+            int billMinutes = resultSet.getInt(4);
+            int billGb = resultSet.getInt(5);
+            int billMsg = resultSet.getInt(6);
+            int clientId = resultSet.getInt(7);
+            statement = connection.prepareStatement(addClientToDebt);
+            statement.setLong(1, phoneNumber);
+            statement.setDouble(2, billCost);
+            statement.setTimestamp(3, billDate);
+            statement.setInt(4, billMinutes);
+            statement.setInt(5, billGb);
+            statement.setInt(6, billMsg);
+            statement.setInt(7, clientId);
+            statement.executeUpdate();
+            statement = connection.prepareStatement(deleteFromCurrentBills);
+            statement.setLong(1, phoneNumber);
+            statement.executeUpdate();
+            removeLine(phoneNumber);
+            return "Linea cancelada queda con una deuda de: " + billCost;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "error al cancelar, por favor intente mas tarde";
+    }
+
+    public String cancelLineTransferCost(long phoneNumber, int clientId){
+        String transferBillCost = "" +
+                "WITH line_to_change AS (" +
+                "SELECT phone_number, (active_bills.bill_cost + (SELECT active_bills.bill_cost FROM active_bills WHERE phone_number = ?)) as cost " +
+                "FROM active_bills WHERE client_id = ? AND phone_number != ? LIMIT 1 ) " +
+                "UPDATE active_bills SET " +
+                "bill_cost = (select cost from line_to_change) " +
+                "where phone_number = (select phone_number from line_to_change)";
+        String deleteFromCurrentBills = "DELETE FROM public.active_bills WHERE phone_number = ?;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(transferBillCost);
+            statement.setLong(1, phoneNumber);
+            statement.setInt(2, clientId);
+            statement.setLong(3, phoneNumber);
+            statement.executeUpdate();
+            statement = connection.prepareStatement(deleteFromCurrentBills);
+            statement.setLong(1, phoneNumber);
+            statement.executeUpdate();
+            removeLine(phoneNumber);
+            return "Linea cancelada el costo de la factura fue transferido a su otra linea";
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return "error al cancelar, por favor intente mas tarde";
+    }
+
+    public boolean hasDebt(int clientId){
+        String checkForDebtQuery = "SELECT exists(SELECT 1 FROM public.debt_bills WHERE client_id = ?);";
+        try {
+            PreparedStatement statement = connection.prepareStatement(checkForDebtQuery);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getBoolean(1);
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return false;
+    }
+
+    private void removeLine(long phoneNumber) throws SQLException {
+        String removeFromPendingQuery = "DELETE FROM public.phone_pending WHERE phone_number = ?";
+        String cancelLineQuery = "UPDATE public.phone SET client_id = -1 WHERE phone_number = ?";
+        PreparedStatement statement = connection.prepareStatement(removeFromPendingQuery);
+        statement.setLong(1, phoneNumber);
+        statement.executeUpdate();
+        statement = connection.prepareStatement(cancelLineQuery);
+        statement.setLong(1, phoneNumber);
+        statement.executeUpdate();
+    }
+
     //**************************** METODOS DEL USUARIO ********************
     public int loginUser(String documento_id_usuario, short documentType, String password) {
         String sql_select = "SELECT user_password, user_type, user_state, up_to_date_password, user_id" +
