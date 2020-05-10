@@ -1069,6 +1069,7 @@ public class DbManager {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
         try {
+            cancelServiceForDebt();
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setInt(1, numberOfClients);
@@ -1085,6 +1086,18 @@ public class DbManager {
         }
 
         return data;
+    }
+
+    private void cancelServiceForDebt() throws SQLException{
+        String sql_select = "SELECT phone_number FROM public.active_bills WHERE (SELECT (DATE_PART('year', phone_date) - DATE_PART('year', time_stamp(0))) * 12 +\n" +
+                "              (DATE_PART('month', phone_date) - DATE_PART('month', time_stamp(0))) > 2";
+        System.out.println("Consultando en la base de datos");
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(sql_select);
+        while (result.next()){
+            long phone_number = result.getLong(1);
+            cancelLineDebt(phone_number);
+        }
     }
 
     public void openDBConnection() {
