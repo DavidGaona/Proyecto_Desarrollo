@@ -4,10 +4,11 @@ import connection.DbManager;
 import model.Bill;
 import utilities.GeneratorPDF;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class DaoBill {
-    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
 
     public String generateBills(){
         int response;
@@ -36,10 +37,14 @@ public class DaoBill {
         }
         int iterator = 1;
 
-        for (Bill bill:
-             bills) {
-            pdf.createPDF(absolutePath+"/factura_numero_"+iterator+".pdf",bill);
-            iterator++;
+        try{
+            for (Bill bill:
+                    bills) {
+                pdf.createPDF(absolutePath+"/factura_numero_"+iterator+".pdf",bill);
+                iterator++;
+            }
+        }catch (FileNotFoundException ex){
+            return "El lugar donde desea guardar no existe o no tiene permisos de escritura";
         }
         return "Se han creado los PDF con exito";
     }

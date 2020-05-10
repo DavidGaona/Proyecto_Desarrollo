@@ -1,6 +1,7 @@
 package utilities;
 
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -19,15 +20,14 @@ public class GeneratorPDF {
     private BaseFont bf;
     private int pageNumber = 0;
 
-    public void createPDF(String pdfFilename, Bill bill) {
+    public void createPDF(String pdfFilename, Bill bill) throws FileNotFoundException{
 
         Document doc = new Document();
         PdfWriter docWriter = null;
         initializeFonts();
-
+        FileOutputStream savePath = new FileOutputStream(pdfFilename);
         try {
-            String path = pdfFilename;
-            docWriter = PdfWriter.getInstance(doc, new FileOutputStream(path));
+            docWriter = PdfWriter.getInstance(doc, savePath);
             doc.addAuthor("MobilePlan");
             doc.addCreationDate();
             doc.addProducer();
@@ -44,7 +44,7 @@ public class GeneratorPDF {
             generateDetail(doc, cb, 1, 615, plan);
             generateBarCode(cb, client.getId()+"-"+ bill.getBill_date().toString());
             printPageNumber(cb);
-
+            
         } catch (DocumentException dex) {
             dex.printStackTrace();
         } catch (Exception ex) {
