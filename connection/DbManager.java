@@ -1068,7 +1068,7 @@ public class DbManager {
         int[] numRows;
         String sql_select = "SELECT phone_number, client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
                 "FROM ((SELECT phone_number, client_id, plan_id FROM public.phone WHERE phone_number " +
-                "NOT IN (SELECT phone_number FROM public.active_bills) AND phone_date < current_timestamp(0)) " +
+                "NOT IN (SELECT phone_number FROM public.active_bills) AND phone_date < current_timestamp(0) AND client_id != -1) " +
                 "AS verf_phone NATURAL JOIN public.plan) AS phone_to_plan";
         String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
         try {
