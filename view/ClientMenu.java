@@ -197,7 +197,7 @@ public class ClientMenu {
     }
 
     private void saveNewLine() {
-        if (client.hasDebt(currentClient)){
+        if (!client.hasDebt(currentClient)){
             String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
             if (response.equals("Plan y número agredado con éxito")) {
                 AlertBox.display("Éxito: ", response);
@@ -209,7 +209,7 @@ public class ClientMenu {
             } else
                 AlertBox.display("Error: ", response);
         } else
-            AlertBox.display("Error: ", "Error interno por favor consulte mas tarde");
+            AlertBox.display("Error: ", "El usuario tiene una deuda pendiente");
     }
 
     private void personalInfo(double width) {

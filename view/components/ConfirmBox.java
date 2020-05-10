@@ -40,8 +40,8 @@ public class ConfirmBox {
         Button yesButton = new Button();
         Button noButton = new Button();
         double fontButton = 16 - (16 * percentage);
-        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.10);
-        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.10);
+        yesButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
+        noButton.setPrefSize(screenSize.getWidth() * 0.12, screenSize.getHeight() * 0.05);
         yesButton.setText(yesAnswerMessage);
         noButton.setText(noAnswerMessage);
         yesButton.setStyle("-fx-font-size: " + fontButton + "px");

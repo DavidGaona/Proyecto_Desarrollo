@@ -401,7 +401,7 @@ public class DbManager {
             int clientId = resultSet.getInt(7);
             statement = connection.prepareStatement(addClientToDebt);
             statement.setLong(1, phoneNumber);
-            statement.setDouble(2, billCost*factor);
+            statement.setDouble(2, billCost * factor);
             statement.setTimestamp(3, billDate);
             statement.setInt(4, billMinutes);
             statement.setInt(5, billGb);
@@ -422,7 +422,7 @@ public class DbManager {
         return "error al cancelar, por favor intente mas tarde";
     }
 
-    public String cancelLineTransferCost(long phoneNumber, int clientId){
+    public String cancelLineTransferCost(long phoneNumber, int clientId) {
         String transferBillCost = "" +
                 "WITH line_to_change AS (" +
                 "SELECT phone_number, (active_bills.bill_cost + (SELECT active_bills.bill_cost FROM active_bills WHERE phone_number = ?)) as cost " +
@@ -442,8 +442,7 @@ public class DbManager {
             statement.executeUpdate();
             removeLine(phoneNumber);
             return "Linea cancelada el costo de la factura fue transferido a su otra linea";
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -452,7 +451,7 @@ public class DbManager {
         return "error al cancelar, por favor intente mas tarde";
     }
 
-    public boolean hasDebt(int clientId){
+    public boolean hasDebt(int clientId) {
         String checkForDebtQuery = "SELECT exists(SELECT 1 FROM public.debt_bills WHERE client_id = ?);";
         try {
             PreparedStatement statement = connection.prepareStatement(checkForDebtQuery);
@@ -460,8 +459,7 @@ public class DbManager {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getBoolean(1);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -1176,7 +1174,7 @@ public class DbManager {
         return data;
     }
 
-    public ArrayList<DataChart> getDataPlansOnRange(Timestamp from, Timestamp to){
+    public ArrayList<DataChart> getDataPlansOnRange(Timestamp from, Timestamp to) {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select = "SELECT plan_name, COUNT(phone_number) AS sum " +
                 "FROM (SELECT * FROM public.phone NATURAL JOIN public.plan WHERE phone_date BETWEEN ? AND ?) AS result " +
@@ -1201,7 +1199,7 @@ public class DbManager {
         return data;
     }
 
-    public ArrayList<DataChart> getBestTenClients(int numberOfClients){
+    public ArrayList<DataChart> getBestTenClients(int numberOfClients) {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
         try {
@@ -1212,7 +1210,7 @@ public class DbManager {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 data.add(
-                        new DataChart(resultSet.getString(1)+" "+resultSet.getString(2)+" Celular: "+resultSet.getString(3), resultSet.getLong(4))
+                        new DataChart(resultSet.getString(1) + " " + resultSet.getString(2) + " Celular: " + resultSet.getString(3), resultSet.getLong(4))
                 );
             }
         } catch (SQLException e) {
@@ -1224,13 +1222,15 @@ public class DbManager {
         return data;
     }
 
-    private void cancelServiceForDebt() throws SQLException{
-        String sql_select = "SELECT phone_number FROM public.active_bills WHERE (SELECT (DATE_PART('year', current_timestamp(0)::timestamptz) - DATE_PART('year', bill_date::timestamptz)) * 12 + (DATE_PART('month', current_timestamp(0)::timestamptz) - DATE_PART('month', bill_date::timestamptz))) > 2";
+    private void cancelServiceForDebt() throws SQLException {
+        String sql_select = "SELECT phone_number FROM public.active_bills WHERE " +
+                "(SELECT (DATE_PART('year', current_timestamp(0)::timestamptz) - DATE_PART('year', bill_date::timestamptz)) * 12" +
+                " + (DATE_PART('month', current_timestamp(0)::timestamptz) - DATE_PART('month', bill_date::timestamptz))) > 2";
         System.out.println("Consultando en la base de datos");
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(sql_select);
-        while (result.next()){
-            cancelLineDebt(result.getLong(1),3);
+        while (result.next()) {
+            cancelLineDebt(result.getLong(1), 3);
         }
     }
 
