@@ -100,7 +100,7 @@ public class DaoClient {
 
     public String cancelLineDebt(long phoneNumber){
         dbManager.openDBConnection();
-        String response = dbManager.cancelLineDebt(phoneNumber);
+        String response = dbManager.cancelLineDebt(phoneNumber,1);
         dbManager.closeDBConnection();
         return response;
     }

@@ -381,7 +381,7 @@ public class DbManager {
         return "error al cancelar, por favor intente mas tarde";
     }
 
-    public String cancelLineDebt(long phoneNumber) {
+    public String cancelLineDebt(long phoneNumber, int factor) {
         String selectCurrentBill = "SELECT * FROM public.active_bills WHERE phone_number = ?;";
         String addClientToDebt = "INSERT INTO public.debt_bills " +
                 "VALUES (?, ?, ?, current_timestamp(0), ?, ?, ?, ?);";
@@ -401,7 +401,7 @@ public class DbManager {
             int clientId = resultSet.getInt(7);
             statement = connection.prepareStatement(addClientToDebt);
             statement.setLong(1, phoneNumber);
-            statement.setDouble(2, billCost);
+            statement.setDouble(2, billCost*factor);
             statement.setTimestamp(3, billDate);
             statement.setInt(4, billMinutes);
             statement.setInt(5, billGb);
@@ -1225,14 +1225,12 @@ public class DbManager {
     }
 
     private void cancelServiceForDebt() throws SQLException{
-        String sql_select = "SELECT phone_number FROM public.active_bills WHERE (SELECT (DATE_PART('year', phone_date) - DATE_PART('year', time_stamp(0))) * 12 +\n" +
-                "              (DATE_PART('month', phone_date) - DATE_PART('month', time_stamp(0))) > 2";
+        String sql_select = "SELECT phone_number FROM public.active_bills WHERE (SELECT (DATE_PART('year', current_timestamp(0)::timestamptz) - DATE_PART('year', bill_date::timestamptz)) * 12 + (DATE_PART('month', current_timestamp(0)::timestamptz) - DATE_PART('month', bill_date::timestamptz))) > 2";
         System.out.println("Consultando en la base de datos");
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(sql_select);
         while (result.next()){
-            long phone_number = result.getLong(1);
-            cancelLineDebt(phone_number);
+            cancelLineDebt(result.getLong(1),3);
         }
     }
 
