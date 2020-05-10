@@ -9,7 +9,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
-import utilities.ConfirmBox;
 import utilities.ProjectEffects;
 import view.Login;
 
