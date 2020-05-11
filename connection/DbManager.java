@@ -1311,8 +1311,8 @@ public class DbManager {
 
     public ArrayList<TableClient> getHighestPayers(int numberOfClients) {
         ArrayList<TableClient> data = new ArrayList<>();
-        String sql_select = "SELECT client_id, phone_number, SUM(bill_cost) AS total_payed " +
-                "FROM public.legacy_bills GROUP BY client_id, phone_number ORDER BY total_payed DESC LIMIT ?";
+        String sql_select = "SELECT client_name, client_last_name, client_document_number ,SUM(bill_cost) AS total_payed " +
+                "FROM public.legacy_bills NATURAL JOIN public.client GROUP BY client_id, client_name, client_last_name, client_document_number ORDER BY total_payed DESC LIMIT ?";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
