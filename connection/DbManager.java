@@ -13,7 +13,6 @@ import java.sql.*;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class DbManager {
     private DBconnect dBconnect;
@@ -480,7 +479,7 @@ public class DbManager {
         statement.executeUpdate();
     }
 
-    public double getDept(int clientId){
+    public double getDept(int clientId) {
         String getDept = "select case when sum(bill_cost) IS NULL then 0 else sum(bill_cost) end as cost from debt_bills where client_id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(getDept);
@@ -498,7 +497,7 @@ public class DbManager {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public String payDebt(int clientId, String bankName, int userId){
+    public String payDebt(int clientId, String bankName, int userId) {
         String selectCurrentDebt = "SELECT * FROM public.debt_bills WHERE client_id = ?;";
         String insertToLegacyDebt = "INSERT INTO public.debt_bills_legacy " +
                 "VALUES (?, ?, ?, ?, current_timestamp(0), ?, ?, ?, ?, ?, ?);";
@@ -511,7 +510,7 @@ public class DbManager {
             int bankId = getBankId(bankName);
             if (bankId == -1)
                 return "Banco no encontrado";
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 long phoneNumber = resultSet.getLong(1);
                 double billCost = resultSet.getDouble(2);
                 Timestamp billDate = resultSet.getTimestamp(3);
@@ -1192,19 +1191,23 @@ public class DbManager {
     }
 
     public ArrayList<DataChart> getDataAboutClientsNC(boolean activos) {
-        ArrayList<DataChart> data = new ArrayList<DataChart>();
+        ArrayList<DataChart> data = new ArrayList<>();
         String sql_select;
         if (activos) {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client GROUP BY client_type";
         } else {
-            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type FROM public.client NATURAL JOIN public.phone) AS result GROUP BY client_type";
+            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type " +
+                    "FROM public.client NATURAL JOIN public.phone) AS result GROUP BY client_type";
         }
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql_select);
             while (resultSet.next()) {
                 data.add(
-                        new DataChart(ProjectUtilities.convertClientTypeString(resultSet.getShort(1)), resultSet.getLong(2))
+                        new DataChart(
+                                ProjectUtilities.convertClientTypeString(resultSet.getShort(1)),
+                                resultSet.getLong(2)
+                        )
                 );
             }
         } catch (SQLException e) {
@@ -1266,9 +1269,11 @@ public class DbManager {
         return data;
     }
 
-    public ArrayList<DataChart> getOldestClients(int numberOfClients) {
-        ArrayList<DataChart> data = new ArrayList<>();
-        String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
+    public ArrayList<TableClient> getOldestClients(int numberOfClients) {
+        ArrayList<TableClient> data = new ArrayList<>();
+        String sql_select = "SELECT client_name, client_last_name, client_document_number, phone_number, phone_date " +
+                "FROM (SELECT * FROM public.phone WHERE client_id != -1) sq1 NATURAL JOIN public.client " +
+                "ORDER BY phone_date ASC LIMIT ?";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
@@ -1276,7 +1281,11 @@ public class DbManager {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 data.add(
-                        new DataChart("Id: "+ resultSet.getString(1) + " Fecha de registro: " + resultSet.getTimestamp(3).toString(), resultSet.getLong(2))
+                        new TableClient(
+                                resultSet.getString(1) + " " + resultSet.getString(2),
+                                resultSet.getString(3),
+                                resultSet.getLong(4),
+                                resultSet.getTimestamp(5).toString())
                 );
             }
         } catch (SQLException e) {
@@ -1300,18 +1309,19 @@ public class DbManager {
         }
     }
 
-    public ArrayList<DataChart> getHighestPayers(int numberOfClients){
-        ArrayList<DataChart> data = new ArrayList<>();
-        String sql_select = "SELECT client_id, phone_number, SUM(bill_cost) AS total_payed FROM public.legacy_bills GROUP BY client_id, phone_number ORDER BY total_payed DESC LIMIT ?";
+    public ArrayList<TableClient> getHighestPayers(int numberOfClients) {
+        ArrayList<TableClient> data = new ArrayList<>();
+        String sql_select = "SELECT client_id, phone_number, SUM(bill_cost) AS total_payed " +
+                "FROM public.legacy_bills GROUP BY client_id, phone_number ORDER BY total_payed DESC LIMIT ?";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setInt(1, numberOfClients);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                data.add(
-                        new DataChart("Id: "+ resultSet.getString(1) + " Celular: " + resultSet.getLong(2), (long) resultSet.getDouble(4))
-                );
+                //data.add(
+                //        new TableClient("Id: " + resultSet.getString(1) + " Celular: " + resultSet.getLong(2), (long) resultSet.getDouble(4))
+                //);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

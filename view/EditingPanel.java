@@ -429,35 +429,27 @@ public class EditingPanel {
     }
 
     public void loadTable(ObservableList<Extras> data) {
-        for (Extras datum : data) {
-            datum.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
-            datum.getSelectPerson().setStyle("-fx-font-size: " + (16 - (16 * percentage)) + ";");
-            datum.getSelectPerson().getStyleClass().add("client-buttons-template");
+        for (Extras datum : data)
+            commonLoad(datum, 16 - (16 * percentage));
+    }
 
-            if (datum.isUsed()){
-                pickedTable.getItems().add(datum);
-                datum.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
-            }
-            else{
-                optionTable.getItems().add(datum);
-                datum.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
-            }
+    private void commonLoad(Extras extra, double v) {
+        extra.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
+        extra.getSelectPerson().setStyle("-fx-font-size: " + (v) + ";");
+        extra.getSelectPerson().getStyleClass().add("client-buttons-template");
 
+        if (extra.isUsed()){
+            pickedTable.getItems().add(extra);
+            extra.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
+        }
+        else{
+            optionTable.getItems().add(extra);
+            extra.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
         }
     }
 
     public void loadTable(Extras extras) {
-        extras.getSelectPerson().setPrefSize(100 - (100 * percentage), 40 - (40 * percentage));
-        extras.getSelectPerson().setStyle("-fx-font-size: " + (16 ) + ";");
-        extras.getSelectPerson().getStyleClass().add("client-buttons-template");
-        if (extras.isUsed()){
-            pickedTable.getItems().add(extras);
-            extras.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
-        }
-        else{
-            optionTable.getItems().add(extras);
-            extras.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
-        }
+        commonLoad(extras, 16 - (16 * percentage));
     }
 
     private void switchRow(TableView<Extras> tableRemove){

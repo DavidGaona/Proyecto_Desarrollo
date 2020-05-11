@@ -125,19 +125,18 @@ public class ChartPlansMenu {
         DatePicker date = new DatePicker();
         DatePicker dateTo = new DatePicker();
 
-
         generateChart.setOnMouseClicked(e -> {
             LocalDate from = date.getValue();
             LocalDate to = dateTo.getValue();
-            ArrayList<DataChart> data = new ArrayList<DataChart>();
+            ArrayList<DataChart> data = new ArrayList<>();
             boolean show = true;
 
             if (chartComboBox.getValue().equals("Ventas por Mes")) {
-                if(from != null && to != null && 12>(ChronoUnit.MONTHS.between(YearMonth.from(from),YearMonth.from(to)))){
+                if (from != null && to != null && 12 > (ChronoUnit.MONTHS.between(YearMonth.from(from), YearMonth.from(to)))) {
                     data = daoChart.getDataPlansPerMonths(from, to);
-                }else{
+                } else {
                     show = false;
-                    AlertBox.display("Error: ","Por favor seleccione un rango de fechas valido");
+                    AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
                 }
                 if (data != null && !data.isEmpty()) {
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
@@ -151,39 +150,33 @@ public class ChartPlansMenu {
                     stackChart.getChildren().clear();
                     stackChart.getChildren().addAll(chart);
                 }
-            } else if(chartComboBox.getValue().equals("Número de Ventas")) {
+            } else if (chartComboBox.getValue().equals("Número de Ventas")) {
+                show = false;
                 if (from != null && to != null) {
-                    data = daoChart.getDataPlansOnRange(from,to);
-                }else{
-                    show = false;
-                    AlertBox.display("Error: ","Por favor seleccione un rango de fechas valido");
-                }
-                if(data != null && !data.isEmpty()){
+                    data = daoChart.getDataPlansOnRange(from, to);
                     final CategoryAxis xAxis = new CategoryAxis();
                     final NumberAxis yAxis = new NumberAxis();
-                    xAxis.setLabel("Plan");
-
-                    final LineChart<String, Number> lineChart =
-                            new LineChart<String, Number>(xAxis, yAxis);
-
-                    lineChart.setTitle("Venta de planes desde "+from.toString()+" hasta "+to.toString());
-
+                    final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
+                    bc.setTitle("Country Summary");
+                    xAxis.setLabel("Planes");
+                    yAxis.setLabel("");
                     XYChart.Series series = new XYChart.Series();
-                    series.setName("Ventas");
-
-                    for (DataChart dataPiece : data) {
-                        series.getData().add(new XYChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+                    for (DataChart datum : data) {
+                        series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
                     }
-                    show = false;
-                    lineChart.getData().add(series);
+                    bc.getData().add(series);
+                    bc.setBarGap(3);
+                    bc.setCategoryGap(8);
                     stackChart.getChildren().clear();
-                    stackChart.getChildren().addAll(lineChart);
-                }
+                    stackChart.getChildren().addAll(bc);
 
-            }else{
+                } else {
+                    AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
+                }
+            } else {
                 /* ToDo */
             }
-            if(show){
+            if (show) {
                 AlertBox.display("Error: ", "No se pudo generar el grafico");
             }
         });
