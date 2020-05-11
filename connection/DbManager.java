@@ -1266,7 +1266,7 @@ public class DbManager {
         return data;
     }
 
-    public ArrayList<DataChart> getBestTenClients(int numberOfClients) {
+    public ArrayList<DataChart> getOldestClients(int numberOfClients) {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select = "SELECT client_id, phone_number, phone_date FROM public.phone NATURAL JOIN public.client ORDER BY phone_date ASC LIMIT ?";
         try {
@@ -1276,7 +1276,7 @@ public class DbManager {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 data.add(
-                        new DataChart(resultSet.getString(1) + " " + resultSet.getString(2) + " Celular: " + resultSet.getString(3), resultSet.getLong(4))
+                        new DataChart("Id: "+ resultSet.getString(1) + " Fecha de registro: " + resultSet.getTimestamp(3).toString(), resultSet.getLong(2))
                 );
             }
         } catch (SQLException e) {
@@ -1298,6 +1298,28 @@ public class DbManager {
         while (result.next()) {
             cancelLineDebt(result.getLong(1), 3);
         }
+    }
+
+    public ArrayList<DataChart> getHighestPayers(int numberOfClients){
+        ArrayList<DataChart> data = new ArrayList<>();
+        String sql_select = "SELECT client_id, phone_number, SUM(bill_cost) AS total_payed FROM public.legacy_bills GROUP BY client_id, phone_number ORDER BY total_payed DESC LIMIT ?";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setInt(1, numberOfClients);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.add(
+                        new DataChart("Id: "+ resultSet.getString(1) + " Celular: " + resultSet.getLong(2), (long) resultSet.getDouble(4))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
+        return data;
     }
 
     public void openDBConnection() {

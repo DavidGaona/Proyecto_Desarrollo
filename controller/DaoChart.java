@@ -46,11 +46,24 @@ public class DaoChart {
         return data;
     }
 
-    public ArrayList<DataChart> getBestTenClients(int numberOfClients){
+    public ArrayList<DataChart> getOldestClients(int numberOfClients){
         if(numberOfClients>2 && numberOfClients<20) return null;
         ArrayList<DataChart> data;
         dbManager.openDBConnection();
-        data = dbManager.getBestTenClients(numberOfClients);
+        data = dbManager.getOldestClients(numberOfClients);
+        dbManager.closeDBConnection();
+        if(data.isEmpty()){
+            return null;
+        }
+
+        return data;
+    }
+
+    public ArrayList<DataChart> getHighestPayers(int numberOfClients){
+        if(numberOfClients>1 && numberOfClients<10) return null;
+        ArrayList<DataChart> data;
+        dbManager.openDBConnection();
+        data = dbManager.getHighestPayers(numberOfClients);
         dbManager.closeDBConnection();
         if(data.isEmpty()){
             return null;
