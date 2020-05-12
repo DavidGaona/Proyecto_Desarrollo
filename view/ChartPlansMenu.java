@@ -18,13 +18,13 @@ import utilities.FA;
 import utilities.ProjectEffects;
 import utilities.ProjectUtilities;
 import view.components.AlertBox;
-import view.components.SearchPane;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ChartPlansMenu {
@@ -125,6 +125,51 @@ public class ChartPlansMenu {
         DatePicker date = new DatePicker();
         DatePicker dateTo = new DatePicker();
 
+        AtomicInteger min = new AtomicInteger();
+        AtomicBoolean enteredTo = new AtomicBoolean(false);
+        AtomicBoolean enteredFrom = new AtomicBoolean(false);
+        AtomicInteger fromSelected = new AtomicInteger();
+        AtomicInteger toSelected = new AtomicInteger();
+        String[] months = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+        ComboBox<String> fromCombobox = new ComboBox<>(FXCollections.observableArrayList(months));
+        fromCombobox.setPrefSize(width * 0.15, height * 0.03);
+        fromCombobox.getItems().remove(11);
+
+        ComboBox<String> toCombobox = new ComboBox<>(FXCollections.observableArrayList(months));
+        toCombobox.setPrefSize(width * 0.15, height * 0.03);
+        toCombobox.getItems().remove(0);
+
+        fromCombobox.setOnAction(e -> {
+            if (enteredTo.get())
+                return;
+            enteredFrom.set(true);
+            toCombobox.getItems().clear();
+            min.set(fromCombobox.getSelectionModel().getSelectedIndex() + 1);
+            fromSelected.set(fromCombobox.getSelectionModel().getSelectedIndex());
+            for (int i = fromCombobox.getSelectionModel().getSelectedIndex() + 1; i < 12; i++)
+                toCombobox.getItems().add(months[i]);
+            toCombobox.getSelectionModel().select(toSelected.get());
+            enteredFrom.set(false);
+        });
+
+        toCombobox.setOnAction(e -> {
+            if (enteredFrom.get())
+                return;
+            enteredTo.set(true);
+            fromCombobox.getItems().clear();
+            toSelected.set(toCombobox.getSelectionModel().getSelectedIndex() - min.get());
+            for (int i = 0; i < toCombobox.getSelectionModel().getSelectedIndex() + min.get(); i++)
+                fromCombobox.getItems().add(months[i]);
+            fromCombobox.getSelectionModel().select(fromSelected.get());
+            enteredTo.set(false);
+        });
+
+        ComboBox<Integer> yearsComboBox = new ComboBox<>();
+        yearsComboBox.setPrefSize(width * 0.15, height * 0.03);
+        for (int i = 0; i < 22; i++)
+            yearsComboBox.getItems().add(2000 + i);
+
         chartComboBox.setPrefSize(width * 0.15, height * 0.03);
 
         generateChart.setOnMouseClicked(e -> {
@@ -154,26 +199,22 @@ public class ChartPlansMenu {
                 }
             } else if (chartComboBox.getValue().equals("Número de Ventas")) {
                 show = false;
+                System.out.println(from.toString());
                 if (from != null && to != null) {
                     data = daoChart.getDataPlansOnRange(from, to);
-                    final CategoryAxis xAxis = new CategoryAxis();
-                    final NumberAxis yAxis = new NumberAxis();
-                    final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
-                    bc.setTitle("Country Summary");
-                    xAxis.setLabel("Planes");
-                    yAxis.setLabel("");
-                    XYChart.Series series = new XYChart.Series();
-                    for (DataChart datum : data) {
-                        series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
-                    }
-                    bc.getData().add(series);
-                    bc.setBarGap(3);
-                    bc.setCategoryGap(8);
-                    stackChart.getChildren().clear();
-                    stackChart.getChildren().addAll(bc);
-
-                } else {
+                    commonBarChart(stackChart, data, "Número de Ventas");
+                } else
                     AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
+            } else if (chartComboBox.getValue().equals("Número de Canceladas")) {
+                show = false;
+                if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
+                    String start = yearsComboBox.getValue() + "-" +
+                            ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
+                    String end = yearsComboBox.getValue() + "-" +
+                            ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
+                    data = daoChart.getCancelledClientsOnRange(LocalDate.parse(start), LocalDate.parse(end));
+                    if (data != null)
+                        commonBarChart(stackChart, data, "Número de Cancelados");
                 }
             } else {
                 /* ToDo */
@@ -183,12 +224,31 @@ public class ChartPlansMenu {
             }
         });
 
-        centerText.getChildren().addAll(text, text2, chartComboBox, text3, date, text4, dateTo, generateChart);
+        centerText.getChildren().addAll(text, text2, chartComboBox, yearsComboBox, text3, date,
+                fromCombobox, text4, dateTo, toCombobox, generateChart);
 
         hbox.getChildren().addAll(centerText, stackChart);
 
 
         return hbox;
+    }
+
+    private void commonBarChart(StackPane stackChart, ArrayList<DataChart> data, String s) {
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
+        bc.setTitle(s);
+        xAxis.setLabel("Planes");
+        yAxis.setLabel("Cantidad");
+        XYChart.Series series = new XYChart.Series();
+        for (DataChart datum : data) {
+            series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
+        }
+        bc.getData().add(series);
+        bc.setBarGap(3);
+        bc.setCategoryGap(8);
+        stackChart.getChildren().clear();
+        stackChart.getChildren().addAll(bc);
     }
 
     @SuppressWarnings("DuplicatedCode")

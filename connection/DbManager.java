@@ -284,6 +284,7 @@ public class DbManager {
             PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
             statement.setInt(1, clientId);
             ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
             return resultSet.getBoolean(1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -504,6 +505,7 @@ public class DbManager {
         statement.setInt(2, resultSet.getInt(1));
         statement.setInt(3, resultSet.getInt(2));
         statement.setInt(4, Login.currentLoggedUser);
+        statement.executeUpdate();
 
         statement = connection.prepareStatement(cancelLineQuery);
         statement.setLong(1, phoneNumber);

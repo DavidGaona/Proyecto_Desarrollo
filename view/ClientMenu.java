@@ -215,7 +215,12 @@ public class ClientMenu {
     private void saveNewLine() {
         if (!client.hasDebt(currentClient)) {
             if (client.hasCancelled(currentClient)){
-                AlertBox.display("Error: ", "Ya ha cancelado antes, tendra que esperar al final del mes");
+                boolean confirmation = ConfirmBox.display(
+                        "Confirmar",
+                        "Ya ha cancelado antes, se generará su factura de inmediato",
+                        "SI",
+                        "NO"
+                );
             } else {
                 String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
                 if (response.equals("Plan y número agredado con éxito")) {

@@ -1,6 +1,7 @@
 package controller;
 
 import connection.DbManager;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import model.App;
 import model.Plan;
@@ -81,7 +82,6 @@ public class DaoPlan {
         dbManager.openDBConnection();
         ObservableList<Extras> extras = dbManager.loadPlanExtras(planId);
         dbManager.closeDBConnection();
-
         return extras;
     }
 
