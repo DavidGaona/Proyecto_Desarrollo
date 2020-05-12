@@ -183,4 +183,65 @@
     -fx-font-weight: bold;
 }
 
+.custom-chart-label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-weight: bold;
+    -fx-text-alignment: LEFT;
+}
 
+/* Charts CSS */
+
+.chart-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-family: Consolas;
+    -fx-font-size: 50;
+}
+
+.axis {
+    -fx-font-size: 25;
+    -fx-tick-label-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+}
+
+.axis-label {
+    -fx-font-size: 35;
+    -fx-tick-label-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}
+
+.chart-pie-label {
+    -fx-fill: #FFFFFF;
+    -fx-font-size: 25;
+}
+.chart-legend {
+    -fx-background-color:  #3D3946;
+    -fx-stroke: #2E293D;
+}
+
+.chart-bar {
+    -fx-background-color: #3D3946;
+}
+
+.data0.chart-pie { -fx-pie-color: turquoise; }
+.data1.chart-pie { -fx-pie-color: aquamarine; }
+.data2.chart-pie { -fx-pie-color: cornflowerblue; }
+.data3.chart-pie { -fx-pie-color: blue; }
+.data4.chart-pie { -fx-pie-color: cadetblue; }
+.data5.chart-pie { -fx-pie-color: navy; }
+.data6.chart-pie { -fx-pie-color: deepskyblue; }
+.data7.chart-pie { -fx-pie-color: cyan; }
+.data8.chart-pie { -fx-pie-color: steelblue; }
+.data9.chart-pie { -fx-pie-color: teal; }
+.data10.chart-pie { -fx-pie-color: royalblue; }
+.data11.chart-pie { -fx-pie-color: dodgerblue; }
+.chart-legend { -fx-background-color: sienna; }

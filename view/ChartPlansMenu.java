@@ -97,33 +97,41 @@ public class ChartPlansMenu {
         centerText.setPrefSize(width * 0.2, height * 0.9);
         centerText.setAlignment(Pos.TOP_CENTER);
         centerText.setStyle("-fx-border-width: 0 2 0 0;-fx-border-color: #FFFFFF;");
-        centerText.setSpacing(15);
+        centerText.setSpacing(25);
 
         StackPane stackChart = new StackPane();
         stackChart.setPrefSize(width * 0.6, height * 0.9);
         stackChart.setAlignment(Pos.CENTER);
 
         //Text with message
-        Text text = new Text("Filtros para Planes");
-        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
-        text.setFill(Color.web("#FFFFFF"));
+        Label introLabel = new Label("Filtros para Planes");
+        introLabel.setPrefSize(width * 0.15, height * 0.03);
+        introLabel.setMaxWidth(width * 0.15);
+        introLabel.setWrapText(true);
+        introLabel.getStyleClass().add("custom-chart-label");
+        introLabel.setStyle(introLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
 
-        Text text2 = new Text("Tipo: ");
-        text2.setFont(new Font("Consolas", 30 - (30 * percentage)));
-        text2.setFill(Color.web("#FFFFFF"));
+        Label typeLabel = new Label("Tipo: ");
+        typeLabel.setPrefSize(width * 0.15, height * 0.03);
+        typeLabel.getStyleClass().add("custom-chart-label");
+        typeLabel.setStyle(typeLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
 
-        Text text3 = new Text("Desde: ");
-        text3.setFont(new Font("Consolas", 30 - (30 * percentage)));
-        text3.setFill(Color.web("#FFFFFF"));
+        Label yearLabel = new Label("Año: ");
+        yearLabel.setPrefSize(width * 0.15, height * 0.03);
+        yearLabel.getStyleClass().add("custom-chart-label");
+        yearLabel.setStyle(yearLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
 
-        Text text4 = new Text("Hasta: ");
-        text4.setFont(new Font("Consolas", 30 - (30 * percentage)));
-        text4.setFill(Color.web("#FFFFFF"));
+        Label fromLabel = new Label("Desde: ");
+        fromLabel.setPrefSize(width * 0.15, height * 0.03);
+        fromLabel.getStyleClass().add("custom-chart-label");
+        fromLabel.setStyle(fromLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
+
+        Label toLabel = new Label("Hasta: ");
+        toLabel.setPrefSize(width * 0.15, height * 0.03);
+        toLabel.getStyleClass().add("custom-chart-label");
+        toLabel.setStyle(toLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
 
         Button generateChart = chartPlanButtonTemplate(width, height, "Generar Gráfico");
-
-        DatePicker date = new DatePicker();
-        DatePicker dateTo = new DatePicker();
 
         AtomicInteger min = new AtomicInteger();
         AtomicBoolean enteredTo = new AtomicBoolean(false);
@@ -173,59 +181,71 @@ public class ChartPlansMenu {
         chartComboBox.setPrefSize(width * 0.15, height * 0.03);
 
         generateChart.setOnMouseClicked(e -> {
-            LocalDate from = date.getValue();
-            LocalDate to = dateTo.getValue();
-            ArrayList<DataChart> data = new ArrayList<>();
+            ArrayList<DataChart> data;
             boolean show = true;
-
-            if (chartComboBox.getValue().equals("Ventas por Mes")) {
-                if (from != null && to != null && 12 > (ChronoUnit.MONTHS.between(YearMonth.from(from), YearMonth.from(to)))) {
-                    data = daoChart.getDataPlansPerMonths(from, to);
-                } else {
-                    show = false;
-                    AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
-                }
-                if (data != null && !data.isEmpty()) {
-                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-                    for (DataChart dataPiece : data) {
-                        pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+            switch (chartComboBox.getValue()) {
+                case "Ventas por Mes":
+                    if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
+                        String start = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
+                        String end = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
+                        data = daoChart.getDataPlansPerMonths(LocalDate.parse(start), LocalDate.parse(end));
+                        if (data != null && !data.isEmpty()) {
+                            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+                            for (DataChart dataPiece : data) {
+                                pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+                            }
+                            final PieChart pieChart = new PieChart(pieChartData);
+                            pieChart.setTitle("Ventas por Mes");
+                            pieChart.setLegendSide(Side.LEFT);
+                            pieChart.setMaxSize(width * 0.55, height * 0.85);
+                            show = false;
+                            stackChart.getChildren().clear();
+                            stackChart.getChildren().addAll(pieChart);
+                        } else
+                            AlertBox.display("Error: ", "No se encontraron registros en esas fechas");
+                    } else {
+                        show = false;
+                        AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
                     }
-                    final PieChart chart = new PieChart(pieChartData);
-                    chart.setTitle("Ventas por Mes");
-                    chart.setLegendSide(Side.LEFT);
+                    break;
+                case "Número de Ventas":
                     show = false;
-                    stackChart.getChildren().clear();
-                    stackChart.getChildren().addAll(chart);
-                }
-            } else if (chartComboBox.getValue().equals("Número de Ventas")) {
-                show = false;
-                System.out.println(from.toString());
-                if (from != null && to != null) {
-                    data = daoChart.getDataPlansOnRange(from, to);
-                    commonBarChart(stackChart, data, "Número de Ventas");
-                } else
-                    AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
-            } else if (chartComboBox.getValue().equals("Número de Canceladas")) {
-                show = false;
-                if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
-                    String start = yearsComboBox.getValue() + "-" +
-                            ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
-                    String end = yearsComboBox.getValue() + "-" +
-                            ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
-                    data = daoChart.getCancelledClientsOnRange(LocalDate.parse(start), LocalDate.parse(end));
-                    if (data != null)
-                        commonBarChart(stackChart, data, "Número de Cancelados");
-                }
-            } else {
-                /* ToDo */
+                    if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
+                        String start = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
+                        String end = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
+                        data = daoChart.getDataPlansOnRange(LocalDate.parse(start), LocalDate.parse(end));
+                        if (data != null)
+                            commonBarChart(stackChart, data, "Número de Ventas", width, height);
+                        else
+                            AlertBox.display("Error: ", "No se encontraron registros en esas fechas");
+                    }
+                    break;
+                case "Número de Cancelados":
+                    show = false;
+                    if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
+                        String start = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
+                        String end = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
+                        data = daoChart.getCancelledClientsOnRange(LocalDate.parse(start), LocalDate.parse(end));
+                        if (data != null)
+                            commonBarChart(stackChart, data, "Número de Cancelados", width, height);
+                        else
+                            AlertBox.display("Error: ", "No se encontraron registros en esas fechas");
+                    }
+                    break;
             }
             if (show) {
                 AlertBox.display("Error: ", "No se pudo generar el grafico");
             }
         });
 
-        centerText.getChildren().addAll(text, text2, chartComboBox, yearsComboBox, text3, date,
-                fromCombobox, text4, dateTo, toCombobox, generateChart);
+        centerText.getChildren().addAll(introLabel, typeLabel, chartComboBox, yearLabel, yearsComboBox, fromLabel,
+                fromCombobox, toLabel, toCombobox, generateChart);
 
         hbox.getChildren().addAll(centerText, stackChart);
 
@@ -233,10 +253,11 @@ public class ChartPlansMenu {
         return hbox;
     }
 
-    private void commonBarChart(StackPane stackChart, ArrayList<DataChart> data, String s) {
+    private void commonBarChart(StackPane stackChart, ArrayList<DataChart> data, String s, double width, double height) {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
+        bc.setMaxSize(width * 0.55, height * 0.85);
         bc.setTitle(s);
         xAxis.setLabel("Planes");
         yAxis.setLabel("Cantidad");
@@ -245,8 +266,9 @@ public class ChartPlansMenu {
             series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
         }
         bc.getData().add(series);
-        bc.setBarGap(3);
-        bc.setCategoryGap(8);
+        bc.setBarGap(10);
+        bc.setCategoryGap(10);
+        bc.setLegendVisible(false);
         stackChart.getChildren().clear();
         stackChart.getChildren().addAll(bc);
     }

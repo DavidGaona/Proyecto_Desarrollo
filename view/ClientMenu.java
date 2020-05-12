@@ -1,6 +1,7 @@
 package view;
 
 import controller.DaoBank;
+import controller.DaoBill;
 import controller.DaoClient;
 import controller.DaoPlan;
 import javafx.geometry.Insets;
@@ -221,8 +222,16 @@ public class ClientMenu {
                         "SI",
                         "NO"
                 );
+                if (confirmation){
+                    String response = client.addNewClientLine(currentClient, newLine.getContent("planName"), true);
+                    if (response.equals("Plan y número agredado con éxito, factura ya disponible")) {
+                        AlertBox.display("Éxito: ", response);
+                        resetPhoneNumbers();
+                    } else
+                        AlertBox.display("Error: ", response);
+                }
             } else {
-                String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
+                String response = client.addNewClientLine(currentClient, newLine.getContent("planName"), false);
                 if (response.equals("Plan y número agredado con éxito")) {
                     AlertBox.display("Éxito: ", response);
                     resetPhoneNumbers();
@@ -387,10 +396,10 @@ public class ClientMenu {
                 response = "Seleccione un cliente primero";
             if (response.equals("Factura pagada con éxito")) {
                 AlertBox.display("Éxito: ", response);
+                payPlan.setTextField("cost", "0.0");
             } else
                 AlertBox.display("Error: ", response);
         });
-
         aligner.add(payPlan);
     }
 
@@ -511,7 +520,7 @@ public class ClientMenu {
         cancelPlan(width);
         payDebt(width);
         var allPlans = plan.loadPlans();
-        var allBanks = new ArrayList<>(Arrays.asList(bank.loadAllBanks()));
+        var allBanks = new ArrayList<>(Arrays.asList(bank.loadAllBanks(false)));
         changePlan.setComboBoxString("planName", allPlans);
         newLine.setComboBoxString("planName", allPlans);
         payPlan.setComboBoxString("banks", allBanks);

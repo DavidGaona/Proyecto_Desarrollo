@@ -31,6 +31,6 @@ public class testDaoBank extends TestCase {
     @Test
     public void testLoadAllBanks(){          /**el numero esperado depende del numero de bancos que hay en la BD**/
         scenario();
-        assertEquals(3,bank.loadAllBanks().length);
+        assertEquals(3,bank.loadAllBanks(true).length);
     }
 }

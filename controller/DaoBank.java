@@ -31,9 +31,9 @@ public class DaoBank {
         return bank;
     }
 
-    public String[] loadAllBanks() {
+    public String[] loadAllBanks(boolean loadAll) {
         dbManager.openDBConnection();
-        String[] banks = dbManager.loadAllBank();
+        String[] banks = dbManager.loadAllBank(loadAll);
         dbManager.closeDBConnection();
         return banks;
     }

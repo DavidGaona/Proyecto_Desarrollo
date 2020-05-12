@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -33,6 +34,7 @@ public class ConfirmBox {
         Label label = new Label();
         double fontLabel = 20 - (20 * percentage);
         label.setText(message);
+        label.setTextAlignment(TextAlignment.CENTER);
         label.setWrapText(true);
         label.setStyle("-fx-font-size: " + fontLabel + "px");
 

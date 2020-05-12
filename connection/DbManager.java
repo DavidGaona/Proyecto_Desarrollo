@@ -113,7 +113,7 @@ public class DbManager {
         return numbers;
     }
 
-    public String addNewClientLine(int clientId, String planName) {
+    public String addNewClientLine(int clientId, String planName, boolean generateBill) {
         String getClientType = "SELECT client_type FROM public.client WHERE client_id = ?";
         String checkForMaxLines = "SELECT count(*) FROM (SELECT phone_number FROM public.phone WHERE client_id = ? LIMIT 5) sq1;";
         String getLastNumberQuery = "SELECT phone_number FROM public.phone WHERE phone_number = (select max(phone_number) from public.phone)";
@@ -147,6 +147,11 @@ public class DbManager {
             statement.setInt(2, clientId);
             statement.setInt(3, planId);
             statement.executeUpdate();
+            if (generateBill) {
+                if (generateBillForNewClient(phoneNumber))
+                    return "Plan y número agredado con éxito, factura ya disponible";
+                return "error interno del sistema";
+            }
             return "Plan y número agredado con éxito";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -278,7 +283,7 @@ public class DbManager {
         return new Client();
     }
 
-    public boolean hasCancelled(int clientId){
+    public boolean hasCancelled(int clientId) {
         String getPlanIdQuery = "SELECT exists(SELECT 1 FROM public.cancelled_phone WHERE client_id = ?);";
         try {
             PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
@@ -1100,12 +1105,15 @@ public class DbManager {
         return new Bank();
     }
 
-    public String[] loadAllBank() {
+    public String[] loadAllBank(boolean loadAll) {
 
         ArrayList<String> banks = new ArrayList<>();
+        String sql_select;
+        if (loadAll)
+            sql_select = "SELECT bank_name FROM public.bank";
+        else
+            sql_select = "SELECT bank_name FROM public.bank WHERE state = true";
 
-        String sql_select = "SELECT bank_name " +
-                "FROM public.bank";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
@@ -1394,17 +1402,17 @@ public class DbManager {
         return data;
     }
 
-    public int generateBillForNewClient(long phoneNumber){
+    private boolean generateBillForNewClient(long phoneNumber) {
         String sql_select = "SELECT phone_number, client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
                 "FROM public.phone NATURAL JOIN public.plan WHERE phone_number = ?";
         String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
-            statement.setLong(1,phoneNumber);
+            statement.setLong(1, phoneNumber);
             ResultSet resultSet = statement.executeQuery();
-            if(!resultSet.next())
-                return -1;
+            if (!resultSet.next())
+                return false;
             statement = connection.prepareStatement(sql_save);
             statement.setLong(1, resultSet.getLong(1));
             statement.setDouble(2, resultSet.getDouble(3));
@@ -1412,16 +1420,14 @@ public class DbManager {
             statement.setInt(4, (int) (0.10 * resultSet.getInt(5)));
             statement.setInt(5, (int) (0.10 * resultSet.getInt(6)));
             statement.setInt(6, resultSet.getInt(2));
-
-            return statement.executeUpdate();
-
+            statement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return -2;
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
-            return -3;
         }
+        return false;
     }
 
     public void openDBConnection() {

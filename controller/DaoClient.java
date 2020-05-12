@@ -49,9 +49,9 @@ public class DaoClient {
         return numbers;
     }
 
-    public String addNewClientLine(int clientId, String planName) {
+    public String addNewClientLine(int clientId, String planName, boolean generateBill) {
         dbManager.openDBConnection();
-        String response = dbManager.addNewClientLine(clientId, planName);
+        String response = dbManager.addNewClientLine(clientId, planName, generateBill);
         dbManager.closeDBConnection();
         return response;
     }

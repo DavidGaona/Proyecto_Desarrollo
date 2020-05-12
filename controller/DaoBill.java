@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class DaoBill {
-    private DbManager dbManager = new DbManager("postgres", "postgres", "MobilePlan", "localhost");
+    private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
     public String generateBills() {
         int response;
@@ -50,23 +50,5 @@ public class DaoBill {
             return "El lugar donde desea guardar no existe o no tiene permisos de escritura";
         }
         return "Se han creado los PDF con exito";
-    }
-
-    public String generateBillForNewClient(long phoneNumber){
-        int response;
-        dbManager.openDBConnection();
-        response = dbManager.generateBillForNewClient(phoneNumber);
-        dbManager.closeDBConnection();
-        if (response > 0)
-            return "Operación realizada con exito";
-
-        switch (response) {
-            case 0:
-                return "No se pudo generar la factura";
-            case -1:
-                return "No se puede generar la factura para este cliente";
-            default:
-                return "Error interno del sistema";
-        }
     }
 }

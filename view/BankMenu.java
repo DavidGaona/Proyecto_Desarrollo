@@ -202,7 +202,7 @@ public class BankMenu {
         bankMenu.setBottom(botBar((HBox) bankMenu.getBottom(), width, height));
         bankMenu.setCenter(bankMenu.getCenter());
 
-        ProjectUtilities.loadComboBox(searchComboBox, bank.loadAllBanks());
+        ProjectUtilities.loadComboBox(searchComboBox, bank.loadAllBanks(true));
 
         stackPane.getChildren().addAll(bankMenu, menuList, sp);
         stackPane.setAlignment(Pos.TOP_LEFT);
