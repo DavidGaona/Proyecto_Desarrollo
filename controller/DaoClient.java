@@ -132,4 +132,11 @@ public class DaoClient {
         dbManager.closeDBConnection();
         return response;
     }
+
+    public boolean hasCancelled(int clientId){
+        dbManager.openDBConnection();
+        boolean response = dbManager.hasCancelled(clientId);
+        dbManager.closeDBConnection();
+        return response;
+    }
 }

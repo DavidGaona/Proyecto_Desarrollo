@@ -278,6 +278,22 @@ public class DbManager {
         return new Client();
     }
 
+    public boolean hasCancelled(int clientId){
+        String getPlanIdQuery = "SELECT exists(SELECT 1 FROM public.cancelled_phone WHERE client_id = ?);";
+        try {
+            PreparedStatement statement = connection.prepareStatement(getPlanIdQuery);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getBoolean(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println("Ocurrio un error interno del sistema");
+        }
+        return true;
+    }
+
     public double getValueToPay(long phoneNumber) {
         String getPlanIdQuery = "SELECT bill_cost FROM public.active_bills WHERE phone_number = ?";
         try {
@@ -470,10 +486,25 @@ public class DbManager {
 
     private void removeLine(long phoneNumber) throws SQLException {
         String removeFromPendingQuery = "DELETE FROM public.phone_pending WHERE phone_number = ?";
+        String getPhoneInfoQuery = "SELECT client_id, plan_id " +
+                "FROM public.phone WHERE phone_number = ?";
+        String registerCancelledPhoneQuery = "INSERT INTO public.cancelled_phone " +
+                "VALUES (?, ?, ?, current_timestamp(0), ?);";
         String cancelLineQuery = "UPDATE public.phone SET client_id = -1 WHERE phone_number = ?";
         PreparedStatement statement = connection.prepareStatement(removeFromPendingQuery);
         statement.setLong(1, phoneNumber);
         statement.executeUpdate();
+
+        statement = connection.prepareStatement(getPhoneInfoQuery);
+        statement.setLong(1, phoneNumber);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        statement = connection.prepareStatement(registerCancelledPhoneQuery);
+        statement.setLong(1, phoneNumber);
+        statement.setInt(2, resultSet.getInt(1));
+        statement.setInt(3, resultSet.getInt(2));
+        statement.setInt(4, Login.currentLoggedUser);
+
         statement = connection.prepareStatement(cancelLineQuery);
         statement.setLong(1, phoneNumber);
         statement.executeUpdate();

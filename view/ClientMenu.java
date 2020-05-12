@@ -214,12 +214,17 @@ public class ClientMenu {
 
     private void saveNewLine() {
         if (!client.hasDebt(currentClient)) {
-            String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
-            if (response.equals("Plan y número agredado con éxito")) {
-                AlertBox.display("Éxito: ", response);
-                resetPhoneNumbers();
-            } else
-                AlertBox.display("Error: ", response);
+            if (client.hasCancelled(currentClient)){
+                AlertBox.display("Error: ", "Ya ha cancelado antes, tendra que esperar al final del mes");
+            } else {
+                String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
+                if (response.equals("Plan y número agredado con éxito")) {
+                    AlertBox.display("Éxito: ", response);
+                    resetPhoneNumbers();
+                } else
+                    AlertBox.display("Error: ", response);
+            }
+
         } else
             AlertBox.display("Error: ", "El usuario tiene una deuda pendiente");
     }
