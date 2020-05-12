@@ -53,4 +53,12 @@ public class DaoChart {
         return (data.isEmpty()) ? null : data;
     }
 
+    public ArrayList<DataChart> getCancelledClientsOnRange(LocalDate from, LocalDate to) {
+        ArrayList<DataChart> data;
+        dbManager.openDBConnection();
+        data = dbManager.getCancelledClientsOnRange(Timestamp.valueOf(from.atStartOfDay()), Timestamp.valueOf(to.atStartOfDay()));
+        dbManager.closeDBConnection();
+        return (data.isEmpty()) ? null : data;
+    }
+
 }
