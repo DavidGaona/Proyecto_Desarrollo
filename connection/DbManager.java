@@ -1394,6 +1394,36 @@ public class DbManager {
         return data;
     }
 
+    public int generateBillForNewClient(long phoneNumber){
+        String sql_select = "SELECT phone_number, client_id, plan_cost, plan_minutes, plan_data_cap, plan_text_message " +
+                "FROM public.phone NATURAL JOIN public.plan WHERE phone_number = ?";
+        String sql_save = "INSERT INTO public.active_bills VALUES(?, ?, current_timestamp(0), ?, ?, ?, ?)";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setLong(1,phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if(!resultSet.next())
+                return -1;
+            statement = connection.prepareStatement(sql_save);
+            statement.setLong(1, resultSet.getLong(1));
+            statement.setDouble(2, resultSet.getDouble(3));
+            statement.setInt(3, (int) (0.10 * resultSet.getInt(4)));
+            statement.setInt(4, (int) (0.10 * resultSet.getInt(5)));
+            statement.setInt(5, (int) (0.10 * resultSet.getInt(6)));
+            statement.setInt(6, resultSet.getInt(2));
+
+            return statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return -2;
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return -3;
+        }
+    }
+
     public void openDBConnection() {
         connection = dBconnect.getConnection();
     }
