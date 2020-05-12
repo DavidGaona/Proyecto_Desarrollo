@@ -1225,10 +1225,10 @@ public class DbManager {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select;
         if (actives) {
-            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client GROUP BY client_type";
+            sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client WHERE client_type != -1 GROUP BY client_type";
         } else {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type " +
-                    "FROM public.client NATURAL JOIN public.phone) AS result GROUP BY client_type";
+                    "FROM public.client NATURAL JOIN public.phone) AS result WHERE client_type != -1 GROUP BY client_type";
         }
         try {
             Statement statement = connection.createStatement();
@@ -1356,6 +1356,31 @@ public class DbManager {
                                 resultSet.getString(3),
                                 resultSet.getDouble(4)
                         )
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
+        return data;
+    }
+
+    public ArrayList<DataChart> getCancelledClientsOnRange(Timestamp from, Timestamp to) {
+        ArrayList<DataChart> data = new ArrayList<>();
+        String sql_select = "SELECT EXTRACT(MONTH FROM phone_cancelled_date) AS month, COUNT(client_id) AS sum FROM " +
+                "(SELECT * FROM public.cancelled_phone WHERE phone_cancelled_date BETWEEN ? AND ?) AS result " +
+                "GROUP BY EXTRACT(MONTH FROM phone_cancelled_date) ORDER BY month DESC";
+        try {
+            System.out.println("Consultando en la base de datos");
+            PreparedStatement statement = connection.prepareStatement(sql_select);
+            statement.setTimestamp(1, from);
+            statement.setTimestamp(2, to);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                data.add(
+                        new DataChart(Month.of(resultSet.getInt(1)).name(), resultSet.getLong(2))
                 );
             }
         } catch (SQLException e) {
