@@ -58,7 +58,7 @@ public class MenuListAdmin extends MenuList {
         closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu, 700, 1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
-        billingLabel.setOnMouseClicked( e -> {
+        billingLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(6));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);

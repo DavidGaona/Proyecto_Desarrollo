@@ -26,7 +26,7 @@ public class DaoPlan {
         return response;
     }
 
-    public String editPlan(String planName, String planCost, String planMinutes, String planData, String planTextMsn, ObservableList<Extras> extras){
+    public String editPlan(String planName, String planCost, String planMinutes, String planData, String planTextMsn, ObservableList<Extras> extras) {
         Plan plan = new Plan(planName, Double.parseDouble(planCost),
                 Integer.parseInt(planMinutes), Integer.parseInt(planData), Integer.parseInt(planTextMsn));
         String response = "";
@@ -70,14 +70,14 @@ public class DaoPlan {
         return extras;
     }
 
-    public Plan loadPlan(String planName){
+    public Plan loadPlan(String planName) {
         dbManager.openDBConnection();
         Plan plan = dbManager.loadPlan(planName);
         dbManager.closeDBConnection();
         return plan;
     }
 
-    public ObservableList<Extras> loadPlanExtras(int planId){
+    public ObservableList<Extras> loadPlanExtras(int planId) {
         dbManager.openDBConnection();
         ObservableList<Extras> extras = dbManager.loadPlanExtras(planId);
         dbManager.closeDBConnection();
@@ -85,7 +85,7 @@ public class DaoPlan {
         return extras;
     }
 
-    public ArrayList<String> loadPlans(){
+    public ArrayList<String> loadPlans() {
         dbManager.openDBConnection();
         ArrayList<String> plans = dbManager.loadPlans();
         dbManager.closeDBConnection();

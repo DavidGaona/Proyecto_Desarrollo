@@ -20,7 +20,7 @@ public class GeneratorPDF {
     private BaseFont bf;
     private int pageNumber = 0;
 
-    public void createPDF(String pdfFilename, Bill bill) throws FileNotFoundException{
+    public void createPDF(String pdfFilename, Bill bill) throws FileNotFoundException {
 
         Document doc = new Document();
         PdfWriter docWriter = null;
@@ -42,9 +42,9 @@ public class GeneratorPDF {
             generateHeader(cb, client.getName() + " " + client.getLastName(), bill.getBill_Phone() + "",
                     client.getDirection(), Integer.toString(bill.getBillPlan().getId()), Integer.toString(client.getId()), bill.getBill_date());
             generateDetail(doc, cb, 1, 615, plan);
-            generateBarCode(cb, client.getId()+"-"+ bill.getBill_date().toString());
+            generateBarCode(cb, client.getId() + "-" + bill.getBill_date().toString());
             printPageNumber(cb);
-            
+
         } catch (DocumentException dex) {
             dex.printStackTrace();
         } catch (Exception ex) {
@@ -156,9 +156,9 @@ public class GeneratorPDF {
 
             createContent(cb, 48, y, String.valueOf(index), PdfContentByte.ALIGN_RIGHT);
             createContent(cb, 52, y, plan.getPlanName(), PdfContentByte.ALIGN_LEFT);
-            createContent(cb, 152, y, "Minutos: " + plan.getPlanMinutes(),PdfContentByte.ALIGN_LEFT);
-            createContent(cb, 152, y-20, "Datos: " + plan.getPlanData(),PdfContentByte.ALIGN_LEFT);
-            createContent(cb, 152, y-40, "Mensajes: " + plan.getPlanTextMsn(),PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y, "Minutos: " + plan.getPlanMinutes(), PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y - 20, "Datos: " + plan.getPlanData(), PdfContentByte.ALIGN_LEFT);
+            createContent(cb, 152, y - 40, "Mensajes: " + plan.getPlanTextMsn(), PdfContentByte.ALIGN_LEFT);
             double price = Double.valueOf(df.format(plan.getPlanCost()));
             createContent(cb, 568, y, df.format(price), PdfContentByte.ALIGN_RIGHT);
 

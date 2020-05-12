@@ -125,6 +125,8 @@ public class ChartPlansMenu {
         DatePicker date = new DatePicker();
         DatePicker dateTo = new DatePicker();
 
+        chartComboBox.setPrefSize(width * 0.15, height * 0.03);
+
         generateChart.setOnMouseClicked(e -> {
             LocalDate from = date.getValue();
             LocalDate to = dateTo.getValue();

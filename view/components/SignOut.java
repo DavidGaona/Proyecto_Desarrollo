@@ -98,18 +98,17 @@ public class SignOut {
         layout.setStyle("-fx-background-color: #22282A");
         layout.setPadding(new Insets(20, 0, 20, 0));
 
-        Scene scene = new Scene(layout,Color.web("#18171C"));
+        Scene scene = new Scene(layout, Color.web("#18171C"));
         scene.getStylesheets().add("Popup.css");
 
 
         window.setScene(scene);
-        window.setX( width * 0.05);
+        window.setX(width * 0.05);
         window.setY(height * 0.097);
         window.setResizable(false);
         ownerStage.show();
         window.show();
-        ProjectEffects.fadeTransition(layout,700,2);
-
+        ProjectEffects.fadeTransition(layout, 700, 2);
 
 
     }

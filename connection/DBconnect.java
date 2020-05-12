@@ -46,7 +46,7 @@ public class DBconnect {
 
     public void closeConnection(Connection c) {
         try {
-            if(c != null) {
+            if (c != null) {
                 c.close();
             }
         } catch (SQLException e) {

@@ -15,9 +15,8 @@ public class TableClient {
         this.date = date;
     }
 
-    public TableClient(String fullName, String documentNumber, long phoneNumber, double value) {
+    public TableClient(String fullName, String documentNumber, double value) {
         this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
         this.documentNumber = documentNumber;
         this.value = value;
     }

@@ -44,9 +44,9 @@ public class DaoChart {
         return (data.isEmpty()) ? null : data;
     }
 
-    public ArrayList<DataChart> getHighestPayers(int numberOfClients) {
+    public ArrayList<TableClient> getHighestPayers(int numberOfClients) {
         if (numberOfClients > 1 && numberOfClients < 10) return null;
-        ArrayList<DataChart> data;
+        ArrayList<TableClient> data;
         dbManager.openDBConnection();
         data = dbManager.getHighestPayers(numberOfClients);
         dbManager.closeDBConnection();

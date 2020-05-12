@@ -32,15 +32,15 @@ public class SwitchButton extends StackPane {
         return switchedOn;
     }
 
-    public void invertSwitchedOn(){
+    public void invertSwitchedOn() {
         switchedOn.set(!switchedOn.get());
     }
 
-    public void setSwitchedButton(boolean state){
+    public void setSwitchedButton(boolean state) {
         switchedOn.set(state);
     }
 
-    public void setToDefault(){
+    public void setToDefault() {
         switchedOn.set(defaultValue);
     }
 
@@ -61,9 +61,9 @@ public class SwitchButton extends StackPane {
         background.setFill(Color.web("#5639AC"));
         background.setStroke(Color.web("#3D3D3E"));
 
-        Circle trigger = new Circle(height/2);
-        trigger.setCenterX(height/2);
-        trigger.setCenterY(height/2);
+        Circle trigger = new Circle(height / 2);
+        trigger.setCenterX(height / 2);
+        trigger.setCenterY(height / 2);
         trigger.setFill(Color.web("#FFFFFF"));
         trigger.setStroke(Color.web("#3D3D3E"));
 
@@ -90,7 +90,7 @@ public class SwitchButton extends StackPane {
             animation.play();
         });
 
-        if (!startState){
+        if (!startState) {
             invertSwitchedOn();
         }
 

@@ -118,7 +118,7 @@ public class EditingPanel {
         getText(name).setFill(Color.web(color));
     }
 
-    public void addButton(String message){
+    public void addButton(String message) {
         addButton = new Button(message);
         addButton.setPrefSize(175 - (175 * percentage), 45 - (45 * percentage));
         addButton.setMinSize(175 - (175 * percentage), 45 - (45 * percentage));
@@ -190,7 +190,7 @@ public class EditingPanel {
         getComboBox(id).valueProperty().set(value);
     }
 
-    public void setComboBox(String id, ArrayList<Long> list){
+    public void setComboBox(String id, ArrayList<Long> list) {
         getComboBox(id).getItems().clear();
         for (Long number : list) {
             getComboBox(id).getItems().add(number + "");
@@ -198,7 +198,7 @@ public class EditingPanel {
         getComboBox(id).getSelectionModel().selectFirst();
     }
 
-    public void setComboBoxString(String id, ArrayList<String> list){
+    public void setComboBoxString(String id, ArrayList<String> list) {
         getComboBox(id).getItems().clear();
         for (String string : list) {
             getComboBox(id).getItems().add(string);
@@ -227,7 +227,7 @@ public class EditingPanel {
         texts.get(getIndex(id)).setText(message);
     }
 
-    public Button getAddButton(){
+    public Button getAddButton() {
         return addButton;
     }
 
@@ -308,7 +308,7 @@ public class EditingPanel {
         }
     }
 
-    public void clearCombobox(String id){
+    public void clearCombobox(String id) {
         getComboBox(id).getItems().clear();
         getComboBox(id).getItems().add("");
     }
@@ -364,7 +364,7 @@ public class EditingPanel {
         getTextfield(id).setEditable(true);
     }
 
-    public void limitVisibleRows(String id, int limit){
+    public void limitVisibleRows(String id, int limit) {
         getComboBox(id).setVisibleRowCount(limit);
     }
 
@@ -423,7 +423,7 @@ public class EditingPanel {
         tablePane.getChildren().addAll(optionTable, pickedTable);
     }
 
-    public void clearTables(){
+    public void clearTables() {
         optionTable.getItems().clear();
         pickedTable.getItems().clear();
     }
@@ -438,11 +438,10 @@ public class EditingPanel {
         extra.getSelectPerson().setStyle("-fx-font-size: " + (v) + ";");
         extra.getSelectPerson().getStyleClass().add("client-buttons-template");
 
-        if (extra.isUsed()){
+        if (extra.isUsed()) {
             pickedTable.getItems().add(extra);
             extra.getSelectPerson().setOnMouseClicked(e -> switchRow(pickedTable));
-        }
-        else{
+        } else {
             optionTable.getItems().add(extra);
             extra.getSelectPerson().setOnMouseClicked(e -> switchRow(optionTable));
         }
@@ -452,7 +451,7 @@ public class EditingPanel {
         commonLoad(extras, 16 - (16 * percentage));
     }
 
-    private void switchRow(TableView<Extras> tableRemove){
+    private void switchRow(TableView<Extras> tableRemove) {
         Extras extra = new Extras(
                 tableRemove.getSelectionModel().getSelectedItem().getId(),
                 tableRemove.getSelectionModel().getSelectedItem().getPlanName(),
@@ -464,8 +463,8 @@ public class EditingPanel {
         deleteRow(tableRemove);
     }
 
-    public void resetTables(){
-        for (int i = 0; i < pickedTable.getItems().size(); i++){
+    public void resetTables() {
+        for (int i = 0; i < pickedTable.getItems().size(); i++) {
             Extras extra = new Extras(
                     pickedTable.getItems().get(i).getId(),
                     pickedTable.getItems().get(i).getPlanName(),
@@ -478,12 +477,12 @@ public class EditingPanel {
         pickedTable.getItems().clear();
     }
 
-    private void deleteRow(TableView<Extras> tableRemove){
+    private void deleteRow(TableView<Extras> tableRemove) {
         var rowToRemove = tableRemove.getSelectionModel().getSelectedItems();
         tableRemove.getItems().removeAll(rowToRemove);
     }
 
-    public ObservableList<Extras> getTableData(){
+    public ObservableList<Extras> getTableData() {
         return pickedTable.getItems();
     }
 

@@ -14,7 +14,6 @@ import view.components.AlertBox;
 import utilities.ProjectUtilities;
 
 
-
 public class UserPasswordChange {
 
 
@@ -79,13 +78,13 @@ public class UserPasswordChange {
         Button changePasswordButton = new Button("Cambiar contraseña");
         changePasswordButton.setPrefSize(width * 0.25, height * 0.05);
         changePasswordButton.getStyleClass().add("login-button");
-        changePasswordButton.setStyle(changePasswordButton.getStyle() + "-fx-font-size: "+ buttonFontChange + "px;");
+        changePasswordButton.setStyle(changePasswordButton.getStyle() + "-fx-font-size: " + buttonFontChange + "px;");
 
         changePasswordButton.setOnAction(e -> {
             DaoUser user = new DaoUser();
             if (user.checkPassword(Login.currentLoggedUser, currentPasswordTextField.getText())) {
                 if (newPasswordTextField.getText().equals(confirmPasswordTextField.getText())) {
-                    Login.currentWindow.set(user.changePassword(Login.currentLoggedUser, confirmPasswordTextField.getText())+1);
+                    Login.currentWindow.set(user.changePassword(Login.currentLoggedUser, confirmPasswordTextField.getText()) + 1);
                 } else {
                     AlertBox.display("Error", "Las contraseñas no coinciden");
                     confirmPasswordTextField.setStyle(confirmPasswordTextField.getStyle() + "-fx-border-color: #FF0000;");
@@ -110,7 +109,7 @@ public class UserPasswordChange {
         return background;
     }
 
-    private boolean passwordMeetsStandard(String password){
+    private boolean passwordMeetsStandard(String password) {
         return (password.length() > 7);
     }
 

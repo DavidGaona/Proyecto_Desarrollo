@@ -13,7 +13,7 @@ public class EditingMenu {
     private double width;
     private ScrollPane scrollPane;
 
-    EditingMenu(double width, double height, double percentage){
+    EditingMenu(double width, double height, double percentage) {
         this.height = height;
         this.width = width;
         this.percentage = percentage;
@@ -45,33 +45,21 @@ public class EditingMenu {
         VBox vbox = new VBox();
         vbox.setPrefWidth(width * 0.2);
         vbox.setSpacing(10);
-        vbox.setStyle("-fx-background-color: #18171C;"); // #336699
+        vbox.setStyle("-fx-background-color: #18171C;");
         return vbox;
     }
 
     public void addToMidPane(HBox... hBoxes) {
-
-        for(HBox hBox: hBoxes){
+        for (HBox hBox : hBoxes)
             midPane.getChildren().add(hBox);
-        }
-
-        //EditingPanel editingPanel1 = new EditingPanel("Información Del Plan", percentage, width);
-        //EditingPanel editingPanel2 = new EditingPanel("Información Bancaria", percentage, width);
-
-        //midPane.getChildren().addAll(
-        //        editingPanel1.sendPane(width, height * 0.6),
-        //        editingPanel2.sendPane(width, height * 0.3)
-        //);
-
     }
 
-    public void topRightPane()
-    {
+    public void topRightPane() {
         midPane.setAlignment(Pos.TOP_RIGHT);
         midPane.setStyle(midPane.getStyle() + "-fx-background-color: #18171C;");
     }
 
-    public void centerPane(){
+    public void centerPane() {
         midPane.setAlignment(Pos.CENTER);
         midPane.setStyle(midPane.getStyle() + "-fx-background-color: #18171C;");
     }
@@ -94,12 +82,11 @@ public class EditingMenu {
 
         scrollPane.setContent(layout);
         layout.setOnScroll(e -> {
-            double deltaY = e.getDeltaY() * 3; // *6 to make the scrolling a bit faster
+            double deltaY = e.getDeltaY() * 3;
             double widthSpeed = scrollPane.getContent().getBoundsInLocal().getWidth();
             double value = scrollPane.getVvalue();
             scrollPane.setVvalue(value + -deltaY / widthSpeed);
         });
-        //scrollPane.setA
         return scrollPane;
     }
 

@@ -14,6 +14,7 @@ public class ProjectUtilities {
     public static boolean isNumeric(String inputData) {
         return inputData.matches("[0-9]*");
     }
+
     public static boolean isFloat(String inputData) {
         return inputData.matches("([0-9]*[.])?[0-9]*");
     }
@@ -38,10 +39,8 @@ public class ProjectUtilities {
         return (short) -1;
     }
 
-    public static void loadComboBox(ComboBox<String> comboBox, String[] items)
-    {
-        for(int i = 0; i < items.length ; i++)
-        {
+    public static void loadComboBox(ComboBox<String> comboBox, String[] items) {
+        for (int i = 0; i < items.length; i++) {
             comboBox.getItems().add(items[i]);
         }
     }
@@ -82,7 +81,7 @@ public class ProjectUtilities {
             return documentTypes[2];
         } else if (documentType == (short) 3) {
             return documentTypes[3];
-        } else if (documentType == (short) 4){
+        } else if (documentType == (short) 4) {
             return "NIT";
         }
         return documentTypes[0];
@@ -111,7 +110,7 @@ public class ProjectUtilities {
             return (short) 0;
         } else if (userTypes[1].equals(type)) {
             return (short) 1;
-        } else if (userTypes[2].equals(type)){
+        } else if (userTypes[2].equals(type)) {
             return (short) 2;
         }
         return (short) -1;
@@ -122,7 +121,7 @@ public class ProjectUtilities {
             return userTypes[0];
         } else if (type == (short) 1) {
             return userTypes[1];
-        } else if (type == (short) 2){
+        } else if (type == (short) 2) {
             return userTypes[2];
         }
         return clientTypes[0];
@@ -138,7 +137,7 @@ public class ProjectUtilities {
         });
     }
 
-    public static void onlyFloatTextField(TextField searchTextField){
+    public static void onlyFloatTextField(TextField searchTextField) {
         searchTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if (!(ProjectUtilities.isFloat(newValue))) {
                 int prevPos = searchTextField.getCaretPosition();
@@ -168,6 +167,7 @@ public class ProjectUtilities {
     }
 
     private static Node selectedNode, lastSelectedNode;
+
     public static void focusListener(GridPane layout, Node... nodes) {
         // Install the same listener on all of them
         for (Node textField : nodes) {
@@ -261,7 +261,6 @@ public class ProjectUtilities {
             });
         }
     }
-
 
 
 }

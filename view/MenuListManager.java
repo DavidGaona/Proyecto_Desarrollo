@@ -21,7 +21,7 @@ public class MenuListManager extends MenuList {
         closeMenu.setStyle(closeMenu.getStyle() + "-fx-font-size: " + (80 - (80 * percentage)) + ";");
 
         Label profile = new Label();
-        profile.setFont(Font.loadFont(FA.getFont(),20));
+        profile.setFont(Font.loadFont(FA.getFont(), 20));
         profile.setText(FA.USER_SECRET);
 
         Label planLabel = labelGenerator("Crear/Editar Planes", width, height, percentage);
@@ -36,8 +36,8 @@ public class MenuListManager extends MenuList {
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
 
-        layout.setPrefSize(width * 0.2 + 2, height); // height * 0.912
-        layout.setMaxSize(width * 0.2 + 2, height); // height * 0.912
+        layout.setPrefSize(width * 0.2 + 2, height);
+        layout.setMaxSize(width * 0.2 + 2, height);
         layout.getChildren().addAll(profile, separator2(width), separator(width), planLabel,
                 separator(width), statsPlansLabel, separator(width), statsClientsLabel, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu);
@@ -48,24 +48,24 @@ public class MenuListManager extends MenuList {
         layout.getStylesheets().add("menuListStyle.css");
 
         //effect closeMenu
-        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu,700,1));
+        closeMenu.setOnMouseEntered(e -> ProjectEffects.fadeTransition(closeMenu, 700, 1));
         closeMenu.setOnMouseExited(e -> ProjectEffects.stopFadeTransition());
 
-        planLabel.setOnMouseClicked( e -> {
+        planLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(2));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
             p.play();
         });
 
-        statsClientsLabel.setOnMouseClicked( e -> {
+        statsClientsLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(7));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);
             p.play();
         });
 
-        statsPlansLabel.setOnMouseClicked( e -> {
+        statsPlansLabel.setOnMouseClicked(e -> {
             PauseTransition p = new PauseTransition(Duration.millis(250));
             p.setOnFinished(ex -> Login.currentWindow.set(8));
             ProjectEffects.linearTransitionToRight(layout, 250, -width, height, -width, height);

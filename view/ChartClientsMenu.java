@@ -110,7 +110,7 @@ public class ChartClientsMenu {
         optionsCombobox.setPrefSize(width * 0.15, height * 0.03);
 
         generateChart.setOnMouseClicked(e -> {
-            if (optionsCombobox.getValue().equals("Tipos de clientes")){
+            if (optionsCombobox.getValue().equals("Tipos de clientes")) {
                 ArrayList<DataChart> data = daoChart.getDataAboutClientsNC(true);
                 if (data != null) {
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
@@ -125,14 +125,18 @@ public class ChartClientsMenu {
                     stackChart.getChildren().addAll(chart);
                     return;
                 }
-            } else if (optionsCombobox.getValue().equals("Clientes antiguos")){
+            } else if (optionsCombobox.getValue().equals("Clientes antiguos")) {
                 ArrayList<TableClient> data = daoChart.getOldestClients(10);
-                if (data != null){
-                    showOldestClients(data, width * 0.55, height * 0.8);
+                if (data != null) {
+                    showOldestClients(data, width * 0.55, height * 0.8, true);
                     return;
                 }
-            } else if(optionsCombobox.getValue().equals("Mejores clientes")){
-                
+            } else if (optionsCombobox.getValue().equals("Mejores clientes")) {
+                ArrayList<TableClient> data = daoChart.getHighestPayers(10);
+                if (data != null) {
+                    showOldestClients(data, width * 0.55, height * 0.8, false);
+                    return;
+                }
             }
             AlertBox.display("Error: ", "No se pudo generar el gráfico");
 
@@ -145,7 +149,7 @@ public class ChartClientsMenu {
         return hbox;
     }
 
-    private void showOldestClients(ArrayList<TableClient> data, double width, double height){
+    private void showOldestClients(ArrayList<TableClient> data, double width, double height, boolean which) {
         TableView<TableClient> oldClientTableView = new TableView<>();
         oldClientTableView.setMinSize(width, height);
         oldClientTableView.setMaxSize(width, height);
@@ -154,33 +158,41 @@ public class ChartClientsMenu {
         titleColumn.setMinWidth(width);
 
         TableColumn<TableClient, String> nameColumn = new TableColumn<>("Nombre Cliente");
-        nameColumn.setMinWidth(width * 0.25);
-        nameColumn.setMaxWidth(width * 0.25);
+        nameColumn.setMinWidth(width * ((which) ? 0.25 : 0.3333));
+        nameColumn.setMaxWidth(width * ((which) ? 0.25 : 0.3333));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
 
         TableColumn<TableClient, String> documentColumn = new TableColumn<>("Número de documento");
-        documentColumn.setMinWidth(width * 0.25);
-        documentColumn.setMaxWidth(width * 0.25);
+        documentColumn.setMinWidth(width * ((which) ? 0.25 : 0.3333));
+        documentColumn.setMaxWidth(width * ((which) ? 0.25 : 0.3333));
         documentColumn.setCellValueFactory(new PropertyValueFactory<>("documentNumber"));
 
-        TableColumn<TableClient, Long> numberColumn = new TableColumn<>("Número de linea");
-        numberColumn.setMinWidth(width * 0.25);
-        numberColumn.setMaxWidth(width * 0.25);
-        numberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        if (which) {
+            TableColumn<TableClient, Long> numberColumn = new TableColumn<>("Número de linea");
+            numberColumn.setMinWidth(width * 0.25);
+            numberColumn.setMaxWidth(width * 0.25);
+            numberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 
-        TableColumn<TableClient, String> dateColumn = new TableColumn<>("Fecha de adquisición");
-        dateColumn.setMinWidth(width * 0.25);
-        dateColumn.setMaxWidth(width * 0.25);
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+            TableColumn<TableClient, String> dateColumn = new TableColumn<>("Fecha de adquisición");
+            dateColumn.setMinWidth(width * 0.25);
+            dateColumn.setMaxWidth(width * 0.25);
+            dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        titleColumn.getColumns().addAll(nameColumn, documentColumn, numberColumn, dateColumn);
+            titleColumn.getColumns().addAll(nameColumn, documentColumn, numberColumn, dateColumn);
+        } else {
+            TableColumn<TableClient, Double> dateColumn = new TableColumn<>("Total pagado");
+            dateColumn.setMinWidth(width * 0.3333);
+            dateColumn.setMaxWidth(width * 0.3333);
+            dateColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+            titleColumn.getColumns().addAll(nameColumn, documentColumn, dateColumn);
+        }
 
         oldClientTableView.getColumns().addAll(titleColumn);
 
         stackChart.getChildren().clear();
         stackChart.getChildren().addAll(oldClientTableView);
 
-        for (TableClient datum: data)
+        for (TableClient datum : data)
             oldClientTableView.getItems().add(datum);
     }
 

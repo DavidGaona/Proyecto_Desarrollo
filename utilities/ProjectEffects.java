@@ -13,12 +13,12 @@ public class ProjectEffects {
 
     private static FadeTransition ft = new FadeTransition();
 
-    public static void linearTransitionToRight(Node node, int duration, double initialWidth, double initialHeight, double toWidth, double toHeight){
+    public static void linearTransitionToRight(Node node, int duration, double initialWidth, double initialHeight, double toWidth, double toHeight) {
         double constant = 0.1;
         Path path = new Path();
-        path.getElements().add(new MoveTo(-initialWidth * constant,initialHeight/2));
-        path.getElements().add(new CubicCurveTo(toWidth * constant, toHeight/2, toWidth * constant, toHeight/2,
-                                                toWidth * constant, toHeight/2));
+        path.getElements().add(new MoveTo(-initialWidth * constant, initialHeight / 2));
+        path.getElements().add(new CubicCurveTo(toWidth * constant, toHeight / 2, toWidth * constant, toHeight / 2,
+                toWidth * constant, toHeight / 2));
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(duration));
         pathTransition.setPath(path);
@@ -28,17 +28,16 @@ public class ProjectEffects {
         pathTransition.play();
     }
 
-    public static void fadeTransition(Node node, int duration, int mode){
+    public static void fadeTransition(Node node, int duration, int mode) {
         ft.setNode(node);
         ft.setDuration(new Duration(duration));
 
-        if( mode == 1)
-        {
+        if (mode == 1) {
             ft.setFromValue(1.0);
             ft.setToValue(0.1);
             ft.setAutoReverse(true);
             ft.setCycleCount(Timeline.INDEFINITE);
-        }else{
+        } else {
             ft.setFromValue(0.1);
             ft.setToValue(1);
             ft.setAutoReverse(false);
@@ -48,7 +47,7 @@ public class ProjectEffects {
         ft.play();
     }
 
-    public static void stopFadeTransition(){
+    public static void stopFadeTransition() {
         ft.stop();
         ft.setDuration(new Duration(7));
         ft.setCycleCount(2);

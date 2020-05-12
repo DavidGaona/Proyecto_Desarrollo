@@ -87,7 +87,7 @@ public class ManagerMenu {
         saveChangesButton = ManagerMenuButtonTemplate(width, height, "Agregar Plan");
         saveChangesButton.setOnAction(e -> {
             String message = "No se pueden dejar campos vacios";
-            if (currentUserMode){
+            if (currentUserMode) {
                 if (!basicPlanInfo.isEmpty()) {
                     message = createNewPlan();
                     if (message.equals("Plan registrado con exito")) {
@@ -184,7 +184,7 @@ public class ManagerMenu {
         aligner.add(createExtra);
     }
 
-    private String createNewPlan(){
+    private String createNewPlan() {
         return plan.saveNewPlan(
                 ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
                 ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
@@ -195,7 +195,7 @@ public class ManagerMenu {
         );
     }
 
-    private String editPlan(){
+    private String editPlan() {
         return plan.editPlan(
                 ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planName")),
                 ProjectUtilities.clearWhiteSpaces(basicPlanInfo.getContent("planCost")),
@@ -206,7 +206,7 @@ public class ManagerMenu {
         );
     }
 
-    private void saveExtra(){
+    private void saveExtra() {
         createExtra.getAddButton().setOnAction(e -> {
             String message = "No se pueden dejar campos vacios";
             if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("Voz")) {
@@ -216,15 +216,14 @@ public class ManagerMenu {
                 );
 
                 wasSuccessful(message);
-            } else if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("App")){
+            } else if (!createExtra.isEmpty() && createExtra.getContent("extraType").equals("App")) {
                 message = plan.saveApp(
                         ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraName")),
                         ProjectUtilities.clearWhiteSpaces(createExtra.getContent("extraQuantity"))
                 );
 
                 wasSuccessful(message);
-            }
-            else {
+            } else {
                 AlertBox.display("Error", message);
             }
         });

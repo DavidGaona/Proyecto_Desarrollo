@@ -1190,10 +1190,10 @@ public class DbManager {
         return array_bills;
     }
 
-    public ArrayList<DataChart> getDataAboutClientsNC(boolean activos) {
+    public ArrayList<DataChart> getDataAboutClientsNC(boolean actives) {
         ArrayList<DataChart> data = new ArrayList<>();
         String sql_select;
-        if (activos) {
+        if (actives) {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM public.client GROUP BY client_type";
         } else {
             sql_select = "SELECT client_type, COUNT(client_id) AS sum FROM (SELECT client_id, client_type " +
@@ -1311,7 +1311,7 @@ public class DbManager {
 
     public ArrayList<TableClient> getHighestPayers(int numberOfClients) {
         ArrayList<TableClient> data = new ArrayList<>();
-        String sql_select = "SELECT client_name, client_last_name, client_document_number ,SUM(bill_cost) AS total_payed " +
+        String sql_select = "SELECT client_name, client_last_name, client_document_number , SUM(bill_cost) AS total_payed " +
                 "FROM public.legacy_bills NATURAL JOIN public.client GROUP BY client_id, client_name, client_last_name, client_document_number ORDER BY total_payed DESC LIMIT ?";
         try {
             System.out.println("Consultando en la base de datos");
@@ -1319,9 +1319,13 @@ public class DbManager {
             statement.setInt(1, numberOfClients);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                //data.add(
-                //        new TableClient("Id: " + resultSet.getString(1) + " Celular: " + resultSet.getLong(2), (long) resultSet.getDouble(4))
-                //);
+                data.add(
+                        new TableClient(
+                                resultSet.getString(1) + " " + resultSet.getString(2),
+                                resultSet.getString(3),
+                                resultSet.getDouble(4)
+                        )
+                );
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

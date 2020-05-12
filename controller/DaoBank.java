@@ -6,20 +6,22 @@ import model.Bank;
 public class DaoBank {
 
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+
     public DaoBank() {
     }
 
-    public String saveNewBank(String bankName, String accountNumber, String bankNIT){
+    public String saveNewBank(String bankName, String accountNumber, String bankNIT) {
         dbManager.openDBConnection();
         String response = dbManager.saveBank(bankName, accountNumber, bankNIT);
         dbManager.closeDBConnection();
-        return  response;
+        return response;
     }
-    public String editBank(boolean state, String bankNIT){
+
+    public String editBank(boolean state, String bankNIT) {
         dbManager.openDBConnection();
         String response = dbManager.setStateBank(state, bankNIT);
         dbManager.closeDBConnection();
-        return  response;
+        return response;
     }
 
     public Bank loadBank(String bankName) {
@@ -29,7 +31,7 @@ public class DaoBank {
         return bank;
     }
 
-    public String[] loadAllBanks(){
+    public String[] loadAllBanks() {
         dbManager.openDBConnection();
         String[] banks = dbManager.loadAllBank();
         dbManager.closeDBConnection();

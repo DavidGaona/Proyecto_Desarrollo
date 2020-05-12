@@ -198,7 +198,7 @@ public class ClientMenu {
         panel.setTextField("planTextMessage", selectedPlan.getPlanTextMsn() + "");
     }
 
-    private void resetPhoneNumbers(){
+    private void resetPhoneNumbers() {
         ArrayList<Long> numbers = client.loadPhoneNumbers(currentClient);
         if (!numbers.isEmpty()) {
             payPlan.setComboBox("phoneNumbers", numbers);
@@ -213,7 +213,7 @@ public class ClientMenu {
     }
 
     private void saveNewLine() {
-        if (!client.hasDebt(currentClient)){
+        if (!client.hasDebt(currentClient)) {
             String response = client.addNewClientLine(currentClient, newLine.getContent("planName"));
             if (response.equals("Plan y número agredado con éxito")) {
                 AlertBox.display("Éxito: ", response);
@@ -261,7 +261,7 @@ public class ClientMenu {
             try {
                 String planName = client.getPhonePlan(Long.parseLong(changePlan.getContent("phoneNumbers")));
                 getSelectedPlan(changePlan, planName);
-            } catch (Exception err){
+            } catch (Exception err) {
                 System.out.println("UwU");
             }
         });
@@ -288,10 +288,10 @@ public class ClientMenu {
             if (currentClientMode)
                 AlertBox.display("Error: ", "Seleccione un cliente primero");
             else {
-                if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0){
+                if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0) {
                     AlertBox.display("Error: ", "El cliente no tiene lineas activas");
                     return;
-                } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")){
+                } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")) {
                     AlertBox.display("Error: ", "El cliente no tiene lineas activas");
                     return;
                 }
@@ -358,7 +358,7 @@ public class ClientMenu {
         payPlan.getComboBox("phoneNumbers").setOnAction(e -> {
             try {
                 payPlan.setTextField("cost", client.getValueToPay(Long.parseLong(payPlan.getContent("phoneNumbers"))) + "");
-            } catch (Exception err){
+            } catch (Exception err) {
                 System.out.println("UwU");
             }
         });
@@ -366,7 +366,7 @@ public class ClientMenu {
         payPlan.addButton("Pagar plan");
         payPlan.getAddButton().setOnAction(e -> {
             String response = "No tiene facturas por pagar";
-            if (!payPlan.getContent("cost").equals("0.0") && !payPlan.getContent("cost").isBlank()){
+            if (!payPlan.getContent("cost").equals("0.0") && !payPlan.getContent("cost").isBlank()) {
                 response = client.payPlan(
                         Long.parseLong(payPlan.getContent("phoneNumbers")),
                         currentClient,
@@ -384,7 +384,7 @@ public class ClientMenu {
         aligner.add(payPlan);
     }
 
-    private void cancelPlan(double width){
+    private void cancelPlan(double width) {
         cancelPlan = new EditingPanel("Cancelar linea", percentage, width);
 
         String[] placeHolder = {""};
@@ -393,50 +393,50 @@ public class ClientMenu {
 
         cancelPlan.addButton("Cancelar linea");
         cancelPlan.getAddButton().setOnAction(e -> {
-            if (currentClient == -1){
+            if (currentClient == -1) {
                 AlertBox.display("Error: ", "Seleccione un cliente primero");
                 return;
-            } else if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0){
+            } else if (changePlan.getComboBox("phoneNumbers").getItems().size() == 0) {
                 AlertBox.display("Error: ", "El cliente no tiene lineas activas");
                 return;
-            } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")){
+            } else if (changePlan.getComboBox("phoneNumbers").getItems().get(0).equals("")) {
                 AlertBox.display("Error: ", "El cliente no tiene lineas activas");
                 return;
             }
 
             String response = "No se pudo cancelar el número";
             long phoneNumber = Long.parseLong(cancelPlan.getContent("phoneNumbers"));
-            if (!cancelPlan.getContent("phoneNumbers").isBlank()){
+            if (!cancelPlan.getContent("phoneNumbers").isBlank()) {
                 response = client.checkForBills(phoneNumber);
-                if (response.equals("No tiene facturas pendientes")){
+                if (response.equals("No tiene facturas pendientes")) {
                     response = client.cancelLine(phoneNumber);
                     resetPhoneNumbers();
                     AlertBox.display("Éxito: ", response);
                     return;
-                } else if (response.equals("Tiene facturas por pagar")){
-                     boolean confirmation = ConfirmBox.display(
-                             "Confirmar" ,
-                             "Aun no ha pagado la factura de la linea que desea cancelar, está seguro que desea cancelarla",
-                             "SI",
-                             "NO"
-                     );
-                     if (confirmation){
-                         if (cancelPlan.getComboBox("phoneNumbers").getItems().size() > 1){
+                } else if (response.equals("Tiene facturas por pagar")) {
+                    boolean confirmation = ConfirmBox.display(
+                            "Confirmar",
+                            "Aun no ha pagado la factura de la linea que desea cancelar, está seguro que desea cancelarla",
+                            "SI",
+                            "NO"
+                    );
+                    if (confirmation) {
+                        if (cancelPlan.getComboBox("phoneNumbers").getItems().size() > 1) {
                             response = client.cancelLineTransferCost(phoneNumber, currentClient);
-                            if (!response.equals("error al cancelar, por favor intente mas tarde")){
+                            if (!response.equals("error al cancelar, por favor intente mas tarde")) {
                                 AlertBox.display("Éxito: ", response);
                                 resetPhoneNumbers();
                                 return;
                             }
-                         } else if (cancelPlan.getComboBox("phoneNumbers").getItems().size() == 1){
-                             response = client.cancelLineDebt(phoneNumber);
-                             if (!response.equals("error al cancelar, por favor intente mas tarde")){
-                                 AlertBox.display("Éxito: ", response);
-                                 return;
-                             }
-                         }
-                     } else
-                         return;
+                        } else if (cancelPlan.getComboBox("phoneNumbers").getItems().size() == 1) {
+                            response = client.cancelLineDebt(phoneNumber);
+                            if (!response.equals("error al cancelar, por favor intente mas tarde")) {
+                                AlertBox.display("Éxito: ", response);
+                                return;
+                            }
+                        }
+                    } else
+                        return;
                 }
             }
             AlertBox.display("Error: ", response);
@@ -444,7 +444,7 @@ public class ClientMenu {
         aligner.add(cancelPlan);
     }
 
-    private void payDebt(double width){
+    private void payDebt(double width) {
         payDebt = new EditingPanel("Pagar deudas", percentage, width);
 
         String[] placeHolder = {""};
@@ -457,22 +457,21 @@ public class ClientMenu {
 
         payDebt.addButton("Pagar deuda");
         payDebt.getAddButton().setOnAction(e -> {
-            if (currentClient == -1){
+            if (currentClient == -1) {
                 AlertBox.display("Error: ", "Seleccione un cliente primero");
                 return;
             }
 
-            if (Double.parseDouble(payDebt.getContent("debt")) == 0.0){
+            if (Double.parseDouble(payDebt.getContent("debt")) == 0.0) {
                 AlertBox.display("Error: ", "No tiene deudas por pagar");
                 return;
             }
 
             String response = client.payDebt(currentClient, payDebt.getContent("banks"), Login.currentLoggedUser);
-            if (response.equals("Deuda pagada con éxito")){
+            if (response.equals("Deuda pagada con éxito")) {
                 AlertBox.display("Éxito: ", response);
                 payDebt.setTextField("debt", 0.0 + "");
-            }
-            else
+            } else
                 AlertBox.display("Error: ", response);
 
         });
