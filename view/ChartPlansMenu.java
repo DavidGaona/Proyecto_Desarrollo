@@ -283,7 +283,10 @@ public class ChartPlansMenu {
         yAxis.setLabel("Cantidad");
         XYChart.Series series = new XYChart.Series();
         for (DataChart datum : data) {
-            series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
+            series.getData().add(new XYChart.Data<>(
+                    ProjectUtilities.monthsInSpanish(datum.getValueX()),
+                    datum.getValueY())
+            );
         }
         bc.getData().add(series);
         bc.setBarGap(10);

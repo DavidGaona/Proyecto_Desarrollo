@@ -27,14 +27,12 @@ public class MenuListAdmin extends MenuList {
 
         Label userLabel = labelGenerator("Crear/Editar Usuario " + FA.USER_PLUS, width, height, percentage);
         Label billingLabel = labelGenerator("Facturación " + FA.COG, width, height, percentage);
-        Label historyUsers = labelGenerator("Historial de Actividad " + FA.USERS, width, height, percentage);
         Label bankLabel = labelGenerator("Crear/Editar Banco " + FA.BANK, width, height, percentage);
         Label changePasswordLabel = labelGenerator("Cambiar Contraseña " + FA.KEY, width, height, percentage);
         Label logOutLabel = labelGenerator("Cerrar Sesión " + FA.SIGN_OUT, width, height, percentage);
 
         userLabel.setAlignment(Pos.CENTER);
         billingLabel.setAlignment(Pos.CENTER);
-        historyUsers.setAlignment(Pos.CENTER);
         bankLabel.setAlignment(Pos.CENTER);
         changePasswordLabel.setAlignment(Pos.CENTER);
         logOutLabel.setAlignment(Pos.CENTER);
@@ -43,7 +41,7 @@ public class MenuListAdmin extends MenuList {
         layout.setMaxSize(width * 0.2 + 2, height);
         layout.getChildren().addAll(
                 profile, separator2(width), billingLabel, separator(width),
-                bankLabel, separator(width), historyUsers, separator(width), userLabel, separator(width), changePasswordLabel,
+                bankLabel, separator(width), separator(width), userLabel, separator(width), changePasswordLabel,
                 separator(width), logOutLabel, separator2(width), closeMenu
         );
         layout.setAlignment(Pos.CENTER);

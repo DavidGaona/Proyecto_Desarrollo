@@ -94,6 +94,13 @@ public class Main extends Application {
                     chartPlanMenuScene.getStylesheets().addAll("styles.css", "graphics.css", "searchPaneStyle.css");
                     window.setScene(chartPlanMenuScene);
                     break;
+                case 9:
+                    //Manager stats Plan menu
+                    Start Show = new Start(percentage, buttonFont);
+                    Scene consumerScene = new Scene(Show.show(width, height), width, height);
+                    consumerScene.getStylesheets().addAll("start.css");
+                    window.setScene(consumerScene);
+                    break;
             }
 
         });

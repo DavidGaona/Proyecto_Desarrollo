@@ -225,7 +225,7 @@ public class ProjectUtilities {
             case "december":
                 return "Diciembre";
             default:
-                return "00";
+                return month;
         }
     }
 

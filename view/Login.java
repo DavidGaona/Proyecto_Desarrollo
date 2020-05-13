@@ -110,11 +110,15 @@ public class Login {
         loginButton.setPrefSize(width * 0.25, height * 0.05);
         loginButton.getStyleClass().add("login-button");
         loginButton.setStyle(loginButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
-        loginButton.setOnMouseClicked(e -> {
-            loginAction();
-        });
+        loginButton.setOnMouseClicked(e -> loginAction());
 
-        vBox.getChildren().addAll(hBox, userIdTextField, documentType, passwordTextField, loginButton);
+        Button consumedButton = new Button("Consultar consumo");
+        consumedButton.setPrefSize(width * 0.25, height * 0.05);
+        consumedButton.getStyleClass().add("login-button");
+        consumedButton.setStyle(consumedButton.getStyle() + "-fx-font-size: " + buttonFontLogin + "px;");
+        consumedButton.setOnAction(e -> Login.currentWindow.set(9));
+
+        vBox.getChildren().addAll(hBox, userIdTextField, documentType, passwordTextField, loginButton, consumedButton);
 
         return vBox;
     }

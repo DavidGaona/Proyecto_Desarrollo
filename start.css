@@ -1,0 +1,26 @@
+.label {
+    -fx-text-fill: #3986AC;
+    -fx-font-family: Consolas;
+    -fx-font-weight: bold;
+    -fx-font-size: 45;
+    -fx-text-alignment: CENTER;
+}
+
+.button {
+    -fx-background-color: #3986AC;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 2;
+    -fx-font-size: 35;
+    -fx-font-family: Consolas;
+}
+
+.text-field {
+    -fx-background-color: #2E3538;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 3;
+    -fx-border-width: 3;
+    -fx-font-family: Consolas;
+    -fx-font-size: 35;
+    -fx-prompt-text-fill: #8F9C9F;
+    -fx-border-color: #3C4448;
+}
