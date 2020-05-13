@@ -163,7 +163,7 @@ public class ChartClientsMenu {
                     break;
                 }
                 case "Clientes antiguos": {
-                    ArrayList<TableClient> data = daoChart.getOldestClients(10);
+                    ArrayList<TableClient> data = daoChart.getOldestClients(35);
                     if (data != null) {
                         showOldestClients(data, width * 0.55, height * 0.85, true);
                         return;
@@ -171,7 +171,7 @@ public class ChartClientsMenu {
                     break;
                 }
                 case "Mejores clientes": {
-                    ArrayList<TableClient> data = daoChart.getHighestPayers(10);
+                    ArrayList<TableClient> data = daoChart.getHighestPayers(25);
                     if (data != null) {
                         showOldestClients(data, width * 0.55, height * 0.85, false);
                         return;

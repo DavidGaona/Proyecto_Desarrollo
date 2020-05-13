@@ -1,12 +1,14 @@
 package model;
 
+import utilities.ProjectUtilities;
+
 public class TableClient {
 
     private String fullName;
     private String documentNumber;
     private long phoneNumber;
     private String date;
-    private double value;
+    private String value;
 
     public TableClient(String fullName, String documentNumber, long phoneNumber, String date) {
         this.fullName = fullName;
@@ -18,7 +20,7 @@ public class TableClient {
     public TableClient(String fullName, String documentNumber, double value) {
         this.fullName = fullName;
         this.documentNumber = documentNumber;
-        this.value = value;
+        this.value = ProjectUtilities.conversion(value);
     }
 
     public String getFullName() {
@@ -37,7 +39,7 @@ public class TableClient {
         return date;
     }
 
-    public double getValue() {
+    public String getValue() {
         return value;
     }
 }

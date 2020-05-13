@@ -7,7 +7,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ProjectUtilities {
 
@@ -325,5 +327,10 @@ public class ProjectUtilities {
         }
     }
 
-
+    public static String conversion(double valor)
+    {
+        Locale.setDefault(Locale.US);
+        DecimalFormat num = new DecimalFormat("#,###.00");
+        return num.format(valor);
+    }
 }
