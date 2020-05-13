@@ -11,26 +11,31 @@ public class testDaoClient extends TestCase {
         client = new DaoClient();
     }
 
-
-    //****************************saveNewClient********************
-
     /**
-     * @Test public void testSaveNewClient(){ //caso exitoso
-     * scenario();
-     * assertEquals("Cliente creado con exito",client.saveNewClient(102,"felipe","pelaez",(short)0,"678","pablo@pablez.com","calle 1 # 10",(short)0,36));
-     * }
+     *Prueba para crear un nuevo cliente de forma exitosa
+     */
+    /*
+    @Test
+    public void testSaveNewClient() {
+        scenario();
+        assertEquals("Cliente creado con exito", client.saveNewClient(102, "felipe", "pelaez", (short) 0, "678", "pablo@pablez.com", "calle 1 # 10", (short) 0, "Palmira", 36));
+    }
      */
 
-
+    /**
+     * Prueba para añadir a un nuevo cliente pero ya se encuentra registrado en la base de datos
+     */
     @Test
-    public void testSaveNewClientExistente() { //cliente existente
+    public void testSaveNewClientExistente() {
         scenario();
         assertEquals("Este cliente ya se encuentra registrado", client.saveNewClient(40, "Miguel",
                 "Reyes", (short) 0, "114", "reyes.miguel@correounivalle.edu.co",
                 "Cra 20 #13-20", (short) 0, "Cali", 36));
     }
 
-    //****************************editClient********************
+    /**
+     * Prueba para editar un cliente exitosamente
+     */
     @Test
     public void testEditClient() {
         scenario();
@@ -39,11 +44,13 @@ public class testDaoClient extends TestCase {
                 (short) 0, "Cali"));
     }
 
-    /**
+    /*
      * Documento ya existente hay que hacerlo manual
      **/
 
-    //****************************loadClient********************
+    /**
+     * Prueba de metodo que carga el cliente en la interfaz
+     */
     @Test
     public void testLoadClient() {
         scenario();

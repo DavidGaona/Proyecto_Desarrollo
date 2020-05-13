@@ -1226,9 +1226,9 @@ public class DbManager {
                                 resultSet.getString(10), resultSet.getString(11), resultSet.getShort(16),
                                 resultSet.getString(12), resultSet.getString(13), resultSet.getString(14),
                                 resultSet.getShort(15)),
-                        new Plan(resultSet.getInt(1), resultSet.getString(17),
-                        resultSet.getDouble(18), resultSet.getInt(19), resultSet.getInt(20),
-                        resultSet.getInt(21)))
+                        new Plan(resultSet.getInt(1), resultSet.getString(18),
+                        resultSet.getDouble(19), resultSet.getInt(20), resultSet.getInt(21),
+                        resultSet.getInt(22)))
                 );
             }
         } catch (SQLException e) {

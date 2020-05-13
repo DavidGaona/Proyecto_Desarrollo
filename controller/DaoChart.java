@@ -36,7 +36,7 @@ public class DaoChart {
     }
 
     public ArrayList<TableClient> getOldestClients(int numberOfClients) {
-        if (numberOfClients < 1 || numberOfClients > 20) return null;
+        if (!(numberOfClients > 1 && numberOfClients < 20)) return null;
         ArrayList<TableClient> data;
         dbManager.openDBConnection();
         data = dbManager.getOldestClients(numberOfClients);
@@ -45,7 +45,7 @@ public class DaoChart {
     }
 
     public ArrayList<TableClient> getHighestPayers(int numberOfClients) {
-        if (numberOfClients > 1 && numberOfClients < 10) return null;
+        if (!(numberOfClients > 1 && numberOfClients < 50)) return null;
         ArrayList<TableClient> data;
         dbManager.openDBConnection();
         data = dbManager.getHighestPayers(numberOfClients);

@@ -19,7 +19,7 @@ public class testDaoBill extends TestCase {
     public void testGenerateBills() {
         scenario();
         assertTrue((bill.generateBills().equals("Las facturas ya fueron generadas"))
-                || bill.generateBills().equals("Operación realizada con exíto, facturas generadas 1".substring(0, 49)));
+                || bill.generateBills().equals("Operación realizada con exíto, facturas generadas 1".substring(0, 60)));
     }
 
     /**
@@ -28,15 +28,16 @@ public class testDaoBill extends TestCase {
     @Test
     public void testGetAllBills() {
         scenario();
-        assertEquals(bill.getAllBills("/home/camilo/Downloads"), "Se han creado los PDF con exito");
+        assertEquals("Se han creado los PDF con exito", bill.getAllBills("/home/camilo/Downloads"));
     }
 
     /**
-     * se evidencia una ruta no permitida, como lo es la capteta raiz /
+     * Prueba para descargar facturas, como se evidencia una ruta
+     * no permitida, como lo es la capteta raiz /
      */
     @Test
-    public void testGetAllBillsBad() {
+    public void testGetAllBillsWrong() {
         scenario();
-        assertEquals(bill.getAllBills("/dev"), "El lugar donde desea guardar no existe o no tiene permisos de escritura");
+        assertEquals("El lugar donde desea guardar no existe o no tiene permisos de escritura", bill.getAllBills("/dev"));
     }
 }

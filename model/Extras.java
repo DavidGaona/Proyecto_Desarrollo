@@ -12,7 +12,7 @@ public class Extras {
     private boolean isUsed;
     private int type; //type 0 = minutos, type 1 megas
 
-    public Extras(){
+    public Extras() {
         planName = "";
         quantity = 0;
         selectPerson = new Label();
@@ -20,7 +20,14 @@ public class Extras {
         type = -1;
     }
 
-    public Extras(int id, String extraName, int quantity, boolean isUsed, int type){
+    public Extras(int id, String planName, int quantity, int type) {
+        this.id = id;
+        this.planName = planName;
+        this.quantity = quantity;
+        this.type = type;
+    }
+
+    public Extras(int id, String extraName, int quantity, boolean isUsed, int type) {
         this.planName = extraName;
         this.quantity = quantity;
         this.isUsed = isUsed;
@@ -33,7 +40,7 @@ public class Extras {
         this.id = id;
     }
 
-    public Extras(String extraName, int quantity, boolean isUsed, int type){
+    public Extras(String extraName, int quantity, boolean isUsed, int type) {
         this.planName = extraName;
         this.quantity = quantity;
         this.isUsed = isUsed;
