@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class DaoBill {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
     public String generateBills() {
         int response;
@@ -41,9 +42,11 @@ public class DaoBill {
         int iterator = 1;
 
         try {
-            for (Bill bill :
-                    bills) {
-                pdf.createPDF(absolutePath + "/factura_numero_" + iterator + ".pdf", bill);
+            for (Bill bill : bills) {
+                if (isWindows)
+                    pdf.createPDF(absolutePath + "\\factura_numero_" + iterator + ".pdf", bill);
+                else
+                    pdf.createPDF(absolutePath + "/factura_numero_" + iterator + ".pdf", bill);
                 iterator++;
             }
         } catch (FileNotFoundException ex) {

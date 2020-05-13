@@ -97,6 +97,7 @@ public class BillingMenu {
         generateBillButton.setOnMouseClicked(e -> {
             AlertBox.display("Mensaje: ", bill.generateBills());
         });
+
         downloadBills.setOnMouseClicked(e -> {
 
             DirectoryChooser directoryChooser = new DirectoryChooser();
