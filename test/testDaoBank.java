@@ -11,27 +11,41 @@ public class testDaoBank extends TestCase {
         bank = new DaoBank();
     }
 
+
     /**
-     * public void testSaveNewBank(){
-     * scenario();
-     * assertEquals("Operación Realizada",(bank.saveNewBank("Caja Social","157486","458451454")));
-     * }
+     * Prueba que crea un banco nuevo
+     */
+    /*
+    public void testSaveNewBank() {
+        scenario();
+        assertEquals("Operación Realizada", (bank.saveNewBank("Caja Social", "157486", "458451454")));
+    }
+    */
+
+    /**
+     * prueba que edita un banco de forma exitosa
      */
     @Test
     public void testEditBank() {
         scenario();
-        assertTrue(bank.editBank(true, "420").equals("Operación Realizada"));     ////actualizar valores
+        assertTrue(bank.editBank(true, "452452452").equals("Operación Realizada"));     ////actualizar valores
     }
 
+    /**
+     * Prueba de carga de los datos de un banco
+     */
     @Test
     public void testLoadBank() {
         scenario();
         assertEquals("69", bank.loadBank("Banco Agrario").getNIT());
     }
 
+    /**
+     * Prueba de metodo que carga todos los bancos en el comboBox
+     */
     @Test
-    public void testLoadAllBanks() {          /**el numero esperado depende del numero de bancos que hay en la BD**/
+    public void testLoadAllBanks() {          /*el numero esperado depende del numero de bancos que hay en la BD**/
         scenario();
-        assertEquals(3, bank.loadAllBanks(true).length);    //////////////actualizar valores
+        assertEquals(2, bank.loadAllBanks(true).length);    //////////////actualizar valores
     }
 }
