@@ -48,6 +48,9 @@ public class testDaoClient extends TestCase {
      * Documento ya existente hay que hacerlo manual
      **/
 
+    /**
+     * Prueba de metodo que carga el cliente en la interfaz
+     */
     @Test
     public void testLoadClient() {
         scenario();

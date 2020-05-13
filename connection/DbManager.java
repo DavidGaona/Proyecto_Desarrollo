@@ -1270,9 +1270,9 @@ public class DbManager {
 
     public ArrayList<DataChart> getDataPlansPerMonths(Timestamp from, Timestamp to) {
         ArrayList<DataChart> data = new ArrayList<>();
-        String sql_select = "SELECT EXTRACT(MONTH FROM phone_date) AS month, COUNT(phone_number) AS sum " +
-                "FROM (SELECT * FROM public.phone WHERE phone_date BETWEEN ? AND ?) AS result " +
-                "GROUP BY EXTRACT(MONTH FROM phone_date) ORDER BY month DESC";
+        String sql_select = "SELECT EXTRACT(MONTH FROM bill_date_legacy) AS month, COUNT(phone_number) AS sum " +
+                "FROM (SELECT * FROM public.legacy_bills WHERE bill_date_legacy BETWEEN ? AND ?) AS result " +
+                "GROUP BY EXTRACT(MONTH FROM bill_date_legacy) ORDER BY month DESC";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
@@ -1295,14 +1295,16 @@ public class DbManager {
 
     public ArrayList<DataChart> getDataPlansOnRange(Timestamp from, Timestamp to) {
         ArrayList<DataChart> data = new ArrayList<>();
-        String sql_select = "SELECT plan_name, COUNT(phone_number) AS sum " +
-                "FROM (SELECT * FROM public.phone NATURAL JOIN public.plan WHERE phone_date BETWEEN ? AND ?) AS result " +
-                "GROUP BY plan_name";
+        String sql_select = "SELECT plan_name, COUNT(phone_number) AS sum FROM " +
+                "((SELECT client_id, plan_id, phone_number FROM public.legacy_bills NATURAL JOIN public.phone " +
+                "WHERE bill_date_legacy BETWEEN ? AND ?) UNION (SELECT client_id, plan_id, phone_number FROM public.legacy_bills NATURAL JOIN public.cancelled_phone WHERE bill_date_legacy BETWEEN ? AND ?)) AS result NATURAL JOIN public.plan GROUP BY plan_name";
         try {
             System.out.println("Consultando en la base de datos");
             PreparedStatement statement = connection.prepareStatement(sql_select);
             statement.setTimestamp(1, from);
             statement.setTimestamp(2, to);
+            statement.setTimestamp(3, from);
+            statement.setTimestamp(4, to);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 data.add(
