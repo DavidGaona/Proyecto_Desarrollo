@@ -16,8 +16,10 @@ public class testDaoChart extends TestCase {
     public void scenario() {
         chart = new DaoChart();
         arrayF = new ArrayList();
-
     }
+    /**TODOS LOS METODOS QUE ESTÁN ENTRE COMENTARIO SIMPLE (/* gris) DEBEN SER DESCOMENTADOS,
+     * ESTÁN ASÍ PORQUE ALTERAN LA BASE DE DATOS Y SU EJECUCIÓN REPETITIVA PUEDE GENERAR ERRORES
+     */
 
     /**
      * prueba para tabla que saca los datos de los clientes

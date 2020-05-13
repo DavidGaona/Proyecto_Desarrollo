@@ -10,6 +10,9 @@ public class testDaoBank extends TestCase {
     public void scenario() {
         bank = new DaoBank();
     }
+    /**TODOS LOS METODOS QUE ESTÁN ENTRE COMENTARIO SIMPLE (/* gris) DEBEN SER DESCOMENTADOS,
+     * ESTÁN ASÍ PORQUE ALTERAN LA BASE DE DATOS Y SU EJECUCIÓN REPETITIVA PUEDE GENERAR ERRORES
+     */
 
 
     /**

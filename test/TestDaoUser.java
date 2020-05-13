@@ -11,6 +11,9 @@ public class TestDaoUser extends TestCase {
     public void scenario() {
         user = new DaoUser();
     }
+    /**TODOS LOS METODOS QUE ESTÁN ENTRE COMENTARIO SIMPLE (/* gris) DEBEN SER DESCOMENTADOS,
+     * ESTÁN ASÍ PORQUE ALTERAN LA BASE DE DATOS Y SU EJECUCIÓN REPETITIVA PUEDE GENERAR ERRORES
+     */
 
 
     /**

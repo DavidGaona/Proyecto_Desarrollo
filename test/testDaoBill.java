@@ -12,6 +12,11 @@ public class testDaoBill extends TestCase {
         bill = new DaoBill();
     }
 
+    /**
+     * TODOS LOS METODOS QUE ESTÁN ENTRE COMENTARIO SIMPLE (/* gris) DEBEN SER DESCOMENTADOS,
+     * ESTÁN ASÍ PORQUE ALTERAN LA BASE DE DATOS Y SU EJECUCIÓN REPETITIVA PUEDE GENERAR ERRORES
+     */
+
     @Test
     /**
      * Prueba de metodo GenerateBills, el cual genera las facturas con los datos almacenados en la base de datos
