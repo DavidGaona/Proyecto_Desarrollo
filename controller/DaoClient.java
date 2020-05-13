@@ -12,8 +12,9 @@ public class DaoClient {
     private DbManager dbManager = new DbManager("postgres", "postgres452", "MobilePlan", "localhost");
 
 
-    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type, int currentLoginUser) {
-        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+    public String saveNewClient(int clientId, String name, String lastName, short documentType, String documentNumber,
+                                String email, String direction, short type, String city, int currentLoginUser) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type, city);
         String response = "";
         if (client.isNotBlank()) {
             dbManager.openDBConnection();
@@ -23,8 +24,9 @@ public class DaoClient {
         return response;
     }
 
-    public String editClient(int clientId, String name, String lastName, short documentType, String documentNumber, String email, String direction, short type) {
-        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type);
+    public String editClient(int clientId, String name, String lastName, short documentType, String documentNumber,
+                             String email, String direction, short type, String city) {
+        Client client = new Client(clientId, name, lastName, documentType, documentNumber, email, direction, type, city);
         String response = "";
         if (client.isNotBlank()) {
             dbManager.openDBConnection();

@@ -21,14 +21,14 @@ public class MenuListManager extends MenuList {
         closeMenu.setStyle(closeMenu.getStyle() + "-fx-font-size: " + (80 - (80 * percentage)) + ";");
 
         Label profile = new Label();
-        profile.setFont(Font.loadFont(FA.getFont(), 20));
-        profile.setText(FA.USER_SECRET);
+        profile.setFont(Font.loadFont(FA.getFont(), (80 - (80 * percentage))));
+        profile.setText(FA.USER);
 
-        Label planLabel = labelGenerator("Crear/Editar Planes", width, height, percentage);
-        Label statsClientsLabel = labelGenerator("Estadísticas de Clientes", width, height, percentage);
-        Label statsPlansLabel = labelGenerator("Estadísticas de Planes", width, height, percentage);
-        Label changePasswordLabel = labelGenerator("Cambiar Contraseña", width, height, percentage);
-        Label logOutLabel = labelGenerator("Cerrar Sesión", width, height, percentage);
+        Label planLabel = labelGenerator("Crear/Editar Planes " + FA.EDIT, width, height, percentage);
+        Label statsClientsLabel = labelGenerator("Estadísticas de Clientes " + FA.BAR_CHART, width, height, percentage);
+        Label statsPlansLabel = labelGenerator("Estadísticas de Planes " + FA.AREA_CHART, width, height, percentage);
+        Label changePasswordLabel = labelGenerator("Cambiar Contraseña " + FA.KEY, width, height, percentage);
+        Label logOutLabel = labelGenerator("Cerrar Sesión " + FA.SIGN_OUT, width, height, percentage);
 
         planLabel.setAlignment(Pos.CENTER);
         statsClientsLabel.setAlignment(Pos.CENTER);

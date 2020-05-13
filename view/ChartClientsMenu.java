@@ -7,13 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import model.DataChart;
 import model.TableClient;
 import utilities.FA;
@@ -93,56 +94,95 @@ public class ChartClientsMenu {
         centerText.setPrefSize(width * 0.2, height * 0.9);
         centerText.setAlignment(Pos.TOP_CENTER);
         centerText.setStyle("-fx-border-width: 0 2 0 0;-fx-border-color: #FFFFFF;");
-        centerText.setSpacing(15);
+        centerText.setSpacing(50);
 
         stackChart = new StackPane();
         stackChart.setPrefSize(width * 0.6, height * 0.9);
         stackChart.setAlignment(Pos.CENTER);
 
         //Text with message
-        Text text = new Text("Filtros para Clientes");
-        text.setFont(new Font("Consolas", 30 - (30 * percentage)));
-        text.setFill(Color.web("#FFFFFF"));
+        Label introLabel = new Label("Filtros para clientes");
+        introLabel.setPrefSize(width * 0.15, height * 0.09);
+        introLabel.setMaxWidth(width * 0.15);
+        introLabel.setWrapText(true);
+        introLabel.getStyleClass().add("custom-chart-label");
+        introLabel.setTextAlignment(TextAlignment.CENTER);
+        introLabel.setStyle(introLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
+
         Button generateChart = chartClientButtonTemplate(width, height, "Generar Grafico");
 
-        String[] options = {"Tipos de clientes", "Clientes antiguos", "Mejores clientes"};
+        String[] options = {"Tipos de clientes %", "Tipos de clientes #", "Clientes antiguos", "Mejores clientes"};
         ComboBox<String> optionsCombobox = new ComboBox<>(FXCollections.observableArrayList(options));
-        optionsCombobox.setPrefSize(width * 0.15, height * 0.03);
+        optionsCombobox.setPrefSize(width * 0.15, height * 0.05);
+        optionsCombobox.setStyle(optionsCombobox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
 
         generateChart.setOnMouseClicked(e -> {
-            if (optionsCombobox.getValue().equals("Tipos de clientes")) {
-                ArrayList<DataChart> data = daoChart.getDataAboutClientsNC(true);
-                if (data != null) {
-                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-                    for (DataChart dataPiece : data) {
-                        pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
-                    }
-                    final PieChart chart = new PieChart(pieChartData);
-                    chart.setTitle("Tipos de Cliente");
-                    chart.setLegendSide(Side.LEFT);
+            switch (optionsCombobox.getValue()) {
+                case "Tipos de clientes %": {
+                    ArrayList<DataChart> data = daoChart.getDataAboutClientsNC(true);
+                    if (data != null) {
+                        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+                        for (DataChart dataPiece : data) {
+                            pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+                        }
+                        final PieChart chart = new PieChart(pieChartData);
+                        chart.setTitle("Tipos de Cliente %");
+                        chart.setLegendSide(Side.LEFT);
+                        chart.setMaxSize(width * 0.55, height * 0.85);
 
-                    stackChart.getChildren().clear();
-                    stackChart.getChildren().addAll(chart);
-                    return;
+                        stackChart.getChildren().clear();
+                        stackChart.getChildren().addAll(chart);
+                        return;
+                    }
+                    break;
                 }
-            } else if (optionsCombobox.getValue().equals("Clientes antiguos")) {
-                ArrayList<TableClient> data = daoChart.getOldestClients(10);
-                if (data != null) {
-                    showOldestClients(data, width * 0.55, height * 0.8, true);
-                    return;
+                case "Tipos de clientes #": {
+                    ArrayList<DataChart> data = daoChart.getDataAboutClientsNC(true);
+                    if (data != null) {
+                        final CategoryAxis xAxis = new CategoryAxis();
+                        final NumberAxis yAxis = new NumberAxis();
+                        final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
+                        bc.setMaxSize(width * 0.55, height * 0.85);
+                        bc.setTitle("Tipos de Cliente #");
+                        xAxis.setLabel("Tipo de cliente");
+                        yAxis.setLabel("Cantidad");
+                        XYChart.Series series = new XYChart.Series();
+                        for (DataChart datum : data) {
+                            series.getData().add(new XYChart.Data<>(datum.getValueX(), datum.getValueY()));
+                        }
+                        bc.getData().add(series);
+                        bc.setBarGap(10);
+                        bc.setCategoryGap(10);
+                        bc.setLegendVisible(false);
+
+                        stackChart.getChildren().clear();
+                        stackChart.getChildren().addAll(bc);
+                        return;
+                    }
+                    break;
                 }
-            } else if (optionsCombobox.getValue().equals("Mejores clientes")) {
-                ArrayList<TableClient> data = daoChart.getHighestPayers(10);
-                if (data != null) {
-                    showOldestClients(data, width * 0.55, height * 0.8, false);
-                    return;
+                case "Clientes antiguos": {
+                    ArrayList<TableClient> data = daoChart.getOldestClients(10);
+                    if (data != null) {
+                        showOldestClients(data, width * 0.55, height * 0.85, true);
+                        return;
+                    }
+                    break;
+                }
+                case "Mejores clientes": {
+                    ArrayList<TableClient> data = daoChart.getHighestPayers(10);
+                    if (data != null) {
+                        showOldestClients(data, width * 0.55, height * 0.85, false);
+                        return;
+                    }
+                    break;
                 }
             }
             AlertBox.display("Error: ", "No se pudo generar el gráfico");
 
         });
 
-        centerText.getChildren().addAll(text, optionsCombobox, generateChart);
+        centerText.getChildren().addAll(introLabel, optionsCombobox, generateChart);
         hbox.getChildren().addAll(centerText, stackChart);
 
 

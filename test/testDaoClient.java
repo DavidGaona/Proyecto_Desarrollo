@@ -1,17 +1,18 @@
 package test;
-    import controller.DaoClient;
-    import junit.framework.TestCase;
-    import org.junit.Test;
+
+import controller.DaoClient;
+import junit.framework.TestCase;
+import org.junit.Test;
 
 public class testDaoClient extends TestCase {
     private DaoClient client;
 
-    public void scenario(){
+    public void scenario() {
         client = new DaoClient();
     }
 
 
-     //****************************saveNewClient********************
+    //****************************saveNewClient********************
     /*
     @Test
     public void testSaveNewClient(){ //caso exitoso
@@ -22,23 +23,30 @@ public class testDaoClient extends TestCase {
 
 
     @Test
-    public void testSaveNewClientExistente(){ //cliente existente
+    public void testSaveNewClientExistente() { //cliente existente
         scenario();
-        assertEquals("Este cliente ya se encuentra registrado",client.saveNewClient(100,"pablo","pablez",(short)0,"677","pablo@pablez.com","calle 1 # 10",(short)0,36));
+        assertEquals("Este cliente ya se encuentra registrado", client.saveNewClient(100, "pablo",
+                "pablez", (short) 0, "677", "pablo@pablez.com",
+                "calle 1 # 10", (short) 0, "Cali", 36));
     }
 
     //****************************editClient********************
     @Test
-    public void testEditClient(){
+    public void testEditClient() {
         scenario();
-        assertEquals("Cliente editado exito",client.editClient(100,"pablo","pablez",(short)0,"677","pablo@pablez.com","cra 200 # 24 - 89",(short)0));
+        assertEquals("Cliente editado exito", client.editClient(100, "pablo", "pablez",
+                (short) 0, "677", "pablo@pablez.com",
+                "cra 200 # 24 - 89", (short) 0, "Cali"));
     }
-    /** Documento ya existente hay que hacerlo manual**/
+
+    /**
+     * Documento ya existente hay que hacerlo manual
+     **/
 
     //****************************loadClient********************
     @Test
-    public void testLoadClient(){
+    public void testLoadClient() {
         scenario();
-        assertEquals("pablo",client.loadClient("677","Cédula de ciudadanía").getName());
+        assertEquals("pablo", client.loadClient("677", "Cédula de ciudadanía").getName());
     }
 }

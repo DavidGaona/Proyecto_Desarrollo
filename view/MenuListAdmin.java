@@ -23,16 +23,14 @@ public class MenuListAdmin extends MenuList {
 
         Label profile = new Label();
         profile.setFont(Font.loadFont(FA.getFont(), (80 - (80 * percentage))));
-        System.out.println(Font.loadFont(FA.getFont(), 20).getFamily());
         profile.setText(FA.USER_SHIELD);
-
 
         Label userLabel = labelGenerator("Crear/Editar Usuario " + FA.USER_PLUS, width, height, percentage);
         Label billingLabel = labelGenerator("Facturación " + FA.COG, width, height, percentage);
         Label historyUsers = labelGenerator("Historial de Actividad " + FA.USERS, width, height, percentage);
         Label bankLabel = labelGenerator("Crear/Editar Banco " + FA.BANK, width, height, percentage);
         Label changePasswordLabel = labelGenerator("Cambiar Contraseña " + FA.KEY, width, height, percentage);
-        Label logOutLabel = labelGenerator("Cerrar Sesión", width, height, percentage);
+        Label logOutLabel = labelGenerator("Cerrar Sesión " + FA.SIGN_OUT, width, height, percentage);
 
         userLabel.setAlignment(Pos.CENTER);
         billingLabel.setAlignment(Pos.CENTER);

@@ -1,0 +1,102 @@
+.custom-chart-label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-weight: bold;
+    -fx-text-alignment: LEFT;
+}
+
+
+.chart-legend {
+    -fx-background-color:  #3D3946;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-size: 20;
+}
+
+.chart-legend-item{
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-size: 20;
+}
+
+.chart-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-family: Consolas;
+    -fx-font-size: 50;
+}
+
+.axis {
+    -fx-tick-label-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+    -fx-font-size: 25px;
+    -fx-tick-label-font-size: 25px;
+}
+
+.axis-label {
+    -fx-font-size: 30;
+    -fx-tick-label-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Consolas;
+}
+
+.axis-minor-tick-mark {
+    -fx-stroke: #859656;
+    -fx-stroke-width: 0;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}
+
+.chart-pie-label {
+    -fx-fill: #FFFFFF;
+    -fx-font-size: 25;
+}
+
+.chart-bar-label {
+    -fx-fill: #FFFFFF;
+    -fx-font-size: 25;
+}
+
+.chart-plot-background {
+    -fx-background-color: #2E3538;
+}
+.chart-vertical-grid-lines {
+    -fx-stroke: #66CCFF;
+    -fx-stroke-width: 0;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: #66CCFF;
+    -fx-stroke-width: 0;
+}
+.chart-alternative-row-fill {
+    -fx-fill: #2E3538;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.data0.chart-bar { -fx-bar-fill: #ff781f;}
+.data1.chart-bar { -fx-bar-fill: #00A6CC;}
+.data2.chart-bar { -fx-bar-fill: #28A808;}
+.data3.chart-bar { -fx-bar-fill: #A25ABC;}
+.data4.chart-bar { -fx-bar-fill: #ee2626;}
+.data5.chart-bar { -fx-bar-fill: #e2bf43;}
+.data6.chart-bar { -fx-bar-fill: #28A808;}
+.data7.chart-bar { -fx-bar-fill: #A25ABC;}
+
+.data0.chart-pie { -fx-pie-color: #ff781f;}
+.data1.chart-pie { -fx-pie-color: #00A6CC;}
+.data2.chart-pie { -fx-pie-color: #28A808;}
+.data3.chart-pie { -fx-pie-color: #A25ABC;}
+.data4.chart-pie { -fx-pie-color: #ee2626;}
+.data5.chart-pie { -fx-pie-color: #e2bf43;}
+.data6.chart-pie { -fx-pie-color: #FF7F7F;}
+.data7.chart-pie { -fx-pie-color: #2C16D5;}
+.data8.chart-pie { -fx-pie-color: #773C00; }
+.data9.chart-pie { -fx-pie-color: teal; }
+.data10.chart-pie { -fx-pie-color: #47FF5C; }
+.data11.chart-pie { -fx-pie-color: magenta; }

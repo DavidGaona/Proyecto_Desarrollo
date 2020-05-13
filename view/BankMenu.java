@@ -37,11 +37,11 @@ public class BankMenu {
     private double buttonFont;
     private MenuListAdmin menuListAdmin = new MenuListAdmin();
     private VBox menuList;
-    ComboBox<String> searchComboBox = new ComboBox();
+    private ComboBox<String> searchComboBox = new ComboBox();
 
     private Button bankButtonTemplate(double width, double height, String message) {
         Button button = new Button(message);
-        button.setPrefSize(width * 0.15, height * 0.03); //0.10 , 0.03
+        button.setPrefSize(width * 0.15, height * 0.03);
         button.setStyle("-fx-font-size: " + buttonFont);
         button.getStyleClass().add("client-buttons-template");
         return button;

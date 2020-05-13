@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import model.DataChart;
 import utilities.FA;
 import utilities.ProjectEffects;
@@ -105,9 +106,10 @@ public class ChartPlansMenu {
 
         //Text with message
         Label introLabel = new Label("Filtros para Planes");
-        introLabel.setPrefSize(width * 0.15, height * 0.03);
+        introLabel.setPrefSize(width * 0.15, height * 0.09);
         introLabel.setMaxWidth(width * 0.15);
         introLabel.setWrapText(true);
+        introLabel.setTextAlignment(TextAlignment.CENTER);
         introLabel.getStyleClass().add("custom-chart-label");
         introLabel.setStyle(introLabel.getStyle() + "\n-fx-font-size: " + (30 - (30 * percentage)) + ";" );
 
@@ -133,6 +135,8 @@ public class ChartPlansMenu {
 
         Button generateChart = chartPlanButtonTemplate(width, height, "Generar Gráfico");
 
+        chartComboBox.setStyle(chartComboBox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
+
         AtomicInteger min = new AtomicInteger();
         AtomicBoolean enteredTo = new AtomicBoolean(false);
         AtomicBoolean enteredFrom = new AtomicBoolean(false);
@@ -142,11 +146,15 @@ public class ChartPlansMenu {
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
         ComboBox<String> fromCombobox = new ComboBox<>(FXCollections.observableArrayList(months));
         fromCombobox.setPrefSize(width * 0.15, height * 0.03);
+        fromCombobox.setStyle(fromCombobox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
         fromCombobox.getItems().remove(11);
+        fromCombobox.getSelectionModel().select(0);
 
         ComboBox<String> toCombobox = new ComboBox<>(FXCollections.observableArrayList(months));
         toCombobox.setPrefSize(width * 0.15, height * 0.03);
+        toCombobox.setStyle(toCombobox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
         toCombobox.getItems().remove(0);
+        toCombobox.getSelectionModel().select(0);
 
         fromCombobox.setOnAction(e -> {
             if (enteredTo.get())
@@ -175,9 +183,10 @@ public class ChartPlansMenu {
 
         ComboBox<Integer> yearsComboBox = new ComboBox<>();
         yearsComboBox.setPrefSize(width * 0.15, height * 0.03);
-        for (int i = 0; i < 22; i++)
+        yearsComboBox.setStyle(yearsComboBox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
+        for (int i = 21; i >= 0; i--)
             yearsComboBox.getItems().add(2000 + i);
-
+        yearsComboBox.getSelectionModel().select(1);
         chartComboBox.setPrefSize(width * 0.15, height * 0.03);
 
         generateChart.setOnMouseClicked(e -> {
@@ -190,11 +199,16 @@ public class ChartPlansMenu {
                                 ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
                         String end = yearsComboBox.getValue() + "-" +
                                 ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
-                        data = daoChart.getDataPlansPerMonths(LocalDate.parse(start), LocalDate.parse(end));
+                        LocalDate startDate = LocalDate.parse(start);
+                        LocalDate endDate = LocalDate.parse(end);
+                        endDate = LocalDate.parse(end.substring(0, 7) + "-" + endDate.lengthOfMonth());
+                        data = daoChart.getDataPlansPerMonths(startDate, endDate);
                         if (data != null && !data.isEmpty()) {
                             ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
                             for (DataChart dataPiece : data) {
-                                pieChartData.add(new PieChart.Data(dataPiece.getValueX(), dataPiece.getValueY()));
+                                pieChartData.add(new PieChart.Data(
+                                        ProjectUtilities.monthsInSpanish(dataPiece.getValueX()),
+                                        dataPiece.getValueY()));
                             }
                             final PieChart pieChart = new PieChart(pieChartData);
                             pieChart.setTitle("Ventas por Mes");
@@ -217,21 +231,27 @@ public class ChartPlansMenu {
                                 ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
                         String end = yearsComboBox.getValue() + "-" +
                                 ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
-                        data = daoChart.getDataPlansOnRange(LocalDate.parse(start), LocalDate.parse(end));
+                        LocalDate startDate = LocalDate.parse(start);
+                        LocalDate endDate = LocalDate.parse(end);
+                        endDate = LocalDate.parse(end.substring(0, 7) + "-" + endDate.lengthOfMonth());
+                        data = daoChart.getDataPlansOnRange(startDate, endDate);
                         if (data != null)
                             commonBarChart(stackChart, data, "Número de Ventas", width, height);
                         else
                             AlertBox.display("Error: ", "No se encontraron registros en esas fechas");
                     }
                     break;
-                case "Número de Cancelados":
+                case "Lineas canceladas":
                     show = false;
                     if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
                         String start = yearsComboBox.getValue() + "-" +
                                 ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
                         String end = yearsComboBox.getValue() + "-" +
                                 ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
-                        data = daoChart.getCancelledClientsOnRange(LocalDate.parse(start), LocalDate.parse(end));
+                        LocalDate startDate = LocalDate.parse(start);
+                        LocalDate endDate = LocalDate.parse(end);
+                        endDate = LocalDate.parse(end.substring(0, 7) + "-" + endDate.lengthOfMonth());
+                        data = daoChart.getCancelledClientsOnRange(startDate, endDate);
                         if (data != null)
                             commonBarChart(stackChart, data, "Número de Cancelados", width, height);
                         else

@@ -27,10 +27,11 @@ public class DbManager {
     public String saveNewClient(Client client, int currentLoginUser) {
         String saveQuery, selectQuery, logQuery;
         int numRows, id = -1;
-        saveQuery = "INSERT INTO public.client(client_name, client_last_name, client_document_number, client_email, client_address, client_type, client_document_type)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?)";
+        saveQuery = "INSERT INTO public.client(client_name, client_last_name, client_document_number, " +
+                "client_email, client_address, client_type, client_document_type, client_city)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        selectQuery = "SELECT client_id FROM public.client WHERE client_document_number = ?  AND client_document_type = ?";
+        selectQuery = "SELECT client_id FROM public.client WHERE client_document_number = ? AND client_document_type = ?";
         logQuery = "INSERT INTO public.client_date(client_id, user_id, join_date) VALUES(?, ?, current_timestamp(0))";
 
         try {
@@ -42,6 +43,7 @@ public class DbManager {
             statement.setString(5, client.getDirection());
             statement.setShort(6, client.getType());
             statement.setShort(7, client.getDocumentType());
+            statement.setString(8, client.getCity());
             numRows = statement.executeUpdate();
             System.out.println(numRows);
             statement = connection.prepareStatement(selectQuery);
@@ -69,8 +71,9 @@ public class DbManager {
     public String editClient(Client client) {
         int numRows;
         String sql_update = "UPDATE public.client " +
-                "SET client_name = ?, client_last_name = ?, client_document_number = ?, client_email = ?, client_address = ?, client_type = ?, client_document_type = ?" +
-                " WHERE client_id = ?";
+                "SET client_name = ?, client_last_name = ?, client_document_number = ?, client_email = ?, " +
+                "client_address = ?, client_type = ?, client_document_type = ?, client_city = ? " +
+                "WHERE client_id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql_update);
             statement.setString(1, client.getName());
@@ -80,7 +83,8 @@ public class DbManager {
             statement.setString(5, client.getDirection());
             statement.setShort(6, client.getType());
             statement.setShort(7, client.getDocumentType());
-            statement.setInt(8, client.getId());
+            statement.setString(8, client.getCity());
+            statement.setInt(9, client.getId());
             numRows = statement.executeUpdate();
             System.out.println("up " + numRows);
             return "Cliente editado exito";
@@ -253,7 +257,7 @@ public class DbManager {
 
     public Client loadClient(String documentNumber, short clientDocumentType) {
         String sql_select = "SELECT client_id, client_name, client_last_name," +
-                " client_email, client_address, client_type " +
+                " client_email, client_address, client_type, client_city " +
                 "FROM public.client WHERE client_document_number = ? AND client_document_type = ?";
 
         Client client = new Client();
@@ -272,6 +276,7 @@ public class DbManager {
             client.setEmail(resultSet.getString(4));
             client.setDirection(resultSet.getString(5));
             client.setType(resultSet.getShort(6));
+            client.setCity(resultSet.getString(7));
             return client;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -1215,10 +1220,13 @@ public class DbManager {
                 array_bills.add(new Bill(
                         resultSet.getDouble(4), resultSet.getDate(5),
                         resultSet.getInt(6), resultSet.getInt(7), resultSet.getInt(8),
-                        resultSet.getLong(3), new Client(resultSet.getInt(2),
-                        resultSet.getString(10), resultSet.getString(11), resultSet.getShort(16),
-                        resultSet.getString(12), resultSet.getString(13), resultSet.getString(14),
-                        resultSet.getShort(15)), new Plan(resultSet.getInt(1), resultSet.getString(17),
+                        resultSet.getLong(3),
+                        new Client(
+                                resultSet.getInt(2),
+                                resultSet.getString(10), resultSet.getString(11), resultSet.getShort(16),
+                                resultSet.getString(12), resultSet.getString(13), resultSet.getString(14),
+                                resultSet.getShort(15)),
+                        new Plan(resultSet.getInt(1), resultSet.getString(17),
                         resultSet.getDouble(18), resultSet.getInt(19), resultSet.getInt(20),
                         resultSet.getInt(21)))
                 );

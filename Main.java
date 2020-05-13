@@ -83,22 +83,17 @@ public class Main extends Application {
                     //Manager stats Client menu
                     ChartClientsMenu chartClient = new ChartClientsMenu(percentage, buttonFont);
                     Scene chartClientMenuScene = new Scene(chartClient.renderChartClientsEditMenu(width, height), width, height);
-                    chartClientMenuScene.getStylesheets().addAll( "searchPaneStyle.css", "charts.css");
+                    chartClientMenuScene.getStylesheets().addAll( "searchPaneStyle.css", "graphics.css", "charts.css");
                     window.setScene(chartClientMenuScene);
-
                     break;
 
                 case 8:
                     //Manager stats Plan menu
                     ChartPlansMenu chartPlan = new ChartPlansMenu(percentage, buttonFont);
                     Scene chartPlanMenuScene = new Scene(chartPlan.renderChartPlansEditMenu(width, height), width, height);
-                    chartPlanMenuScene.getStylesheets().addAll("styles.css", "searchPaneStyle.css");
+                    chartPlanMenuScene.getStylesheets().addAll("styles.css", "graphics.css", "searchPaneStyle.css");
                     window.setScene(chartPlanMenuScene);
-
                     break;
-
-
-
             }
 
         });

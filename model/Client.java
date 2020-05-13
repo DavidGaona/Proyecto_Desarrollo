@@ -10,10 +10,12 @@ public class Client {
     private String email;
     private String direction;
     private short type;
+    private String city;
 
     public Client(){}
 
-    public Client(int id, String name, String lastName, short documentType, String documentId, String email, String direction, short type) {
+    public Client(int id, String name, String lastName, short documentType, String documentId, String email,
+                  String direction, short type) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -22,6 +24,19 @@ public class Client {
         this.email = email;
         this.direction = direction;
         this.type = type;
+    }
+
+    public Client(int id, String name, String lastName, short documentType, String documentId, String email,
+                  String direction, short type, String city) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.documentType = documentType;
+        this.documentId = documentId;
+        this.email = email;
+        this.direction = direction;
+        this.type = type;
+        this.city = city;
     }
 
     public boolean isNotBlank() {
@@ -95,4 +110,11 @@ public class Client {
         this.direction = direction;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 }

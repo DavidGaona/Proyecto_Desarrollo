@@ -84,8 +84,8 @@ public class SearchPane {
         frame.setStyle("-fx-background-color: #3D3946;\n -fx-background-radius: 10px");
         frame.setPadding(new Insets(10, 10, 10, (this.width * 0.05)));
 
-        searchField.setMinSize(this.width * 0.70, height * 0.04175);
-        searchField.setMaxSize(this.width * 0.70, height * 0.04175);
+        searchField.setMinSize(this.width * 0.65, height * 0.04175);
+        searchField.setMaxSize(this.width * 0.65, height * 0.04175);
         searchField.setPromptText("Escriba el nombre del plan");
         searchField.getStyleClass().add("search-bar");
         searchField.setStyle(searchField.getStyle() + "-fx-font-size: " + (28 - (28 * percentage)) + ";");
@@ -99,6 +99,7 @@ public class SearchPane {
             searchField.setText("");
             setVisible(false);
         });
+
         closeButton.setOnMouseEntered(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #4422AA;"));
         closeButton.setOnMouseExited(e -> closeButton.setStyle(closeButton.getStyle() + "-fx-background-color: #5639AC;"));
 
