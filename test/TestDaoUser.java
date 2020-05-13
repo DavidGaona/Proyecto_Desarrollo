@@ -11,14 +11,18 @@ public class TestDaoUser extends TestCase {
     public void scenario() {
         user = new DaoUser();
     }
-    //****************************testsaveNewUser********************
 
+
+    /**
+     * Prueba de crear un nuevo usuario de forma exitosa
+     */
     /*
-     @Test public void testSaveNewUser() { //caso exitoso
+     @Test public void testSaveNewUser() {
      scenario();
      assertEquals("Operacion exitosa", (user.saveNewUser(168, "pipe", "jimenez", "451", (short) 0, (short) 0, true, 35)));
      }
      */
+
 
     /**
      * prueba para comprobar un usuario que ya existe
@@ -28,8 +32,6 @@ public class TestDaoUser extends TestCase {
         scenario();
         assertEquals("El usuario ya se encuentra creado", (user.saveNewUser(36, "Bigueloncho", "Beyes Bendoza", "444", (short) 0, (short) 0, true, 35)));
     }
-
-    //****************************editUser********************
 
     /**
      * prueba de exito al editar un usuario
@@ -43,8 +45,6 @@ public class TestDaoUser extends TestCase {
     /*documento existente toca hacerlo manual
      */
 
-    //****************************loadUser********************
-
     /**
      * prueba de carga exitosa de un usuario
      */
@@ -53,8 +53,6 @@ public class TestDaoUser extends TestCase {
         scenario();
         assertEquals("Papi", user.loadUser("000", "Cédula de ciudadanía").getName());
     }
-
-    //****************************loginUser********************
 
     /**
      * prueba de logueo exitoso de un usuario
@@ -65,17 +63,32 @@ public class TestDaoUser extends TestCase {
         assertTrue(0 <= user.loginUser("666", (short) 0, "666"));
     }
 
+    /**
+     * Prueba que muestra el login incorrecto de un usuario por contraseña errada
+     */
     @Test
     public void testLoginUserIncorrecto() { //password incorrecto
         scenario();
         assertFalse(0 <= user.loginUser("000", (short) 1, "432346"));
     }
 
-
+    /**
+     * Verifica que el password introducido sea correcto
+     * Prueba orientada a Fallo
+     */
     @Test
-    public void testCheckPasswordIncorrecto() { //check incorrecto
+    public void testCheckPasswordIncorrecto() {
         scenario();
         assertFalse(true == user.checkPassword(152, "46"));
+    }
+
+    /**
+     * Prueba de cambio de contraseña
+     */
+    @Test
+    public void testchangePassword() {
+        scenario();
+        assertEquals(1, user.changePassword(151, "56"));
     }
 
 

@@ -28,7 +28,7 @@ public class testDaoBill extends TestCase {
     @Test
     public void testGetAllBills() {
         scenario();
-        assertEquals("Se han creado los PDF con exito",bill.getAllBills("/home/camilo/Downloads"));
+        assertEquals("Se han creado los PDF con exito", bill.getAllBills("/home/camilo/Downloads"));
     }
 
     /**
@@ -38,6 +38,6 @@ public class testDaoBill extends TestCase {
     @Test
     public void testGetAllBillsWrong() {
         scenario();
-        assertEquals("El lugar donde desea guardar no existe o no tiene permisos de escritura",bill.getAllBills("/dev"));
+        assertEquals("El lugar donde desea guardar no existe o no tiene permisos de escritura", bill.getAllBills("/dev"));
     }
 }

@@ -28,7 +28,7 @@ public class testDaoPlan extends TestCase {
      */
     /*
     @Test
-    public void testSaveNewPlan() {  //caso exitoso
+    public void testSaveNewPlan() {
         scenario();
         assertEquals("Plan registrado con exito", plan.saveNewPlan("plan express", "1212", "1212", "1212", "1212", result));
     }
