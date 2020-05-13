@@ -113,6 +113,7 @@ public class ChartClientsMenu {
 
         String[] options = {"Tipos de clientes %", "Tipos de clientes #", "Clientes antiguos", "Mejores clientes"};
         ComboBox<String> optionsCombobox = new ComboBox<>(FXCollections.observableArrayList(options));
+        optionsCombobox.getSelectionModel().select(0);
         optionsCombobox.setPrefSize(width * 0.15, height * 0.05);
         optionsCombobox.setStyle(optionsCombobox.getStyle() + "\n-fx-font-size: " + (20 - (20 * percentage)) + ";");
 
