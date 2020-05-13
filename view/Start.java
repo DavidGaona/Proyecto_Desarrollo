@@ -37,7 +37,7 @@ public class Start {
         center.setPadding(new Insets(50, 0, 50, 0));
         center.setAlignment(Pos.TOP_CENTER);
 
-        Label label = new Label("Introdusca su número de celular");
+        Label label = new Label("Introduzca su número de celular");
         label.setMinSize(500, 120);
         label.setMaxSize(500, 120);
         label.setWrapText(true);
@@ -48,7 +48,7 @@ public class Start {
         ProjectUtilities.onlyNumericTextField(textField);
         textField.setOnAction(e -> {
             if (textField.getText().isBlank())
-                AlertBox.display("Error", "introdusca un número de celular valido:");
+                AlertBox.display("Error", "introduzca un número de celular valido:");
             AlertBox.display("Consulta", "Su consumo de datos es de: " +
                     ThreadLocalRandom.current().nextInt(0, 10000) + " Megas");
         });
