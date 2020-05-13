@@ -12,6 +12,11 @@ public class testDaoBill extends TestCase {
         bill = new DaoBill();
     }
 
+    /**
+     * TODOS LOS METODOS QUE ESTÁN ENTRE COMENTARIO SIMPLE (/* gris) DEBEN SER DESCOMENTADOS,
+     * ESTÁN ASÍ PORQUE ALTERAN LA BASE DE DATOS Y SU EJECUCIÓN REPETITIVA PUEDE GENERAR ERRORES
+     */
+
     @Test
     /**
      * Prueba de metodo GenerateBills, el cual genera las facturas con los datos almacenados en la base de datos
@@ -19,7 +24,7 @@ public class testDaoBill extends TestCase {
     public void testGenerateBills() {
         scenario();
         assertTrue((bill.generateBills().equals("Las facturas ya fueron generadas"))
-                || bill.generateBills().equals("Operación realizada con exíto, facturas generadas 1".substring(0, 60)));
+                || bill.generateBills().substring(0, 60).equals("Operación realizada con exíto, facturas generadas 1"));
     }
 
     /**
