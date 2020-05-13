@@ -98,7 +98,7 @@ public class testDaoClient extends TestCase {
     @Test
     public void testQueueNewPlan(){
         scenario();
-        assertEquals("prueba",client.queueNewPlan(40,Long.valueOf("3230000075"),"Plan Colombia Virtual"));
+        assertEquals("Plan pendiente por cambio, sera cambiado en su proximo pago",client.queueNewPlan(40,Long.valueOf("3230000075"),"Plan Colombia Virtual"));
     }
 
      */

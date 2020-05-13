@@ -24,7 +24,7 @@ public class testDaoBill extends TestCase {
     public void testGenerateBills() {
         scenario();
         assertTrue((bill.generateBills().equals("Las facturas ya fueron generadas"))
-                || bill.generateBills().substring(0, 60).equals("Operación realizada con exíto, facturas generadas 1"));
+                || bill.generateBills().equals("Operación realizada con exíto, facturas generadas 1".substring(0, 60)));
     }
 
     /**
