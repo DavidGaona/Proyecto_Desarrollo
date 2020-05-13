@@ -87,6 +87,9 @@ public class ManagerMenu {
                 if (!basicPlanInfo.isEmpty()) {
                     message = createNewPlan();
                     if (message.equals("Plan registrado con exito")) {
+                        searchComboBox.getItems().add(ProjectUtilities.clearWhiteSpaces(
+                                basicPlanInfo.getContent("planName")
+                        ));
                         basicPlanInfo.clear();
                         planExtras.resetTables();
                     }

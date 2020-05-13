@@ -193,7 +193,7 @@ public class ChartPlansMenu {
             ArrayList<DataChart> data;
             boolean show = true;
             switch (chartComboBox.getValue()) {
-                case "Ventas por Mes":
+                case "Ventas de mes torta":
                     if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
                         String start = yearsComboBox.getValue() + "-" +
                                 ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
@@ -222,6 +222,23 @@ public class ChartPlansMenu {
                     } else {
                         show = false;
                         AlertBox.display("Error: ", "Por favor seleccione un rango de fechas valido");
+                    }
+                    break;
+                case "Ventas de mes barra":
+                    show = false;
+                    if (fromCombobox.getValue() != null && toCombobox.getValue() != null && yearsComboBox.getValue() != null) {
+                        String start = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(fromCombobox.getValue()) + "-01";
+                        String end = yearsComboBox.getValue() + "-" +
+                                ProjectUtilities.monthToNumber(toCombobox.getValue()) + "-01";
+                        LocalDate startDate = LocalDate.parse(start);
+                        LocalDate endDate = LocalDate.parse(end);
+                        endDate = LocalDate.parse(end.substring(0, 7) + "-" + endDate.lengthOfMonth());
+                        data = daoChart.getDataPlansPerMonths(startDate, endDate);
+                        if (data != null)
+                            commonBarChart(stackChart, data, "Ventas por Mes", width, height);
+                        else
+                            AlertBox.display("Error: ", "No se encontraron registros en esas fechas");
                     }
                     break;
                 case "Número de Ventas":
