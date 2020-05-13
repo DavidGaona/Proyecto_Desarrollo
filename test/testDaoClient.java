@@ -25,14 +25,18 @@ public class testDaoClient extends TestCase {
     @Test
     public void testSaveNewClientExistente() { //cliente existente
         scenario();
-        assertEquals("Este cliente ya se encuentra registrado", client.saveNewClient(40, "Miguel", "Reyes", (short) 0, "114", "reyes.miguel@correounivalle.edu.co", "Cra 20 #13-20", (short) 0, 36));
+        assertEquals("Este cliente ya se encuentra registrado", client.saveNewClient(40, "Miguel",
+                "Reyes", (short) 0, "114", "reyes.miguel@correounivalle.edu.co",
+                "Cra 20 #13-20", (short) 0, "Cali", 36));
     }
 
     //****************************editClient********************
     @Test
     public void testEditClient() {
         scenario();
-        assertEquals("Cliente editado exito", client.editClient(40, "Miguel", "Reyes", (short) 0, "114", "reyes.miguel@correounivalle.edu.co", "Cra 48 #13-54", (short) 0));
+        assertEquals("Cliente editado exito", client.editClient(40, "Miguel", "Reyes",
+                (short) 0, "114", "reyes.miguel@correounivalle.edu.co", "Cra 48 #13-54",
+                (short) 0, "Cali"));
     }
 
     /**
